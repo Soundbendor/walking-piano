@@ -198,8 +198,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                         # Check for note_on and note_off events:
                         if msg.type == "note_on" and msg.velocity != 0:
                             self.highlight_key(msg.note)  # Highlight the key
-                
-                            print(self.paused, self.pausenote, msg.note)
+                            self.outport.send(msg)  # Send the message out if necessary
+
                             if self.paused == True and self.pausenote == msg.note:
                                 print("Resuming game...")
                                 self.clock_pause_manager.resume()
@@ -208,11 +208,9 @@ class PianoGameUI(pyglet.event.EventDispatcher):
 
                         elif msg.type == "note_off" or (msg.type == "note_on" and msg.velocity == 0):
                             self.unhighlight_key(msg.note)  # Unhighlight the key
+                            self.outport.send(msg)  # Send the message out if necessary
 
-                        # Optionally, process the message further...
-                        self.outport.send(msg)  # Send the message out if necessary
-
-                    time.sleep(0.01)  # Sleep for a very short time to prevent high CPU usage
+                    time.sleep(0.0001)  # Sleep for a very short time to prevent high CPU usage
             finally:
                 inport.close()  # Ensure the input port is closed properly
                 print("Thread ended.")  # Confirm the thread has ended
@@ -290,7 +288,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
     def create_active_notes_line(self):
         white_key_width = 20
         black_key_width = white_key_width / 2
-        y_position = 600  # Position the line near the top of the window
+        y_position = self.window.height # Position the line near the top of the window
         x_position = (self.window.width - white_key_width * 52) / 2
         border_size = 1
         height = 6

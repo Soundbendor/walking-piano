@@ -4,13 +4,14 @@ import os
 import signal
 import gc
 import mido
+import csv
 
 # Sample database of songs
 song_database = {
-    1: {"name": "Mary had a little lamb", "artist": "???", "file": "mary_lamb.mid"},
-    2: {"name": "Peter Peter Pumpkin Eater", "artist": "???", "file": "PeterPeter.mid"},
-    3: {"name": "The Wishing Well", "artist": "???", "file": "TheWishingWell.mid"},
-    4: {"name": "A Lion", "artist": "???", "file": "A_Lion.mid"},
+    1: {"name": "Mary had a little lamb", "artist": "Nursery Rhyme (Easy)", "file": "mary_lamb.mid"},
+    2: {"name": "Peter Peter Pumpkin Eater", "artist": "Nursery Rhyme (Easy)", "file": "PeterPeter.mid"},
+    3: {"name": "The Wishing Well", "artist": "Nursery Rhyme (Easy)", "file": "TheWishingWell.mid"},
+    4: {"name": "A Lion", "artist": "Nursery Rhyme (Easy)", "file": "A_Lion.mid"},
     5: {"name": "Minuet in G Minor", "artist": "Bach", "file": "Bach_Minuet_in_G_Minor.mid"},
     6:  {"name": "Song for Beginners ", "artist": "Nikodem Kulczyk", "file": "beginner.mid"},
     7: {"name": "Cornfield Chase", "artist": "Hans Zimmer (Interstellar)", "file": "cornfield_chase.mid"},
@@ -23,11 +24,25 @@ song_database = {
 #REDACTED 1: {"name": "Best Part", "artist": "Daniel Caesar", "file": "best_part.mid"},
 }
 
+def csv_to_song_database(csv_filename):
+    song_database = {}
+    with open(csv_filename, mode='r', encoding='utf-8') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        song_id = 1
+        for row in csv_reader:
+            song_database[song_id] = {
+                "name": row["canonical_title"],
+                "artist": row["canonical_composer"] + "(" + row["year"] + ")",
+                "file": "../jukebox_songs/" + row["midi_filename"] 
+            }
+            song_id += 1
+    return song_database
 
-
+csv_filename = 'maestro-v3_songs.csv' 
+jukebox_song_database = csv_to_song_database(csv_filename)
 
 class ScrollableLabel:
-    def __init__(self, text, font_size, x, y, anchor_x, anchor_y, batch, color=(255, 255, 255, 255)):
+    def __init__(self, text, font_size, x, y, anchor_x, anchor_y, batch, color=(255, 255, 255, 255), highlightable=True):
         self.label = pyglet.text.Label(text,
                                        font_name='Arial',
                                        font_size=font_size,
@@ -37,14 +52,26 @@ class ScrollableLabel:
                                        anchor_y=anchor_y,
                                        color=color, 
                                        batch=batch)
+        
+        self.original_color = color  # Store the original color
+        self.highlight_color = (200, 200, 200, 255)  # Define the highlight color
+        self.highlightable = highlightable  # Flag to control if the label should be highlightable
 
     def is_clicked(self, x, y):
         return (
-            self.label.x - self.label.content_width // 2 < x < self.label.x +
-            self.label.content_width // 2
+            self.label.x - self.label.content_width // 2 < x < self.label.x + self.label.content_width // 2
             and self.label.y - self.label.content_height // 2 < y < self.label.y + self.label.content_height // 2
         )
 
+    def update_highlight(self, x, y):
+        '''Change the color of the label when mouse is over it, preserving original color otherwise.'''
+        if self.highlightable:  # Only update highlight if the label is marked as highlightable
+            if (self.label.x - self.label.content_width // 2 < x < self.label.x + self.label.content_width // 2
+                and self.label.y - self.label.content_height // 2 < y < self.label.y + self.label.content_height // 2):
+                self.label.color = self.highlight_color
+            else:
+                self.label.color = self.original_color
+            
 
 class WalkingPianoGame(pyglet.window.Window):
     def __init__(self, *args, **kwargs):
@@ -52,8 +79,10 @@ class WalkingPianoGame(pyglet.window.Window):
         
         self.menu_batch = pyglet.graphics.Batch()
         self.song_select_batch = pyglet.graphics.Batch()
+        self.song_select_batch_jukebox = pyglet.graphics.Batch()
         self.settings_batch = pyglet.graphics.Batch()
         self.player_mode_batch = pyglet.graphics.Batch()
+        
         
         self.game_modes = ['Challenge Mode', 'Practice', 'FreePlay', 'Settings', 'JukeBox', 'Exit']
         
@@ -65,6 +94,7 @@ class WalkingPianoGame(pyglet.window.Window):
         
         self.menu_options_labels = []
         self.song_options_labels = []
+        self.song_options_labels_jukebox = []
         self.settings_options_labels = []
         self.player_mode_options_labels = []
         
@@ -72,6 +102,7 @@ class WalkingPianoGame(pyglet.window.Window):
         
         self.setup_menu()
         self.setup_song_selection()
+        self.setup_jukebox_song_selection()
         self.setup_player_mode_selection()
         
         self.outport = mido.get_output_names()[0] if mido.get_output_names() else None
@@ -80,7 +111,7 @@ class WalkingPianoGame(pyglet.window.Window):
         
     def setup_menu(self):
        # Main menu title
-        self.main_menu_title = ScrollableLabel("WALKING PIANO", 32, self.width // 2, self.height - 50, 'center', 'center', self.menu_batch)
+        self.main_menu_title = ScrollableLabel("WALKING PIANO", 32, self.width // 2, self.height - 50, 'center', 'center', self.menu_batch, highlightable=False)
         
         # Menu options
         y_offset = 150  # Adjusted to make space for the title
@@ -90,7 +121,7 @@ class WalkingPianoGame(pyglet.window.Window):
 
     def setup_song_selection(self):
         # Song selection title
-        self.song_selection_title = ScrollableLabel("Choose your song:", 32, self.width // 2, self.height - 50, 'center', 'center', self.song_select_batch)
+        self.song_selection_title = ScrollableLabel("Choose your song:", 32, self.width // 2, self.height - 50, 'center', 'center', self.song_select_batch, highlightable=False)
         
         # Song options
         for song_id, song_info in song_database.items():
@@ -99,7 +130,19 @@ class WalkingPianoGame(pyglet.window.Window):
             
         self.home_button = ScrollableLabel("Return to Menu", 24, self.width // 2, 50, 'center', 'center', self.song_select_batch)
         self.song_options_labels.append(self.home_button)
-             
+        
+    def setup_jukebox_song_selection(self):
+        # Song selection title
+        self.song_selection_title_jukebox = ScrollableLabel("Choose your song:", 32, self.width // 2, self.height - 50, 'center', 'center', self.song_select_batch_jukebox, highlightable=False)
+
+        # Song options
+        for song_id, song_info in jukebox_song_database.items():
+            label = ScrollableLabel(f"{song_info['name']} - {song_info['artist']}", 18, self.width // 2, self.height - song_id * 30 - 100, 'center', 'center', self.song_select_batch_jukebox)  # Adjusted y-offset for song labels
+            self.song_options_labels_jukebox.append(label)
+            
+        self.home_button = ScrollableLabel("Return to Menu", 24, self.width // 2, 50, 'center', 'center', self.song_select_batch_jukebox)
+        self.song_options_labels_jukebox.append(self.home_button)
+                
     def setup_settings(self):
         
         #Clear batch
@@ -111,11 +154,11 @@ class WalkingPianoGame(pyglet.window.Window):
         all_in_ports = mido.get_input_names()
         
         # Settings title
-        self.settings_title = ScrollableLabel("Settings", 32, self.width // 2, self.height - 50, 'center', 'center', self.settings_batch)
+        self.settings_title = ScrollableLabel("Settings", 32, self.width // 2, self.height - 50, 'center', 'center', self.settings_batch, highlightable=False)
 
         # Output MIDI Ports
         y_position = self.height - y_offset
-        self.settings_options_labels.append(ScrollableLabel("Select your MIDI Output Port:", 24, self.width // 2, y_position, 'center', 'center', self.settings_batch))
+        self.settings_options_labels.append(ScrollableLabel("Select your MIDI Output Port:", 24, self.width // 2, y_position, 'center', 'center', self.settings_batch, highlightable=False))
         y_position -= 30
         if all_out_ports:
             for port in all_out_ports:
@@ -128,7 +171,7 @@ class WalkingPianoGame(pyglet.window.Window):
 
         # Input MIDI Ports
         y_position -= 40  # Extra spacing before listing input ports
-        self.settings_options_labels.append(ScrollableLabel("Select your MIDI Input Port:", 24, self.width // 2, y_position, 'center', 'center', self.settings_batch))
+        self.settings_options_labels.append(ScrollableLabel("Select your MIDI Input Port:", 24, self.width // 2, y_position, 'center', 'center', self.settings_batch, highlightable=False))
         y_position -= 30
         if all_in_ports:
             for port in all_in_ports:
@@ -142,7 +185,7 @@ class WalkingPianoGame(pyglet.window.Window):
         
         # Autoplay option
         y_position -= 60  # Adjust y_position accordingly
-        self.settings_options_labels.append(ScrollableLabel("Autoplay:", 24, self.width // 2, y_position, 'center', 'center', self.settings_batch))
+        self.settings_options_labels.append(ScrollableLabel("Autoplay:", 24, self.width // 2, y_position, 'center', 'center', self.settings_batch, highlightable=False))
 
         # True option
         y_position -= 30
@@ -160,7 +203,7 @@ class WalkingPianoGame(pyglet.window.Window):
            
     def setup_player_mode_selection(self):
         
-        choose_players_title = ScrollableLabel("Select number of players:", 32, self.width // 2, self.height - 50, 'center', 'center', self.player_mode_batch)
+        choose_players_title = ScrollableLabel("Select number of players:", 32, self.width // 2, self.height - 50, 'center', 'center', self.player_mode_batch, highlightable=False)
         self.player_mode_options_labels.append(choose_players_title)
         
         modes = ['1 Player', '2 Player', 'Return to Menu']
@@ -179,6 +222,10 @@ class WalkingPianoGame(pyglet.window.Window):
         if self.game_state == 'SONG_SELECTION':
             self.clear()
             self.song_select_batch.draw()
+            
+        if self.game_state == 'SONG_SELECTION_JUKEBOX':
+            self.clear()
+            self.song_select_batch_jukebox.draw()
             
         if self.game_state == 'SETTINGS':
             self.clear()
@@ -228,9 +275,8 @@ class WalkingPianoGame(pyglet.window.Window):
                         elif game_mode == 'JukeBox':
                             #Code for JukeBox
                             print(f"Game Mode Selected: {self.game_modes[index]}")
-                            self.game_state = 'SONG_SELECTION'
+                            self.game_state = 'SONG_SELECTION_JUKEBOX'
                             self.selected_game_mode = 'JukeBox'
-                            
                             
                             
                         elif game_mode == 'Exit':
@@ -265,6 +311,17 @@ class WalkingPianoGame(pyglet.window.Window):
                             print(f"You clicked {song_database[song_id]['name']} by {song_database[song_id]['artist']}")
                             self.start_game(song_database[song_id]['file'], self.selected_game_mode, self.inport, self.outport, self.player_count, self.autoplay)
                             return
+            
+            elif self.game_state == 'SONG_SELECTION_JUKEBOX':
+                for song_id, label in enumerate(self.song_options_labels_jukebox, start=1):
+                    if label.is_clicked(x, y):
+                        if label.label.text == "Return to Menu":
+                            self.return_to_menu()
+                            return
+                        else:
+                            print(f"You clicked {jukebox_song_database[song_id]['name']} by {jukebox_song_database[song_id]['artist']}")
+                            self.start_game(jukebox_song_database[song_id]['file'], self.selected_game_mode, self.inport, self.outport, self.player_count, self.autoplay)
+                            return
                     
             
             elif self.game_state == "SETTINGS":
@@ -298,6 +355,29 @@ class WalkingPianoGame(pyglet.window.Window):
                     self.autoplay = False
                     self.setup_settings()  # Refresh settings to update highlighted selection
                     return
+                
+                
+    def on_mouse_motion(self, x, y, dx, dy):
+        
+        if self.game_state == 'MENU':
+            for label in self.menu_options_labels:
+                label.update_highlight(x, y)
+        
+        if self.game_state == 'SONG_SELECTION':
+            for label in self.song_options_labels:
+                label.update_highlight(x, y)
+        
+        if self.game_state == 'PLAYER_MODE_SELECTION':
+            for label in self.player_mode_options_labels:
+                label.update_highlight(x, y)
+        
+        if self.game_state == 'SONG_SELECTION_JUKEBOX':
+            for label in self.song_options_labels_jukebox:
+                label.update_highlight(x, y)
+        
+        if self.game_state == 'SETTINGS':
+            for label in self.settings_options_labels:
+                label.update_highlight(x, y)
 
                                  
     def start_game(self, midi_file, game_mode, inport, outport, player_count=1, autoplay=False):
@@ -334,6 +414,5 @@ if __name__ == "__main__":
     #Change to songs directory for access of song files within game.
     os.chdir("songs")
 
-    game = WalkingPianoGame(width=1080, height=590,
-                caption="Walking Piano Game")
+    game = WalkingPianoGame(fullscreen=True, resizable=True, caption="Walking Piano")
     pyglet.app.run()
