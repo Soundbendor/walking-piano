@@ -131,25 +131,27 @@ class WalkingPianoGame(pyglet.window.Window):
         self.home_button = ScrollableLabel("Return to Menu", 24, self.width // 2, 50, 'center', 'center', self.song_select_batch)
         self.song_options_labels.append(self.home_button)
         
-    def setup_jukebox_song_selection(self):
+    def setup_jukebox_song_selection(self, current_page=0):
         # Song selection title
         self.song_selection_title_jukebox = ScrollableLabel("Choose your song:", 32, self.width // 2, self.height - 50, 'center', 'center', self.song_select_batch_jukebox, highlightable=False)
 
         # Pagination vars
-        self.current_page = 0
+        self.current_page = current_page
         self.songs_per_page = 20
         self.total_pages = len(jukebox_song_database) // self.songs_per_page + 1
 
         # Create song labels for the current page
         self.song_options_labels_jukebox = []
-        for song_id in range(self.current_page * self.songs_per_page + 1, (self.current_page + 1) * self.songs_per_page + 1):
+        for song_id in range(current_page * self.songs_per_page + 1, (current_page + 1) * self.songs_per_page + 1):
             song_info = jukebox_song_database.get(song_id, {})
-            label = ScrollableLabel(f"{song_info.get('name', '')} - {song_info.get('artist', '')}", 18, self.width // 2, self.height - (song_id - self.current_page * self.songs_per_page) * 30 - 100, 'center', 'center', self.song_select_batch_jukebox)  # Adjusted y-offset for song labels
+            label = ScrollableLabel(f"{song_info.get('name', '')} - {song_info.get('artist', '')}", 18, self.width // 2, self.height - (song_id - current_page * self.songs_per_page) * 30 - 100, 'center', 'center', self.song_select_batch_jukebox)  # Adjusted y-offset for song labels
             self.song_options_labels_jukebox.append(label)
 
         # Pagination buttons
         self.prev_page_button = ScrollableLabel("Previous", 18, self.width // 2 - 200, 50, 'center', 'center', self.song_select_batch_jukebox)
         self.next_page_button = ScrollableLabel("Next", 18, self.width // 2 + 200, 50, 'center', 'center', self.song_select_batch_jukebox)
+        self.song_options_labels_jukebox.append(self.prev_page_button)
+        self.song_options_labels_jukebox.append(self.next_page_button)
 
         self.home_button = ScrollableLabel("Return to Menu", 24, self.width // 2, 50, 'center', 'center', self.song_select_batch_jukebox)
         self.song_options_labels_jukebox.append(self.home_button)
@@ -422,14 +424,14 @@ class WalkingPianoGame(pyglet.window.Window):
         # Logic to handle previous page of songs
         if self.current_page > 0:
             self.current_page -= 1
-            self.setup_jukebox_song_selection()
+            self.setup_jukebox_song_selection(self.current_page)
         pass
 
     def handle_next_page(self):
         # Logic to handle next page of songs
         if self.current_page < self.total_pages - 1:
             self.current_page += 1
-            self.setup_jukebox_song_selection()
+            self.setup_jukebox_song_selection(self.current_page)
         pass
 
 if __name__ == "__main__":
