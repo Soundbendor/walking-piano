@@ -415,4 +415,6 @@ if __name__ == "__main__":
     os.chdir("songs")
 
     game = WalkingPianoGame(fullscreen=True, resizable=True, caption="Walking Piano")
+    #game = WalkingPianoGame(width = 1920, height = 1080, resizable=True, caption="Walking Piano")
+
     pyglet.app.run()
