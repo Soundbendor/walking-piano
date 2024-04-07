@@ -341,7 +341,7 @@ class WalkingPianoGame(pyglet.window.Window):
                             self.handle_next_page()
                             return
                         else:
-                            print(f"You clicked {jukebox_song_database[song_id]['name']} by {jukebox_song_database[song_id]['artist']}")
+                            print(f"You clicked {jukebox_song_database[song_id + (self.current_page*20)]['name']} by {jukebox_song_database[song_id + (self.current_page*20)]['artist']}")
                             self.start_game(jukebox_song_database[song_id]['file'], self.selected_game_mode, self.inport, self.outport, self.player_count, self.autoplay)
                             return
                     
