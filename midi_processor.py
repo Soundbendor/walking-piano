@@ -12,6 +12,7 @@ class MIDIProcessor(pyglet.event.EventDispatcher):
     Attributes:
         file_path (str): The path to the MIDI file.
         midi_file (MidiFile): The MidiFile object representing the MIDI file.
+        BPM (int): The tempo of the MIDI file in BPM.
     """
     
     def __init__(self, file_path):
@@ -24,6 +25,7 @@ class MIDIProcessor(pyglet.event.EventDispatcher):
         
         self.file_path = file_path
         self.midi_file = self.read_midi_file()
+        self.bpm = None # Is et in extract_track_messages
 
     def read_midi_file(self):
         """
@@ -59,6 +61,7 @@ class MIDIProcessor(pyglet.event.EventDispatcher):
         for msg in self.midi_file.tracks[0]:
             if msg.type == 'set_tempo':
                 tempo = msg.tempo
+                self.bpm = bpm2tempo(tempo)
                 break
 
         #tempo = bpm2tempo(100)

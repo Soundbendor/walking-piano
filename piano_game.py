@@ -47,9 +47,9 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         
         self.active_note_events = {}  # New: Dictionary to track active note events
 
-        # array for notes as they approach the time for being played.
-        # 0 = dont play, 1 = near 2 = perfect
-        self.incoming_notes = {note: 0 for note in range(21, 109)}
+        # Array for notes as they approach the time for being played.
+        # 0 = dont play, 1 = okay 2 = perfect
+        self.incoming_notes = {note: {'note_timing': 0, 'note_played': 0} for note in range(21, 109)}
 
         """#Temp for testing visuals"""
         self.active_notes_line_segments = {}
@@ -103,17 +103,29 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         self.wrong_color_white = (255, 0, 0, 255)
         self.wrong_color_black = (100, 0, 0, 255)
         
-        self.pausenote = -999 
+        self.pausenote = -999
         
+        # Initialize scoring system
+        self.score = 0
+        self.points_for_hit_perfect = 100  # Points awarded for accurately hitting a note 'perfect'
+        self.points_for_hit_okay = 50  # Points awarded for accurately hitting a note 'okay'
+        self.points_for_hit_bad = 0  # Points awarded for hitting a note 'badly'
+        
+        self.points_for_hold = 10   # Points awarded per second for holding the note correctly 
+        
+        if self.game_mode == "Challenge":
+            #Schedule score update function
+            pyglet.clock.schedule_interval(self.update_score, 1/4)
+            
         #Load MIDI file / Starting game
-        if self.game_mode != "FreePlay" and self.game_mode!= "JukeBox" and midi_file_path is not None:
+        elif self.game_mode != "FreePlay" and self.game_mode!= "JukeBox" and midi_file_path is not None:
                   
             keyboard_thread = threading.Thread(target=self.play_piano_user)
             keyboard_thread.start()
           
             #Schedule updating rectangles function to move things down constantly.
             pyglet.clock.schedule_interval(self.update_rectangles, 1/60.0)
-            
+           
             #load file in; begin game
             self.load_midi_file(midi_file_path)
             
@@ -199,6 +211,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                         if msg.type == "note_on" and msg.velocity != 0:
                             self.highlight_key(msg.note)  # Highlight the key
                             self.outport.send(msg)  # Send the message out if necessary
+                            self.playing_notes[msg.note] = True
 
                             if self.paused == True and self.pausenote == msg.note:
                                 print("Resuming game...")
@@ -209,6 +222,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                         elif msg.type == "note_off" or (msg.type == "note_on" and msg.velocity == 0):
                             self.unhighlight_key(msg.note)  # Unhighlight the key
                             self.outport.send(msg)  # Send the message out if necessary
+                            self.playing_notes[msg.note] = False
 
                     time.sleep(0.0001)  # Sleep for a very short time to prevent high CPU usage
             finally:
@@ -346,6 +360,13 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             # Draw falling rectangles
             for rectangle in self.falling_rectangles_list:
                 rectangle.draw()
+            
+            
+            if self.game_mode == "Challenge":
+                #Draw score
+                score_text = f"Score: {self.score}"
+                score_label = pyglet.text.Label(score_text, x=10, y=self.window.height - 20, anchor_x='left', anchor_y='top')
+                score_label.draw()
 
     # Function to highlight a specific key based on the key number
     def highlight_key(self, key_number):
@@ -358,24 +379,36 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         black_color = (0, 0, 0)
 
         #if key number in not in valid range, pass ~ error catching
+        #Assign colors based on the note timing.
         if key_number not in range(21, 109): 
             pass
         else:
-            if self.incoming_notes[key_number] == 1:
+            if self.incoming_notes[key_number]['note_timing'] == 1:
                 color = self.okay_color_white
                 black_color = self.okay_color_black
                 
-            elif self.incoming_notes[key_number] == 2:
+                #Add points for playing the note 'okay', ONE TIME only.
+                if self.incoming_notes[key_number]['note_played'] == 0:
+                    self.incoming_notes[key_number]['note_played'] = 1
+                    self.score += self.points_for_hit_okay
+                
+            elif self.incoming_notes[key_number]['note_timing'] == 2:
                 color = self.perfect_color_white
                 black_color = self.perfect_color_black
                 
+                #Add points for playing the note perfectly, ONE TIME only.
+                if self.incoming_notes[key_number]['note_played'] == 0:
+                    self.incoming_notes[key_number]['note_played'] = 1
+                    self.score += self.points_for_hit_perfect
+                    
             else:
                 color = self.wrong_color_white
                 black_color = self.wrong_color_black
         
 
-        #Is black key? True or false...?
-        is_black_key = key_number in self.black_keys_midi
+        #Apply color to the key
+        #Is it a black key? True/False...
+        is_black_key = key_number in self.black_keys_midi 
         
         for key, midi_number in self.all_midi_keys:
             if midi_number == key_number:
@@ -546,12 +579,12 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             if rectangle.y >= 100:
                 rectangle.y -= move_speed * dt
 
-            if rectangle.y <= 170 and rectangle.y > 120 and self.incoming_notes[rectangle.note_number] != 2:
+            if rectangle.y <= 170 and rectangle.y > 120 and self.incoming_notes[rectangle.note_number]['note_timing'] != 2:
                 # we need to flag this note as 'close' to the line segment
-                self.incoming_notes[rectangle.note_number] = 1
+                self.incoming_notes[rectangle.note_number]['note_timing'] = 1
 
             elif rectangle.y <= 120 and rectangle.y >= 80:
-                self.incoming_notes[rectangle.note_number] = 2
+                self.incoming_notes[rectangle.note_number]['note_timing'] = 2
                 
             if rectangle.height == 1:
                 rectangle.color = (0, 255, 0)
@@ -565,11 +598,13 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                 rectangle.y = 100
     
                 if rectangle.height > 0 and rectangle.negative_y > 20:
-                    self.incoming_notes[rectangle.note_number] = 1
+                    self.incoming_notes[rectangle.note_number]['note_timing'] = 1
 
+                #Setup for next rectangle being played...
                 if rectangle.height <= 0:
                     rectangle.height = 0
-                    self.incoming_notes[rectangle.note_number] = 0
+                    self.incoming_notes[rectangle.note_number]['note_timing'] = 0
+                    self.incoming_notes[rectangle.note_number]['note_played'] = 0
                     
                     if self.testing_autoplay == True and rectangle.note_off == False and self.playing_notes[rectangle.note_number] == True:
                         rectangle.note_off = True
@@ -661,7 +696,19 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             print("Backspace pressed")
            
             self.exit_game()
-            
+    
+    def update_score(self, dt):
+        for note in self.playing_notes:
+            if self.playing_notes[note] == True:
+                #Refresh highlight
+                
+                if self.incoming_notes[note]['note_timing'] == 0:
+                    self.highlight_key(note)
+                
+                if self.incoming_notes[note]['note_timing'] != 0:
+                    self.score += self.points_for_hold
+        
+
                 
     def jukebox_mode(self, midi_file_path):
         
