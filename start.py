@@ -4,7 +4,7 @@ import os
 import signal
 import gc
 import mido
-import csv
+import csv 
 
 # Sample database of songs
 song_database = {
@@ -131,18 +131,32 @@ class WalkingPianoGame(pyglet.window.Window):
         self.home_button = ScrollableLabel("Return to Menu", 24, self.width // 2, 50, 'center', 'center', self.song_select_batch)
         self.song_options_labels.append(self.home_button)
         
-    def setup_jukebox_song_selection(self):
+    def setup_jukebox_song_selection(self, current_page=0):
         # Song selection title
         self.song_selection_title_jukebox = ScrollableLabel("Choose your song:", 32, self.width // 2, self.height - 50, 'center', 'center', self.song_select_batch_jukebox, highlightable=False)
 
-        # Song options
-        for song_id, song_info in jukebox_song_database.items():
-            label = ScrollableLabel(f"{song_info['name']} - {song_info['artist']}", 18, self.width // 2, self.height - song_id * 30 - 100, 'center', 'center', self.song_select_batch_jukebox)  # Adjusted y-offset for song labels
+        # Pagination vars
+        self.current_page = current_page
+        self.songs_per_page = 20
+        self.total_pages = len(jukebox_song_database) // self.songs_per_page + 1
+
+        # Create song labels for the current page
+        self.song_options_labels_jukebox = []
+        for song_id in range(current_page * self.songs_per_page + 1, (current_page + 1) * self.songs_per_page + 1):
+            song_info = jukebox_song_database.get(song_id, {})
+            label = ScrollableLabel(f"{song_info.get('name', '')} - {song_info.get('artist', '')}", 18, self.width // 2, self.height - (song_id - current_page * self.songs_per_page) * 30 - 100, 'center', 'center', self.song_select_batch_jukebox)  # Adjusted y-offset for song labels
             self.song_options_labels_jukebox.append(label)
-            
+
+        # Pagination buttons
+        self.prev_page_button = ScrollableLabel("Previous", 18, self.width // 2 - 200, 50, 'center', 'center', self.song_select_batch_jukebox)
+        self.next_page_button = ScrollableLabel("Next", 18, self.width // 2 + 200, 50, 'center', 'center', self.song_select_batch_jukebox)
+        self.song_options_labels_jukebox.append(self.prev_page_button)
+        self.song_options_labels_jukebox.append(self.next_page_button)
+
         self.home_button = ScrollableLabel("Return to Menu", 24, self.width // 2, 50, 'center', 'center', self.song_select_batch_jukebox)
         self.song_options_labels_jukebox.append(self.home_button)
-                
+
+
     def setup_settings(self):
         
         #Clear batch
@@ -318,8 +332,16 @@ class WalkingPianoGame(pyglet.window.Window):
                         if label.label.text == "Return to Menu":
                             self.return_to_menu()
                             return
+                        elif label.label.text == "Previous":
+                            print("Previous page")
+                            self.handle_prev_page()
+                            return
+                        elif label.label.text == "Next":
+                            print("Next page")
+                            self.handle_next_page()
+                            return
                         else:
-                            print(f"You clicked {jukebox_song_database[song_id]['name']} by {jukebox_song_database[song_id]['artist']}")
+                            print(f"You clicked {jukebox_song_database[song_id + (self.current_page*self.songs_per_page)]['name']} by {jukebox_song_database[song_id + (self.current_page*self.songs_per_page)]['artist']}")
                             self.start_game(jukebox_song_database[song_id]['file'], self.selected_game_mode, self.inport, self.outport, self.player_count, self.autoplay)
                             return
                     
@@ -396,6 +418,20 @@ class WalkingPianoGame(pyglet.window.Window):
         # Reset the game state
         self.player_count = 1
         self.game = None
+        pass
+
+    def handle_prev_page(self):
+        # Logic to handle previous page of songs
+        if self.current_page > 0:
+            self.current_page -= 1
+            self.setup_jukebox_song_selection(self.current_page)
+        pass
+
+    def handle_next_page(self):
+        # Logic to handle next page of songs
+        if self.current_page < self.total_pages - 1:
+            self.current_page += 1
+            self.setup_jukebox_song_selection(self.current_page)
         pass
 
 if __name__ == "__main__":
