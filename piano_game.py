@@ -6,13 +6,24 @@ from midi_processor import MIDIProcessor
 
 
 class PianoGameUI(pyglet.event.EventDispatcher):
+    """ A class for the piano game user interface """
 
     def __init__(self, window, midi_file_path, game_mode, inport_name, outport_name, player_count=1,  auto_play=False):
-        """ Initialize Pyglet window and other UI elements """
+        """ 
+        Initialize Pyglet window and other UI elements
+        :param window: The Pyglet window to display the game in
+        :param midi_file_path: The path to the MIDI file to play
+        :param game_mode: The game mode to play (Challenge, Practice, FreePlay, JukeBox)
+        :param inport_name: The name of the MIDI input port to use
+        :param outport_name: The name of the MIDI output port to use
+        :param player_count: The number of players in the game
+        :param auto_play: Whether to automatically play the piano
+        """
+
         # Create a window
         self.window = window
 
-        #Open outport You may need to change this to your specific MIDI port in settings.
+        # Open outport You may need to change this to your specific MIDI port in settings.
         if outport_name is not None:
             self.outport = mido.open_output(outport_name, autoreset=True) # Open the MIDI output port
         
@@ -20,8 +31,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             self.outport = None
             
         # Store the MIDI input port name
-        #We will open this port in seperate thread to avoid blocking the main thread.
-        #See play_piano_user() for more details.
+        # We will open this port in seperate thread to avoid blocking the main thread.
+        # See play_piano_user() for more details.
         self.inport_name = inport_name
 
         self.player_count = player_count
@@ -42,7 +53,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         # Placeholder array for notes currently being drawn.
         self.active_notes = {note: False for note in range(21, 109)}
         
-        #Array for tracking notes currently being played by user.
+        # Array for tracking notes currently being played by user.
         self.playing_notes = {note: False for note in range(21, 109)}
         
         self.active_note_events = {}  # New: Dictionary to track active note events
@@ -51,10 +62,10 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         # 0 = dont play, 1 = okay 2 = perfect
         self.incoming_notes = {note: {'note_timing': 0, 'note_played': 0} for note in range(21, 109)}
 
-        """#Temp for testing visuals"""
+        """Temp for testing visuals"""
         self.active_notes_line_segments = {}
 
-        # Intialize falling rectangle manager
+        # Initialize falling rectangle manager
         self.falling_rectangles_list = []
 
         """Todo: Get this note list working with 'extract_track_messages()' from MIDIprocessor class"""
@@ -69,7 +80,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         # Create piano keys and start game.
         self.create_piano()
         
-        #Flag for game state
+        # Flag for game state
         self.game_active = True
         
         self.paused = False
@@ -80,7 +91,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         
         self.clock_pause_manager = ClockPauseManager(self.update_rectangles)
         
-        #Add custom event handler for window close. This will allow us to clean up the MIDI port, and allow user to return to menu with ESC/Window close
+        # Add custom event handler for window close. This will allow us to clean up the MIDI port, and allow user to return to menu with ESC/Window close
         def on_window_close():
             self.game_active = False
             window.on_close = lambda: window.close() #Reset the close function to default
@@ -114,41 +125,40 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         self.points_for_hold = 10   # Points awarded per second for holding the note correctly 
         
         if self.game_mode == "Challenge":
-            #Schedule score update function
+            # Schedule score update function
             pyglet.clock.schedule_interval(self.update_score, 1/4)
             
-        #Load MIDI file / Starting game
+        # Load MIDI file / Starting game
         elif self.game_mode != "FreePlay" and self.game_mode!= "JukeBox" and midi_file_path is not None:
                   
             keyboard_thread = threading.Thread(target=self.play_piano_user)
             keyboard_thread.start()
           
-            #Schedule updating rectangles function to move things down constantly.
+            # Schedule updating rectangles function to move things down constantly.
             pyglet.clock.schedule_interval(self.update_rectangles, 1/60.0)
            
-            #load file in; begin game
+            # load file in; begin game
             self.load_midi_file(midi_file_path)
             
         elif self.game_mode == "FreePlay":
-            #Open the input port for the piano user. Allow playing piano, but no game.
+            # Open the input port for the piano user. Allow playing piano, but no game.
             keyboard_thread = threading.Thread(target=self.play_piano_user)
             keyboard_thread.start()
             
         elif self.game_mode == "JukeBox":            
-            #Automatic piano playing mode. No user input.
+            # Automatic piano playing mode. No user input.
             thread = threading.Thread(target=self.jukebox_mode, args=(midi_file_path,))
             thread.start()
          
-
-
-    # Function to load a MIDI file into the game. Utilizes the MIDIProcessor class from midi_processor.py
     def load_midi_file(self, midi_file_path):
-        """ Load a MIDI file into the game """
-        
+        """ 
+        Load a MIDI file into the game. Utilizes the MIDIProcessor class from midi_processor.py
+        :param midi_file_path: The path to the MIDI file to load
+        """
         
         self.midi_processor = MIDIProcessor(midi_file_path)
         
-        track_number = 0 #Assuming we only using the first track for now...
+        track_number = 0 # Assuming we only using the first track for now...
         track_messages = self.midi_processor.extract_track_messages(track_number)
         
         track_messages2 = []
@@ -190,13 +200,9 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             finally:
                 'Do nothing...'
 
-        
-        
-        
-
-    # Function to play the piano using the computer keyboard
     def play_piano_user(self):
         """ Play the piano using the computer keyboard """
+
         import time  # Import time module for sleep
         
         if self.inport_name is not None:
@@ -229,19 +235,31 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                 inport.close()  # Ensure the input port is closed properly
                 print("Thread ended.")  # Confirm the thread has ended
 
-    # Function to create a single piano white key
     def create_white_key(self, x, y, width, height, color):
-        """ Create a piano white key """
+        """ 
+        Create a piano white key
+        :param x: The x-coordinate of the key
+        :param y: The y-coordinate of the key
+        :param width: The width of the key
+        :param height: The height of the key
+        :param color: The color of the key
+        """
         return pyglet.shapes.Rectangle(x, y, width, height, color=color)
 
-    # Function to create a single piano black key
     def create_black_key(self, x, y, width, height, color):
-        """ Create a piano black key """
+        """ 
+        Create a piano black key
+        :param x: The x-coordinate of the key
+        :param y: The y-coordinate of the key
+        :param width: The width of the key
+        :param height: The height of the key
+        :param color: The color of the key
+        """
         return pyglet.shapes.Rectangle(x, y, width, height, color=color)
 
-    # Function to create the entire piano, using single white and black keys.
     def create_piano(self):
-        """ Create piano keys """
+        """ Create full piano using black and white keys """
+
         # White Key size:
         white_key_width = 20
         white_key_height = 100
@@ -255,7 +273,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         y_position = 0
         border_size = 1
 
-        # 21 is the lowest MIDI note on our piano. Start out couting at 20 for 'zero'
+        # 21 is the lowest MIDI note on our piano. Start out counting at 20 for 'zero'
         midi_key_counter = 20
 
         # Create the piano keys
@@ -298,8 +316,9 @@ class PianoGameUI(pyglet.event.EventDispatcher):
 
         # Draw the piano keys and labels
 
-    # Function to draw 'imaginary' line where our notes will fall from
     def create_active_notes_line(self):
+        """ Create the line where active notes will fall from """
+
         white_key_width = 20
         black_key_width = white_key_width / 2
         y_position = self.window.height # Position the line near the top of the window
@@ -329,9 +348,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             # Move to the next key position
             x_position += white_key_width
 
-    # Function to draw the piano keys and labels. Is utilized by the on_draw function.
     def draw_piano(self):
-        """ Draw the piano keys"""
+        """ Draw the piano keys and labels. Utilized by the on_draw function."""
 
         self.window.clear()
         # Draw white keys
@@ -342,18 +360,16 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         for black_key in self.black_keys:
             black_key.draw()
 
-    # Function to draw all aspects of the game. This includes pianos, rectangles and any other buttons. This method is called automatically by Pyglet every frame.
     def on_draw(self):
-
-        #print("Drawing piano...")
+        """ Draw the game elements. Includes the piano, falling rectangles, and other buttons. Pyglet calls this function automatically every frame."""
 
         self.window.clear()
         
         if self.window.game_state == 'GAME':
-            #Draw the piano
+            # Draw the piano
             self.draw_piano()
 
-            #Draw our line segment
+             #Draw our line segment
             for i in self.active_notes_line_segments:
                 self.active_notes_line_segments[i].draw()
 
@@ -363,12 +379,11 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             
             
             if self.game_mode == "Challenge":
-                #Draw score
+                # Draw score
                 score_text = f"Score: {self.score}"
                 score_label = pyglet.text.Label(score_text, x=10, y=self.window.height - 20, anchor_x='left', anchor_y='top')
                 score_label.draw()
 
-    # Function to highlight a specific key based on the key number
     def highlight_key(self, key_number):
         """
         Highlight a specific key based on the key number
@@ -378,8 +393,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         color = (0, 0, 0)
         black_color = (0, 0, 0)
 
-        #if key number in not in valid range, pass ~ error catching
-        #Assign colors based on the note timing.
+        # if key number in not in valid range, pass ~ error catching
+        # Assign colors based on the note timing.
         if key_number not in range(21, 109): 
             pass
         else:
@@ -387,7 +402,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                 color = self.okay_color_white
                 black_color = self.okay_color_black
                 
-                #Add points for playing the note 'okay', ONE TIME only.
+                # Add points for playing the note 'okay', ONE TIME only.
                 if self.incoming_notes[key_number]['note_played'] == 0:
                     self.incoming_notes[key_number]['note_played'] = 1
                     self.score += self.points_for_hit_okay
@@ -396,7 +411,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                 color = self.perfect_color_white
                 black_color = self.perfect_color_black
                 
-                #Add points for playing the note perfectly, ONE TIME only.
+                # Add points for playing the note perfectly, ONE TIME only.
                 if self.incoming_notes[key_number]['note_played'] == 0:
                     self.incoming_notes[key_number]['note_played'] = 1
                     self.score += self.points_for_hit_perfect
@@ -405,9 +420,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                 color = self.wrong_color_white
                 black_color = self.wrong_color_black
         
-
-        #Apply color to the key
-        #Is it a black key? True/False...
+        # Apply color to the key
+        # Is it a black key? True/False...
         is_black_key = key_number in self.black_keys_midi 
         
         for key, midi_number in self.all_midi_keys:
@@ -419,7 +433,6 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                     key.color = color
                 return
 
-    # Function to unhighlight a specific key based on the key number
     def unhighlight_key(self, key_number):
         """
         Unhighlight a specific key based on the key number
@@ -439,7 +452,11 @@ class PianoGameUI(pyglet.event.EventDispatcher):
     
     # Function to prepare a falling rectangle for a specific note number
     def prepare_falling_rectangle(self, note_number, player):
-       
+        """
+        Prepare a falling rectangle for a specific note number
+        :param note_number: The MIDI note number to prepare a falling rectangle for
+        :param player: The player number to prepare the rectangle for
+        """
         # Where it's at?
         reference_segment = self.active_notes_line_segments[note_number]
 
@@ -488,9 +505,13 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         self.active_note_events[unique_id] = {'rectangle': new_rectangle, 'note_number': note_number, 'locked': False, 'played': False}
         return new_rectangle
 
-    # Function to play notes from a MIDI track in real time
     def start_rectangle_game(self, dt, track_messages, player):
-    
+        """
+        Play notes from a MIDI track in real time
+        :param dt: The time delay between notes 
+        :param track_messages: The MIDI messages to play
+        :param player: The player number to play the notes
+        """
         #print(f"{track_messages[0]}")
 
         total_delay = 0
@@ -498,8 +519,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
 
         for msg, delay in track_messages:
         
-            #We can't have delay zero or else 2 messages will get scheduled at the same time...
-            #If two messages are scheduled at same time, there are bugs. Add tiny delay to avoid this... hope this delay doesn't accumulate and cause more issues. :')
+            # We can't have delay zero or else 2 messages will get scheduled at the same time...
+            # If two messages are scheduled at same time, there are bugs. Add tiny delay to avoid this... hope this delay doesn't accumulate and cause more issues. :')
             if delay == 0:
                 delay = 0.000001
             total_delay += delay
@@ -525,12 +546,21 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         #Schedule end of the song?
         
     def start_rectangle_game_thread(self, dt, track_messages, player):
-        # Wrapper function for threading
+        """
+        Start the game in a separate thread
+        :param dt: The time delay between notes
+        :param track_messages: The MIDI messages to play
+        :param player: The player number to play the notes
+        """
         game_thread = threading.Thread(target=self.start_rectangle_game, args=(dt, track_messages, player))
         game_thread.start()
 
-    # Function to flag a note as being played or not
     def flag_note(self, note_number, bool):
+        """
+        Flag a note as being played or not
+        :param note_number: The MIDI note number to flag
+        :param bool: The boolean value to flag the note with
+        """
         # Directly flagging note_on or note_off without iterating every time
         unique_id = None
         # Attempt to find the most recent matching note_number event that's not locked yet
@@ -546,18 +576,33 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         if bool:
             pass
 
-    # Function to schedule a note to be flagged as being played 
     def schedule_flag_note_on(self, dt, note, velocity, player):
+        """ 
+        Schedule a note to be flagged as being played
+        :param dt: The time delay between notes
+        :param note: The MIDI note number to flag
+        :param velocity: The velocity of the note
+        :param player: The player number to flag the note for
+        """
         new_rectangle = self.prepare_falling_rectangle(note, player)
         self.falling_rectangles_list.append(new_rectangle)
         self.flag_note(note, True)
 
-    # Function to schedule a note to be flagged as not being played
     def schedule_flag_note_off(self, dt, note, velocity):
+        """
+        Schedule a note to be flagged as not being played
+        :param dt: The time delay between notes
+        :param note: The MIDI note number to flag
+        :param velocity: The velocity of the note
+        """
         self.flag_note(note, False)
 
-    # Function to update the falling rectangles
     def update_rectangles(self, dt):
+        """
+        Update the falling rectangles
+        :param dt: The time delay between updates
+        """
+
         """
         We need to fix / adjust the logic when note_off and note_on occur so close together.
         
@@ -650,12 +695,14 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                                         
         for rectangle in cleanup_list:
             self.falling_rectangles_list.remove(rectangle)
-            #del self.active_note_events[rectangle.unique_id]
+            # del self.active_note_events[rectangle.unique_id]
             del rectangle
               
                       
 
     def exit_game(self):
+        """ Exit the game and return to the main menu """
+
         self.clock_pause_manager.clear()
             #Additional cleanup if needed
             
@@ -674,8 +721,13 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                 
     #Custom Keybinds for Development...
     def on_key_press(self, symbol, modifiers):
+        """
+        Handle key press events
+        :param symbol: The key that was pressed
+        :param modifiers: Any modifier keys that were pressed
+        """
         
-        #PAUSE THE GAME
+        # PAUSE THE GAME
         if symbol == pyglet.window.key.P:
             print("P pressed")
             
@@ -691,34 +743,40 @@ class PianoGameUI(pyglet.event.EventDispatcher):
              
             print("total seconds played", datetime.datetime.now() - self.clock_pause_manager.start_time)  
            
-        #QUIT THE GAME // RETURN TO MENU
+        # QUIT THE GAME // RETURN TO MENU
         if symbol == pyglet.window.key.BACKSPACE:
             print("Backspace pressed")
            
             self.exit_game()
     
     def update_score(self, dt):
+        """ 
+        Update the score based on the notes being played
+        :param dt: The time delay between score updates
+        """
         for note in self.playing_notes:
             if self.playing_notes[note] == True:
-                #Refresh highlight
+                # Refresh highlight
                 
                 if self.incoming_notes[note]['note_timing'] == 0:
                     self.highlight_key(note)
                 
                 if self.incoming_notes[note]['note_timing'] != 0:
                     self.score += self.points_for_hold
-        
-
-                
+                        
     def jukebox_mode(self, midi_file_path):
+        """
+        Play a MIDI file in automatic mode
+        :param midi_file_path: The path to the MIDI file to play
+        """
         
-        #We can change the color of our highlight keys here.
+        # We can change the color of our highlight keys here.
         self.perfect_color_white = (106, 90 , 205, 255)
         self.perfect_color_black = (75, 0, 130, 255)
         
-        #The highlight function will use these colors to determine if the note was played correctly.
-        #It usually highlights "Wrong" notes in red, and since the game is not running every note is being considered "wrong"
-        #but we can change that here to all notes are highlighted any color we desire.
+        # The highlight function will use these colors to determine if the note was played correctly.
+        # It usually highlights "Wrong" notes in red, and since the game is not running every note is being considered "wrong"
+         #but we can change that here to all notes are highlighted any color we desire.
         self.wrong_color_black = self.perfect_color_black
         self.wrong_color_white = self.perfect_color_white
     
@@ -744,7 +802,11 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         
             
 class ClockPauseManager():
+    """ A class to manage pausing and resuming the clock and scheduled functions. """
+
     def __init__(self, update_rectangles):
+        """ Initialize the clock pause manager """
+
         self.scheduled_functions = []
         self.start_time = datetime.datetime.now()
         self.update_rectangles = update_rectangles
@@ -752,28 +814,27 @@ class ClockPauseManager():
         self.pause_time = 0
         self.unpause_time = 0
 
-
-
     def schedule_function(self, func, delay):
-        
+        """ 
+        Schedule a function to be called after a delay
+        :param func: The function to call
+        :param delay: The delay before the function is called
+        """
         #print(f"Scheduling function {func} with delay {delay}")
        
         scheduled_funcID = pyglet.clock.schedule_once(func, delay)
         self.scheduled_functions.append((func, delay, scheduled_funcID))
         
     def pause(self):
-        
         """Pause the clock and all scheduled functions."""
+
         if not self.paused:
             for func, _, _ in self.scheduled_functions:
                 pyglet.clock.unschedule(func)
             pyglet.clock.unschedule(self.update_rectangles)
             self.paused = True
             self.pause_time = datetime.datetime.now()
-
-
-            
-            
+   
     def resume(self):
         """Resume the clock and all scheduled functions with adjusted intervals."""
 
@@ -822,6 +883,8 @@ class ClockPauseManager():
             self.start_time = datetime.datetime.now()
 
     def clear(self):    
+        """Clear all scheduled functions and reset the clock."""
+
         for func, _, _ in self.scheduled_functions:
             pyglet.clock.unschedule(func)
         pyglet.clock.unschedule(self.update_rectangles)        
