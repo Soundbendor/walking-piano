@@ -25,6 +25,14 @@ song_database = {
 }
 
 def csv_to_song_database(csv_filename):
+    """ 
+    Read a CSV file and convert it to a dictionary of songs.
+    The CSV file should have the following columns:
+    - canonical_title: The title of the song
+    - canonical_composer: The composer of the song
+    - year: The year the song was composed
+    - midi_filename: The filename of the MIDI file
+    """
     song_database = {}
     with open(csv_filename, mode='r', encoding='utf-8') as csv_file:
         csv_reader = csv.DictReader(csv_file)
@@ -42,6 +50,7 @@ csv_filename = 'maestro-v3_songs.csv'
 jukebox_song_database = csv_to_song_database(csv_filename)
 
 class ScrollableLabel:
+    """ A class to represent a scrollable label in the game."""
     def __init__(self, text, font_size, x, y, anchor_x, anchor_y, batch, color=(255, 255, 255, 255), highlightable=True):
         self.label = pyglet.text.Label(text,
                                        font_name='Arial',
@@ -58,6 +67,7 @@ class ScrollableLabel:
         self.highlightable = highlightable  # Flag to control if the label should be highlightable
 
     def is_clicked(self, x, y):
+        '''Check if the mouse click is within the label's bounding box.'''
         return (
             self.label.x - self.label.content_width // 2 < x < self.label.x + self.label.content_width // 2
             and self.label.y - self.label.content_height // 2 < y < self.label.y + self.label.content_height // 2
@@ -74,6 +84,7 @@ class ScrollableLabel:
             
 
 class WalkingPianoGame(pyglet.window.Window):
+    """ A class to represent the main game window."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
@@ -107,7 +118,6 @@ class WalkingPianoGame(pyglet.window.Window):
         
         self.outport = mido.get_output_names()[0] if mido.get_output_names() else None
         self.inport = mido.get_input_names()[0] if mido.get_input_names() else None
-        
         
     def setup_menu(self):
        # Main menu title
@@ -162,7 +172,6 @@ class WalkingPianoGame(pyglet.window.Window):
         #Clear batch
         self.settings_batch = pyglet.graphics.Batch()
         
-        
         y_offset = 120  # Adjust for where settings options start
         all_out_ports = mido.get_output_names()
         all_in_ports = mido.get_input_names()
@@ -216,6 +225,7 @@ class WalkingPianoGame(pyglet.window.Window):
         self.settings_options_labels.append(self.home_button)
            
     def setup_player_mode_selection(self):
+        """ Set up the player mode selection screen."""
         
         choose_players_title = ScrollableLabel("Select number of players:", 32, self.width // 2, self.height - 50, 'center', 'center', self.player_mode_batch, highlightable=False)
         self.player_mode_options_labels.append(choose_players_title)
@@ -255,132 +265,134 @@ class WalkingPianoGame(pyglet.window.Window):
             pass
 
     def on_mouse_press(self, x, y, button, modifiers):
-            if self.game_state == 'MENU':
-                for index, label in enumerate(self.menu_options_labels):
-                    if label.is_clicked(x, y):
-                          
-                        game_mode = self.game_modes[index]
+        """ Handle mouse press events."""
+        if self.game_state == 'MENU':
+            for index, label in enumerate(self.menu_options_labels):
+                if label.is_clicked(x, y):
                         
-                        if game_mode == 'Challenge Mode':
-                            
-                            # Code for Challenge Mode
-                            print(f"Game Mode Selected: {self.game_modes[index]}")
-                            self.game_state = 'PLAYER_MODE_SELECTION' 
-                            self.selected_game_mode = 'Challenge'
-                            
-                        elif game_mode == 'Practice':
-                            
-                            # Code for Practice Mode
-                            print(f"Game Mode Selected: {self.game_modes[index]}")
-                            self.game_state = 'SONG_SELECTION'
-                            self.selected_game_mode = 'Practice'
-                         
-                        elif game_mode == 'FreePlay':
-                            # Code for FreePlay Mode
-                            print(f"Game Mode Selected: {self.game_modes[index]}")
-                            
-                            self.start_game(None, 'FreePlay', self.inport, self.outport)
-                            
-                        elif game_mode == 'Settings':
-                            #Code for Settings
-                            self.setup_settings()
-                            self.game_state = 'SETTINGS'
-                        
-                        elif game_mode == 'JukeBox':
-                            #Code for JukeBox
-                            print(f"Game Mode Selected: {self.game_modes[index]}")
-                            self.game_state = 'SONG_SELECTION_JUKEBOX'
-                            self.selected_game_mode = 'JukeBox'
-                            
-                            
-                        elif game_mode == 'Exit':
-                            # Code for Exit
-                            print("Exiting...")
-                            pyglet.app.exit()
+                    game_mode = self.game_modes[index]
                     
+                    if game_mode == 'Challenge Mode':
+                        
+                        # Code for Challenge Mode
+                        print(f"Game Mode Selected: {self.game_modes[index]}")
+                        self.game_state = 'PLAYER_MODE_SELECTION' 
+                        self.selected_game_mode = 'Challenge'
+                        
+                    elif game_mode == 'Practice':
+                        
+                        # Code for Practice Mode
+                        print(f"Game Mode Selected: {self.game_modes[index]}")
+                        self.game_state = 'SONG_SELECTION'
+                        self.selected_game_mode = 'Practice'
+                        
+                    elif game_mode == 'FreePlay':
+                        # Code for FreePlay Mode
+                        print(f"Game Mode Selected: {self.game_modes[index]}")
+                        
+                        self.start_game(None, 'FreePlay', self.inport, self.outport)
+                        
+                    elif game_mode == 'Settings':
+                        #Code for Settings
+                        self.setup_settings()
+                        self.game_state = 'SETTINGS'
+                    
+                    elif game_mode == 'JukeBox':
+                        #Code for JukeBox
+                        print(f"Game Mode Selected: {self.game_modes[index]}")
+                        self.game_state = 'SONG_SELECTION_JUKEBOX'
+                        self.selected_game_mode = 'JukeBox'
+                        
+                        
+                    elif game_mode == 'Exit':
+                        # Code for Exit
+                        print("Exiting...")
+                        pyglet.app.exit()
+                
+                    return
+                
+        elif self.game_state == 'PLAYER_MODE_SELECTION':
+            for label in self.player_mode_options_labels:
+                if label.is_clicked(x, y):
+                    clicked_text = label.label.text
+                    if clicked_text == '1 Player' or clicked_text == '2 Player':
+                        # Handle 1-player or 2-player mode selection here
+                        print(f"Selected {clicked_text} mode")
+                        self.player_count = 1 if clicked_text == '1 Player' else 2
+                        self.game_state = 'SONG_SELECTION'  # Or any other appropriate state
                         return
                     
-            elif self.game_state == 'PLAYER_MODE_SELECTION':
-                for label in self.player_mode_options_labels:
-                    if label.is_clicked(x, y):
-                        clicked_text = label.label.text
-                        if clicked_text == '1 Player' or clicked_text == '2 Player':
-                            # Handle 1-player or 2-player mode selection here
-                            print(f"Selected {clicked_text} mode")
-                            self.player_count = 1 if clicked_text == '1 Player' else 2
-                            self.game_state = 'SONG_SELECTION'  # Or any other appropriate state
-                            return
-                        
-                        elif clicked_text == 'Return to Menu':
-                            self.return_to_menu()
-                            return
+                    elif clicked_text == 'Return to Menu':
+                        self.return_to_menu()
+                        return
+                
+        elif self.game_state == 'SONG_SELECTION':
+            for song_id, label in enumerate(self.song_options_labels, start=1):
+                if label.is_clicked(x, y):
+                    if label.label.text == "Return to Menu":
+                        self.return_to_menu()
+                        return
+                    else:
+                        print(f"You clicked {song_database[song_id]['name']} by {song_database[song_id]['artist']}")
+                        self.start_game(song_database[song_id]['file'], self.selected_game_mode, self.inport, self.outport, self.player_count, self.autoplay)
+                        return
+        
+        elif self.game_state == 'SONG_SELECTION_JUKEBOX':
+            for song_id, label in enumerate(self.song_options_labels_jukebox, start=1):
+                if label.is_clicked(x, y):
+                    if label.label.text == "Return to Menu":
+                        self.return_to_menu()
+                        return
+                    elif label.label.text == "Previous":
+                        print("Previous page")
+                        self.handle_prev_page()
+                        return
+                    elif label.label.text == "Next":
+                        print("Next page")
+                        self.handle_next_page()
+                        return
+                    else:
+                        print(f"You clicked {jukebox_song_database[song_id + (self.current_page*self.songs_per_page)]['name']} by {jukebox_song_database[song_id + (self.current_page*self.songs_per_page)]['artist']}")
+                        self.start_game(jukebox_song_database[song_id]['file'], self.selected_game_mode, self.inport, self.outport, self.player_count, self.autoplay)
+                        return
+                
+        
+        elif self.game_state == "SETTINGS":
+            # Handling clicks on output ports
+            for label in self.settings_options_labels:
+                if label.is_clicked(x, y):
+                    clicked_text = label.label.text
+                    all_out_ports = mido.get_output_names()
+                    all_in_ports = mido.get_input_names()
                     
-            elif self.game_state == 'SONG_SELECTION':
-                for song_id, label in enumerate(self.song_options_labels, start=1):
-                    if label.is_clicked(x, y):
-                        if label.label.text == "Return to Menu":
-                            self.return_to_menu()
-                            return
-                        else:
-                            print(f"You clicked {song_database[song_id]['name']} by {song_database[song_id]['artist']}")
-                            self.start_game(song_database[song_id]['file'], self.selected_game_mode, self.inport, self.outport, self.player_count, self.autoplay)
-                            return
-            
-            elif self.game_state == 'SONG_SELECTION_JUKEBOX':
-                for song_id, label in enumerate(self.song_options_labels_jukebox, start=1):
-                    if label.is_clicked(x, y):
-                        if label.label.text == "Return to Menu":
-                            self.return_to_menu()
-                            return
-                        elif label.label.text == "Previous":
-                            print("Previous page")
-                            self.handle_prev_page()
-                            return
-                        elif label.label.text == "Next":
-                            print("Next page")
-                            self.handle_next_page()
-                            return
-                        else:
-                            print(f"You clicked {jukebox_song_database[song_id + (self.current_page*self.songs_per_page)]['name']} by {jukebox_song_database[song_id + (self.current_page*self.songs_per_page)]['artist']}")
-                            self.start_game(jukebox_song_database[song_id]['file'], self.selected_game_mode, self.inport, self.outport, self.player_count, self.autoplay)
-                            return
+                    if clicked_text in all_out_ports:
+                        self.outport = clicked_text  # Update the currently selected output port
+                        print(f"Selected Output Port: {clicked_text}")
+                        self.setup_settings()  # Refresh settings to update highlighted selection
+                        return
+                    elif clicked_text in all_in_ports:
+                        self.inport = clicked_text  # Update the currently selected input port
+                        print(f"Selected Input Port: {clicked_text}")
+                        self.setup_settings()  # Refresh settings to update highlighted selection
+                        return
                     
-            
-            elif self.game_state == "SETTINGS":
-                # Handling clicks on output ports
-                for label in self.settings_options_labels:
-                    if label.is_clicked(x, y):
-                        clicked_text = label.label.text
-                        all_out_ports = mido.get_output_names()
-                        all_in_ports = mido.get_input_names()
-                        
-                        if clicked_text in all_out_ports:
-                            self.outport = clicked_text  # Update the currently selected output port
-                            print(f"Selected Output Port: {clicked_text}")
-                            self.setup_settings()  # Refresh settings to update highlighted selection
-                            return
-                        elif clicked_text in all_in_ports:
-                            self.inport = clicked_text  # Update the currently selected input port
-                            print(f"Selected Input Port: {clicked_text}")
-                            self.setup_settings()  # Refresh settings to update highlighted selection
-                            return
-                        
-                        elif clicked_text == "Return to Menu":
-                            self.return_to_menu()
-                            return
-                    
-                if self.true_label.is_clicked(x, y):
-                    self.autoplay = True
-                    self.setup_settings()  # Refresh settings to update highlighted selection
-                    return
-                elif self.false_label.is_clicked(x, y):
-                    self.autoplay = False
-                    self.setup_settings()  # Refresh settings to update highlighted selection
-                    return
+                    elif clicked_text == "Return to Menu":
+                        self.return_to_menu()
+                        return
+                
+            if self.true_label.is_clicked(x, y):
+                self.autoplay = True
+                self.setup_settings()  # Refresh settings to update highlighted selection
+                return
+            elif self.false_label.is_clicked(x, y):
+                self.autoplay = False
+                self.setup_settings()  # Refresh settings to update highlighted selection
+                return
                 
                 
     def on_mouse_motion(self, x, y, dx, dy):
-        
+        """ Handle mouse motion events."""
+
         if self.game_state == 'MENU':
             for label in self.menu_options_labels:
                 label.update_highlight(x, y)
@@ -403,12 +415,20 @@ class WalkingPianoGame(pyglet.window.Window):
 
                                  
     def start_game(self, midi_file, game_mode, inport, outport, player_count=1, autoplay=False):
-        # Initialize and run the game with the selected MIDI file
-        #Adjust game state for tracking whats happening
+        """ 
+        Start the game with the selected MIDI file.
+        params: midi_file: str: The path to the MIDI file to play.
+        params: game_mode: str: The selected game mode.
+        params: inport: str: The MIDI input port to use.
+        params: outport: str: The MIDI output port to use.
+        params: player_count: int: The number of players for the game.
+        params: autoplay: bool: Whether to enable autoplay for the game.
+        """
+        # Adjust game state for tracking whats happening
         self.game_state = 'GAME'
         
-        #Create the game
-        #Pass in the song and selected game mode
+        # Create the game
+        # Pass in the song and selected game mode
         self.game = PianoGameUI(self, midi_file, game_mode, inport, outport,  player_count, autoplay)
         print("Game is running")
 
@@ -442,15 +462,15 @@ if __name__ == "__main__":
         os._exit(1)
     signal.signal(signal.SIGINT, signal_handler)
     
-    #Change into song directory so that the game can find the songs.
-    #This method might need to be changed depending on how the game is run.
+    # Change into song directory so that the game can find the songs.
+    # This method might need to be changed depending on how the game is run.
     
-    #Change to working directory of start.py
+    # Change to working directory of start.py
     os.chdir(os.path.dirname(__file__))
-    #Change to songs directory for access of song files within game.
+    # Change to songs directory for access of song files within game.
     os.chdir("songs")
 
     game = WalkingPianoGame(fullscreen=True, resizable=True, caption="Walking Piano")
-    #game = WalkingPianoGame(width = 1920, height = 1080, resizable=True, caption="Walking Piano")
+    # game = WalkingPianoGame(width = 1920, height = 1080, resizable=True, caption="Walking Piano")
 
     pyglet.app.run()
