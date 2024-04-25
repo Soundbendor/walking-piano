@@ -7,8 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'WalkingPiano'
-copyright = '2024, Devin Martin and Jake Anding'
-author = 'Devin Martin and Jake Anding'
+copyright = '2024, Devin Martin and Wesley Anding'
+author = 'Devin Martin and Wesley Anding'
 release = '1.0'
 
 # -- General configuration ---------------------------------------------------

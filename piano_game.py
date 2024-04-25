@@ -118,7 +118,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             pyglet.clock.schedule_interval(self.update_score, 1/4)
             
         #Load MIDI file / Starting game
-        elif self.game_mode != "FreePlay" and self.game_mode!= "JukeBox" and midi_file_path is not None:
+        if self.game_mode != "FreePlay" and self.game_mode!= "JukeBox" and midi_file_path is not None:
                   
             keyboard_thread = threading.Thread(target=self.play_piano_user)
             keyboard_thread.start()

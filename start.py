@@ -8,15 +8,15 @@ import csv
 
 # Sample database of songs
 song_database = {
-    1: {"name": "Mary had a little lamb", "artist": "Nursery Rhyme (Easy)", "file": "mary_lamb.mid"},
-    2: {"name": "Peter Peter Pumpkin Eater", "artist": "Nursery Rhyme (Easy)", "file": "PeterPeter.mid"},
-    3: {"name": "The Wishing Well", "artist": "Nursery Rhyme (Easy)", "file": "TheWishingWell.mid"},
-    4: {"name": "A Lion", "artist": "Nursery Rhyme (Easy)", "file": "A_Lion.mid"},
-    5: {"name": "Minuet in G Minor", "artist": "Bach", "file": "Bach_Minuet_in_G_Minor.mid"},
-    6:  {"name": "Song for Beginners ", "artist": "Nikodem Kulczyk", "file": "beginner.mid"},
-    7: {"name": "Cornfield Chase", "artist": "Hans Zimmer (Interstellar)", "file": "cornfield_chase.mid"},
-    8: {"name": " Dry Hands", "artist": "C418" , "file": "Dry_Hands.mid"},
-    9: {"name": "Golden Hour", "artist": "JVKE", "file": "Golden_HOUR.mid"},   #Jukebox example
+    1: {"name": "Mary had a little lamb", "artist": "Nursery Rhyme (Easy)", "file": "mary_lamb.mid", "difficulty": "Easy", "players": 1},
+    2: {"name": "Peter Peter Pumpkin Eater", "artist": "Nursery Rhyme (Easy)", "file": "PeterPeter.mid", "difficulty": "Easy", "players": 1},
+    3: {"name": "The Wishing Well", "artist": "Nursery Rhyme (Easy)", "file": "TheWishingWell.mid", "difficulty": "Easy", "players": 1},
+    4: {"name": "A Lion", "artist": "Nursery Rhyme (Easy)", "file": "A_Lion.mid", "difficulty": "Easy", "players": 1},
+    5:  {"name": "Song for Beginners ", "artist": "Nikodem Kulczyk", "file": "beginner.mid", "difficulty": "Easy", "players": 2},
+    6: {"name": "Minuet in G Minor", "artist": "Bach", "file": "Bach_Minuet_in_G_Minor.mid", "difficulty": "Medium", "players": 2},
+    7: {"name": "Cornfield Chase", "artist": "Hans Zimmer (Interstellar)", "file": "cornfield_chase.mid", "difficulty": "Medium", "players": 2},
+    8: {"name": " Dry Hands", "artist": "C418" , "file": "Dry_Hands.mid", "difficulty": "Medium", "players": 2},
+    9: {"name": "Golden Hour", "artist": "JVKE", "file": "Golden_HOUR.mid", "difficulty": "Hard", "players": 2},   #Jukebox example
 
 #REDACTED 5: {"name": "NULL", "artist": "Debussy", "file": "debussy.mid"},
 #REDACTED 6: {"name": "sir Duke", "artist": "stevie wonder", "file": "stevie.mid"},  
@@ -121,16 +121,27 @@ class WalkingPianoGame(pyglet.window.Window):
 
     def setup_song_selection(self):
         # Song selection title
+        self.song_options_labels.clear()  # Clear existing labels
         self.song_selection_title = ScrollableLabel("Choose your song:", 32, self.width // 2, self.height - 50, 'center', 'center', self.song_select_batch, highlightable=False)
         
-        # Song options
-        for song_id, song_info in song_database.items():
-            label = ScrollableLabel(f"{song_info['name']} - {song_info['artist']}", 18, self.width // 2, self.height - song_id * 30 - 100, 'center', 'center', self.song_select_batch)  # Adjusted y-offset for song labels
-            self.song_options_labels.append(label)
-            
-        self.home_button = ScrollableLabel("Return to Menu", 24, self.width // 2, 50, 'center', 'center', self.song_select_batch)
-        self.song_options_labels.append(self.home_button)
+        # Filter songs based on the current mode and players
+        valid_songs = self.filter_songs_based_on_mode_and_players()
         
+        # Calculate start position for the first song label
+        start_y = self.height - 100  # Start 100 pixels below the title
+        label_height = 30  # Height between labels
+        
+        # Song options
+        for index, (song_id, song_info) in enumerate(valid_songs.items(), start=1):
+            y_position = start_y - index * label_height
+            label = ScrollableLabel(f"{song_info['name']} - {song_info['artist']}", 18, self.width // 2, y_position, 'center', 'center', self.song_select_batch)
+            self.song_options_labels.append(label)
+        
+        # Home button at the bottom
+        home_button_y = start_y - len(valid_songs) * label_height - 50  # Extra space before the home button
+        self.home_button = ScrollableLabel("Return to Menu", 24, self.width // 2, home_button_y, 'center', 'center', self.song_select_batch)
+        self.song_options_labels.append(self.home_button)
+            
     def setup_jukebox_song_selection(self, current_page=0):
         # Song selection title
         self.song_selection_title_jukebox = ScrollableLabel("Choose your song:", 32, self.width // 2, self.height - 50, 'center', 'center', self.song_select_batch_jukebox, highlightable=False)
@@ -225,7 +236,29 @@ class WalkingPianoGame(pyglet.window.Window):
         for index, mode in enumerate(modes):
             label = ScrollableLabel(mode, 24, self.width // 2, self.height - index * 50 - y_offset, 'center', 'center', self.player_mode_batch)
             self.player_mode_options_labels.append(label)       
-           
+        
+    def filter_songs_based_on_mode_and_players(self):
+        filtered_songs = {}
+        
+        if self.selected_game_mode == 'Practice':
+            # Filter for 'Easy' songs for Practice mode regardless of player count
+            for song_id, song_info in song_database.items():
+                if song_info['difficulty'] == 'Easy':
+                    filtered_songs[song_id] = song_info
+        elif self.selected_game_mode == 'Challenge':
+            # In Challenge Mode, filter songs based on the number of players
+            for song_id, song_info in song_database.items():
+                print(f"Song info: {song_info}")
+                print(f"Players: {song_info['players']}")
+                if song_info['players'] == self.player_count:
+                    filtered_songs[song_id] = song_info
+        elif self.selected_game_mode in ['FreePlay', 'JukeBox']:
+            # For FreePlay or JukeBox, show all songs
+            filtered_songs = song_database
+        return filtered_songs
+
+
+
     def on_draw(self):
         
         if self.game_state == 'MENU':
@@ -272,8 +305,10 @@ class WalkingPianoGame(pyglet.window.Window):
                             
                             # Code for Practice Mode
                             print(f"Game Mode Selected: {self.game_modes[index]}")
-                            self.game_state = 'SONG_SELECTION'
                             self.selected_game_mode = 'Practice'
+                            self.setup_song_selection()  # Refresh the song list for Practice mode
+                            self.game_state = 'SONG_SELECTION'
+
                          
                         elif game_mode == 'FreePlay':
                             # Code for FreePlay Mode
@@ -297,23 +332,29 @@ class WalkingPianoGame(pyglet.window.Window):
                             # Code for Exit
                             print("Exiting...")
                             pyglet.app.exit()
-                    
-                        return
-                    
+                            return
+            
             elif self.game_state == 'PLAYER_MODE_SELECTION':
                 for label in self.player_mode_options_labels:
                     if label.is_clicked(x, y):
                         clicked_text = label.label.text
-                        if clicked_text == '1 Player' or clicked_text == '2 Player':
-                            # Handle 1-player or 2-player mode selection here
-                            print(f"Selected {clicked_text} mode")
-                            self.player_count = 1 if clicked_text == '1 Player' else 2
-                            self.game_state = 'SONG_SELECTION'  # Or any other appropriate state
+                        if clicked_text == '1 Player':
+                            self.player_count = 1
+                            self.selected_game_mode = 'Challenge'  # Ensure game mode is explicitly set
+                            self.setup_song_selection()  # Refresh song list based on new settings
+                            self.game_state = 'SONG_SELECTION'
                             return
-                        
+                        elif clicked_text == '2 Player':
+                            self.player_count = 2
+                            self.selected_game_mode = 'Challenge'
+                            self.setup_song_selection()
+                            self.game_state = 'SONG_SELECTION'
+                            return
                         elif clicked_text == 'Return to Menu':
                             self.return_to_menu()
                             return
+
+
                     
             elif self.game_state == 'SONG_SELECTION':
                 for song_id, label in enumerate(self.song_options_labels, start=1):
