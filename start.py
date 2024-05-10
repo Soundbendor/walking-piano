@@ -42,7 +42,7 @@ csv_filename = 'maestro-v3_songs.csv'
 jukebox_song_database = csv_to_song_database(csv_filename)
 
 class ScrollableLabel:
-    def __init__(self, text, font_size, x, y, anchor_x, anchor_y, batch, color=(255, 255, 255, 255), highlightable=True):
+    def __init__(self, text, song_id, font_size, x, y, anchor_x, anchor_y, batch, color=(255, 255, 255, 255), highlightable=True):
         self.label = pyglet.text.Label(text,
                                        font_name='Arial',
                                        font_size=font_size,
@@ -53,6 +53,7 @@ class ScrollableLabel:
                                        color=color, 
                                        batch=batch)
         
+        self.song_id = song_id  # Storing song ID in label for easy access
         self.original_color = color  # Store the original color
         self.highlight_color = (200, 200, 200, 255)  # Define the highlight color
         self.highlightable = highlightable  # Flag to control if the label should be highlightable
@@ -111,18 +112,18 @@ class WalkingPianoGame(pyglet.window.Window):
         
     def setup_menu(self):
        # Main menu title
-        self.main_menu_title = ScrollableLabel("WALKING PIANO", 32, self.width // 2, self.height - 50, 'center', 'center', self.menu_batch, highlightable=False)
+        self.main_menu_title = ScrollableLabel("WALKING PIANO", None, 32, self.width // 2, self.height - 50, 'center', 'center', self.menu_batch, highlightable=False)
         
         # Menu options
         y_offset = 150  # Adjusted to make space for the title
         for index, mode in enumerate(self.game_modes):
-            label = ScrollableLabel(mode, 24, self.width // 2, self.height - index * 50 - y_offset, 'center', 'center', self.menu_batch)
+            label = ScrollableLabel(mode, None, 24, self.width // 2, self.height - index * 50 - y_offset, 'center', 'center', self.menu_batch)
             self.menu_options_labels.append(label)
 
     def setup_song_selection(self):
         # Song selection title
         self.song_options_labels.clear()  # Clear existing labels
-        self.song_selection_title = ScrollableLabel("Choose your song:", 32, self.width // 2, self.height - 50, 'center', 'center', self.song_select_batch, highlightable=False)
+        self.song_selection_title = ScrollableLabel("Choose your song:", None, 32, self.width // 2, self.height - 50, 'center', 'center', self.song_select_batch, highlightable=False)
         
         # Filter songs based on the current mode and players
         valid_songs = self.filter_songs_based_on_mode_and_players()
@@ -134,17 +135,17 @@ class WalkingPianoGame(pyglet.window.Window):
         # Song options
         for index, (song_id, song_info) in enumerate(valid_songs.items(), start=1):
             y_position = start_y - index * label_height
-            label = ScrollableLabel(f"{song_info['name']} - {song_info['artist']}", 18, self.width // 2, y_position, 'center', 'center', self.song_select_batch)
+            label = ScrollableLabel(f"{song_info['name']} - {song_info['artist']}", song_id, 18, self.width // 2, y_position, 'center', 'center', self.song_select_batch)
             self.song_options_labels.append(label)
         
         # Home button at the bottom
         home_button_y = start_y - len(valid_songs) * label_height - 50  # Extra space before the home button
-        self.home_button = ScrollableLabel("Return to Menu", 24, self.width // 2, home_button_y, 'center', 'center', self.song_select_batch)
+        self.home_button = ScrollableLabel("Return to Menu", None, 24, self.width // 2, home_button_y, 'center', 'center', self.song_select_batch)
         self.song_options_labels.append(self.home_button)
             
     def setup_jukebox_song_selection(self, current_page=0):
         # Song selection title
-        self.song_selection_title_jukebox = ScrollableLabel("Choose your song:", 32, self.width // 2, self.height - 50, 'center', 'center', self.song_select_batch_jukebox, highlightable=False)
+        self.song_selection_title_jukebox = ScrollableLabel("Choose your song:", None, 32, self.width // 2, self.height - 50, 'center', 'center', self.song_select_batch_jukebox, highlightable=False)
 
         # Pagination vars
         self.current_page = current_page
@@ -155,16 +156,16 @@ class WalkingPianoGame(pyglet.window.Window):
         self.song_options_labels_jukebox = []
         for song_id in range(current_page * self.songs_per_page + 1, (current_page + 1) * self.songs_per_page + 1):
             song_info = jukebox_song_database.get(song_id, {})
-            label = ScrollableLabel(f"{song_info.get('name', '')} - {song_info.get('artist', '')}", 18, self.width // 2, self.height - (song_id - current_page * self.songs_per_page) * 30 - 100, 'center', 'center', self.song_select_batch_jukebox)  # Adjusted y-offset for song labels
+            label = ScrollableLabel(f"{song_info.get('name', '')} - {song_info.get('artist', '')}", None, 18, self.width // 2, self.height - (song_id - current_page * self.songs_per_page) * 30 - 100, 'center', 'center', self.song_select_batch_jukebox)  # Adjusted y-offset for song labels
             self.song_options_labels_jukebox.append(label)
 
         # Pagination buttons
-        self.prev_page_button = ScrollableLabel("Previous", 18, self.width // 2 - 200, 50, 'center', 'center', self.song_select_batch_jukebox)
-        self.next_page_button = ScrollableLabel("Next", 18, self.width // 2 + 200, 50, 'center', 'center', self.song_select_batch_jukebox)
+        self.prev_page_button = ScrollableLabel("Previous", None, 18, self.width // 2 - 200, 50, 'center', 'center', self.song_select_batch_jukebox)
+        self.next_page_button = ScrollableLabel("Next", None, 18, self.width // 2 + 200, 50, 'center', 'center', self.song_select_batch_jukebox)
         self.song_options_labels_jukebox.append(self.prev_page_button)
         self.song_options_labels_jukebox.append(self.next_page_button)
 
-        self.home_button = ScrollableLabel("Return to Menu", 24, self.width // 2, 50, 'center', 'center', self.song_select_batch_jukebox)
+        self.home_button = ScrollableLabel("Return to Menu", None, 24, self.width // 2, 50, 'center', 'center', self.song_select_batch_jukebox)
         self.song_options_labels_jukebox.append(self.home_button)
 
 
@@ -179,62 +180,62 @@ class WalkingPianoGame(pyglet.window.Window):
         all_in_ports = mido.get_input_names()
         
         # Settings title
-        self.settings_title = ScrollableLabel("Settings", 32, self.width // 2, self.height - 50, 'center', 'center', self.settings_batch, highlightable=False)
+        self.settings_title = ScrollableLabel("Settings", None, 32, self.width // 2, self.height - 50, 'center', 'center', self.settings_batch, highlightable=False)
 
         # Output MIDI Ports
         y_position = self.height - y_offset
-        self.settings_options_labels.append(ScrollableLabel("Select your MIDI Output Port:", 24, self.width // 2, y_position, 'center', 'center', self.settings_batch, highlightable=False))
+        self.settings_options_labels.append(ScrollableLabel("Select your MIDI Output Port:", None, 24, self.width // 2, y_position, 'center', 'center', self.settings_batch, highlightable=False))
         y_position -= 30
         if all_out_ports:
             for port in all_out_ports:
                 color = (0, 130, 255, 255) if port == self.outport else (255, 255, 255, 255)
-                label = ScrollableLabel(port, 18, self.width // 2, y_position, 'center', 'center', self.settings_batch, color=color)
+                label = ScrollableLabel(port, None, 18, self.width // 2, y_position, 'center', 'center', self.settings_batch, color=color)
                 self.settings_options_labels.append(label)
                 y_position -= 30
         else:
-            self.settings_options_labels.append(ScrollableLabel("None", 18, self.width // 2, y_position, 'center', 'center', self.settings_batch, color=(255, 0, 0, 255)))
+            self.settings_options_labels.append(ScrollableLabel("None", None, 18, self.width // 2, y_position, 'center', 'center', self.settings_batch, color=(255, 0, 0, 255)))
 
         # Input MIDI Ports
         y_position -= 40  # Extra spacing before listing input ports
-        self.settings_options_labels.append(ScrollableLabel("Select your MIDI Input Port:", 24, self.width // 2, y_position, 'center', 'center', self.settings_batch, highlightable=False))
+        self.settings_options_labels.append(ScrollableLabel("Select your MIDI Input Port:", None, 24, self.width // 2, y_position, 'center', 'center', self.settings_batch, highlightable=False))
         y_position -= 30
         if all_in_ports:
             for port in all_in_ports:
                 color = (0, 130, 255, 255) if port == self.inport else (255, 255, 255, 255)
-                label = ScrollableLabel(port, 18, self.width // 2, y_position, 'center', 'center', self.settings_batch, color=color)
+                label = ScrollableLabel(port, None, 18, self.width // 2, y_position, 'center', 'center', self.settings_batch, color=color)
                 self.settings_options_labels.append(label)
                 y_position -= 30
         else:
-            self.settings_options_labels.append(ScrollableLabel("None", 18, self.width // 2, y_position, 'center', 'center', self.settings_batch, color=(255, 0, 0, 255)))
+            self.settings_options_labels.append(ScrollableLabel("None", None, 18, self.width // 2, y_position, 'center', 'center', self.settings_batch, color=(255, 0, 0, 255)))
         
         
         # Autoplay option
         y_position -= 60  # Adjust y_position accordingly
-        self.settings_options_labels.append(ScrollableLabel("Autoplay:", 24, self.width // 2, y_position, 'center', 'center', self.settings_batch, highlightable=False))
+        self.settings_options_labels.append(ScrollableLabel("Autoplay:", None, 24, self.width // 2, y_position, 'center', 'center', self.settings_batch, highlightable=False))
 
         # True option
         y_position -= 30
         true_color = (0, 255, 0, 255) if self.autoplay else (255, 255, 255, 255)
-        self.true_label = ScrollableLabel("True", 18, self.width // 2 - 50, y_position, 'center', 'center', self.settings_batch, color=true_color)
+        self.true_label = ScrollableLabel("True", None, 18, self.width // 2 - 50, y_position, 'center', 'center', self.settings_batch, color=true_color)
         self.settings_options_labels.append(self.true_label)
 
         # False option
         false_color = (255, 0, 0, 255) if not self.autoplay else (255, 255, 255, 255)
-        self.false_label = ScrollableLabel("False", 18, self.width // 2 + 50, y_position, 'center', 'center', self.settings_batch, color=false_color)
+        self.false_label = ScrollableLabel("False", None, 18, self.width // 2 + 50, y_position, 'center', 'center', self.settings_batch, color=false_color)
         self.settings_options_labels.append(self.false_label)
         
-        self.home_button = ScrollableLabel("Return to Menu", 24, self.width // 2, 50, 'center', 'center', self.settings_batch)
+        self.home_button = ScrollableLabel("Return to Menu", None, 24, self.width // 2, 50, 'center', 'center', self.settings_batch)
         self.settings_options_labels.append(self.home_button)
            
     def setup_player_mode_selection(self):
         
-        choose_players_title = ScrollableLabel("Select number of players:", 32, self.width // 2, self.height - 50, 'center', 'center', self.player_mode_batch, highlightable=False)
+        choose_players_title = ScrollableLabel("Select number of players:", None, 32, self.width // 2, self.height - 50, 'center', 'center', self.player_mode_batch, highlightable=False)
         self.player_mode_options_labels.append(choose_players_title)
         
         modes = ['1 Player', '2 Player', 'Return to Menu']
         y_offset = 125
         for index, mode in enumerate(modes):
-            label = ScrollableLabel(mode, 24, self.width // 2, self.height - index * 50 - y_offset, 'center', 'center', self.player_mode_batch)
+            label = ScrollableLabel(mode, None, 24, self.width // 2, self.height - index * 50 - y_offset, 'center', 'center', self.player_mode_batch)
             self.player_mode_options_labels.append(label)       
         
     def filter_songs_based_on_mode_and_players(self):
@@ -248,15 +249,25 @@ class WalkingPianoGame(pyglet.window.Window):
         elif self.selected_game_mode == 'Challenge':
             # In Challenge Mode, filter songs based on the number of players
             for song_id, song_info in song_database.items():
-                print(f"Song info: {song_info}")
-                print(f"Players: {song_info['players']}")
-                if song_info['players'] == self.player_count:
+                if self.player_count == 2:
+                    # Show only 2-player songs
+                    if song_info['players'] == 2:
+                        filtered_songs[song_id] = song_info
+            
+                elif self.player_count == 1:
+                    # Show ALL songs, both 1-player songs and 2 player songs
                     filtered_songs[song_id] = song_info
+                    
         elif self.selected_game_mode in ['FreePlay', 'JukeBox']:
             # For FreePlay or JukeBox, show all songs
             filtered_songs = song_database
+            
+            
         return filtered_songs
 
+
+    def get_song_id_from_label(self, label):
+        return label.song_id
 
 
     def on_draw(self):
@@ -357,15 +368,26 @@ class WalkingPianoGame(pyglet.window.Window):
 
                     
             elif self.game_state == 'SONG_SELECTION':
-                for song_id, label in enumerate(self.song_options_labels, start=1):
+                for index, label in enumerate(self.song_options_labels):
                     if label.is_clicked(x, y):
+                        # Check for a return to menu command
                         if label.label.text == "Return to Menu":
                             self.return_to_menu()
                             return
                         else:
-                            print(f"You clicked {song_database[song_id]['name']} by {song_database[song_id]['artist']}")
-                            self.start_game(song_database[song_id]['file'], self.selected_game_mode, self.inport, self.outport, self.player_count, self.autoplay)
+                            # Fetch the corresponding song ID from the label itself or by maintaining a map
+                            # Assuming you have a method or a way to map label to song_id correctly
+                            song_id = self.get_song_id_from_label(label)  # You need to implement this method
+
+                            # Access the song info using the song_id
+                            song_info = song_database.get(song_id, None)
+                            if song_info:
+                                print(f"You clicked {song_info['name']} by {song_info['artist']}")
+                                self.start_game(song_info['file'], self.selected_game_mode, self.inport, self.outport, self.player_count, self.autoplay)
+                            else:
+                                print("Error: Song info not found.")
                             return
+
             
             elif self.game_state == 'SONG_SELECTION_JUKEBOX':
                 for song_id, label in enumerate(self.song_options_labels_jukebox, start=1):
