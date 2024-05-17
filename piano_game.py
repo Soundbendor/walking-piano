@@ -94,14 +94,14 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         # TEMPORARY TESTING IF TRUE
         self.testing_autoplay = auto_play
         
-        self.okay_color_white = (255, 255, 0, 255)
-        self.okay_color_black =  (100, 100, 0, 255)
+        self.okay_color_white = (255, 255, 0)
+        self.okay_color_black =  (100, 100, 0)
 
-        self.perfect_color_white = (0, 255, 0, 255)
-        self.perfect_color_black = (0, 100, 0, 255)
+        self.perfect_color_white = (0, 255, 0)
+        self.perfect_color_black = (0, 100, 0)
         
-        self.wrong_color_white = (255, 0, 0, 255)
-        self.wrong_color_black = (100, 0, 0, 255)
+        self.wrong_color_white = (255, 0, 0)
+        self.wrong_color_black = (100, 0, 0)
         
         self.pausenote = -999
         
@@ -113,6 +113,17 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         
         self.points_for_hold = 10   # Points awarded per second for holding the note correctly 
         
+        #Define back button
+        self.back_button = pyglet.shapes.Rectangle(10, self.window.height - 40, 100, 30, color=(50, 50, 50))
+        self.back_button_label = pyglet.text.Label(
+            "Back", font_name='Times New Roman', font_size=18,
+            x=60, y=self.window.height - 25, anchor_x='center', anchor_y='center'
+        )
+        
+        #Handle mouse press for back button
+        self.window.push_handlers(on_mouse_press=self.on_mouse_press)
+        
+        #INITIALIZE GAME MODES
         if self.game_mode == "Challenge":
             #Schedule score update function
             pyglet.clock.schedule_interval(self.update_score, 1/4)
@@ -138,7 +149,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             #Automatic piano playing mode. No user input.
             thread = threading.Thread(target=self.jukebox_mode, args=(midi_file_path,))
             thread.start()
-         
+        
+        
 
 
     # Function to load a MIDI file into the game. Utilizes the MIDIProcessor class from midi_processor.py
@@ -363,11 +375,24 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             
             
             if self.game_mode == "Challenge":
-                #Draw score
-                score_text = f"Score: {self.score}"
-                score_label = pyglet.text.Label(score_text, x=10, y=self.window.height - 20, anchor_x='left', anchor_y='top')
+                 # Draw score
+                score_text = f"{self.score}"
+                score_label = pyglet.text.Label(
+                    score_text,
+                    font_name='Times New Roman',
+                    font_size=36,
+                    x=self.window.width - 10,
+                    y=self.window.height - 10,
+                    anchor_x='right',
+                    anchor_y='top',
+                    color=(255, 255, 255, 255)  # Gold color
+                )
                 score_label.draw()
-
+                
+            # Draw Back button
+            self.back_button.draw()
+            self.back_button_label.draw()
+                
     # Function to highlight a specific key based on the key number
     def highlight_key(self, key_number):
         """
@@ -377,11 +402,18 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         """
         color = (0, 0, 0)
         black_color = (0, 0, 0)
-
-        #if key number in not in valid range, pass ~ error catching
-        #Assign colors based on the note timing.
+        
+        # if key number in not in valid range, pass ~ error catching
         if key_number not in range(21, 109): 
-            pass
+            return # Do nothing if the key number is out of range
+        
+        
+        #Check if game is in FreePlay mode. If so, we will highlight all keys the same color.
+        if self.game_mode == "FreePlay":
+            color = self.perfect_color_white
+            black_color = self.perfect_color_black
+        
+        # Else if not freeplay, assign colors based on the note timing.
         else:
             if self.incoming_notes[key_number]['note_timing'] == 1:
                 color = self.okay_color_white
@@ -653,7 +685,13 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             #del self.active_note_events[rectangle.unique_id]
             del rectangle
               
-                      
+    # Method for handling mouse press to quit the game... can also use backspace but this is more intuitive.
+    def on_mouse_press(self, x, y, button, modifiers):
+        # Check if the back button is clicked
+        if (10 <= x <= 110) and (self.window.height - 40 <= y <= self.window.height - 10):
+            self.exit_game()
+            return
+
 
     def exit_game(self):
         self.clock_pause_manager.clear()
@@ -674,8 +712,15 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                 
     #Custom Keybinds for Development...
     def on_key_press(self, symbol, modifiers):
-        
-        #PAUSE THE GAME
+  
+        """Custom keybinds for development"""
+        #QUIT THE GAME // RETURN TO MENU
+        if symbol == pyglet.window.key.BACKSPACE:
+            print("Backspace pressed")
+            self.exit_game()
+                
+        """
+        #PAUSE THE GAME - DEBUGGING PRACTICE MODE 
         if symbol == pyglet.window.key.P:
             print("P pressed")
             
@@ -690,12 +735,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                 
              
             print("total seconds played", datetime.datetime.now() - self.clock_pause_manager.start_time)  
-           
-        #QUIT THE GAME // RETURN TO MENU
-        if symbol == pyglet.window.key.BACKSPACE:
-            print("Backspace pressed")
-           
-            self.exit_game()
+           """
+        
     
     def update_score(self, dt):
         for note in self.playing_notes:
@@ -712,9 +753,9 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                 
     def jukebox_mode(self, midi_file_path):
         
-        #We can change the color of our highlight keys here.
-        self.perfect_color_white = (106, 90 , 205, 255)
-        self.perfect_color_black = (75, 0, 130, 255)
+        #We can change the color of our highlight keys here if needed
+        # self.perfect_color_white = (106, 90 , 205)
+        # self.perfect_color_black = (75, 0, 130)
         
         #The highlight function will use these colors to determine if the note was played correctly.
         #It usually highlights "Wrong" notes in red, and since the game is not running every note is being considered "wrong"
