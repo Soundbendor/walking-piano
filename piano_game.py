@@ -119,9 +119,24 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             "Back", font_name='Times New Roman', font_size=18,
             x=60, y=self.window.height - 25, anchor_x='center', anchor_y='center'
         )
-        
+            
         #Handle mouse press for back button
         self.window.push_handlers(on_mouse_press=self.on_mouse_press)
+         
+        # Flag for game over
+        self.game_over = False
+        
+        # Game over label
+        self.game_over_label = pyglet.text.Label(
+            "GAME OVER", 
+            font_name='Times New Roman', 
+            font_size=48, 
+            x=self.window.width // 2, 
+            y=self.window.height // 2, 
+            anchor_x='center', 
+            anchor_y='center', 
+            color=(255, 255, 255, 255)  # Red color
+        )
         
         #INITIALIZE GAME MODES
         if self.game_mode == "Challenge":
@@ -392,6 +407,10 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             # Draw Back button
             self.back_button.draw()
             self.back_button_label.draw()
+            
+            # Draw Game Over message if the game is over
+            if self.game_over:
+                self.game_over_label.draw()
                 
     # Function to highlight a specific key based on the key number
     def highlight_key(self, key_number):
@@ -523,9 +542,9 @@ class PianoGameUI(pyglet.event.EventDispatcher):
     # Function to play notes from a MIDI track in real time
     def start_rectangle_game(self, dt, track_messages, player):
     
-        #print(f"{track_messages[0]}")
 
         total_delay = 0
+        buffer_time = 15  # 10 seconds buffer time for end of song
         
 
         for msg, delay in track_messages:
@@ -554,13 +573,20 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                 
             
         #print(f"Total delay: {total_delay}")
-        #Schedule end of the song?
+    
+        # Schedule end of the song with buffer time using ClockPauseManager
+        self.clock_pause_manager.schedule_function(self.end_of_song, total_delay + buffer_time)
         
     def start_rectangle_game_thread(self, dt, track_messages, player):
         # Wrapper function for threading
         game_thread = threading.Thread(target=self.start_rectangle_game, args=(dt, track_messages, player))
         game_thread.start()
-
+        
+    def end_of_song(self, dt):
+        print("Song is over!")
+        # Acknowledge end of the song
+        self.game_over = True
+    
     # Function to flag a note as being played or not
     def flag_note(self, note_number, bool):
         # Directly flagging note_on or note_off without iterating every time
@@ -672,7 +698,14 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                 """LOGIC FOR PRACTICE GAME MODE"""
                 if self.game_mode == "Practice":
                     (key_in_question, note_number) = self.all_midi_keys[rectangle.note_number - 21]
-                    if key_in_question.color in (self.okay_color_white, self.okay_color_black, self.perfect_color_white, self.perfect_color_black) and self.paused == False:
+                    #print key in question color
+                    print("Key in question color is: ", key_in_question.color)
+                    print("The colors we are checking for are: ", self.okay_color_white, self.okay_color_black, self.perfect_color_white, self.perfect_color_black)
+                    if key_in_question.color in (self.okay_color_white, self.okay_color_white + (255,),
+                                                 self.okay_color_black, self.okay_color_black +  (255,),
+                                                 self.perfect_color_white, self.perfect_color_white +  (255,),
+                                                 self.perfect_color_black, self.perfect_color_black +  (255,)
+                                                ) and self.paused == False:
                         print("You played the right note!")
                     else:
                         print("You didn't play the right note!")
@@ -694,20 +727,39 @@ class PianoGameUI(pyglet.event.EventDispatcher):
 
 
     def exit_game(self):
-        self.clock_pause_manager.clear()
-            #Additional cleanup if needed
-            
-        self.game_active = False
+        self.clock_pause_manager.clear()  # Clear scheduled functions and pause manager
+        self.game_active = False  # Set game to inactive
 
+        # Reset MIDI output
         if self.outport is not None:
             self.outport.reset()
             self.outport.close()
 
+        # Clear all active notes and playing notes
+        self.active_notes = {note: False for note in range(21, 109)}
+        self.playing_notes = {note: False for note in range(21, 109)}
+        self.incoming_notes = {note: {'note_timing': 0, 'note_played': 0} for note in range(21, 109)}
+
+        # Clear the list of falling rectangles
+        self.falling_rectangles_list.clear()
+
+        # Reset any note events
+        self.active_note_events.clear()
+
+        # Reset score and other game-specific variables
+        self.score = 0
+
+        # Reset window handlers
         self.window.remove_handlers(on_draw=self.on_draw)
-        self.window.remove_handlers(self)
-        
+        self.window.remove_handlers(on_mouse_press=self.on_mouse_press)
+        self.window.pop_handlers()
+
         self.window.clear()
         
+        #Reset game state
+        self.game_over = False
+
+        # Call the method to return to the main menu or initial screen
         self.window.return_to_menu()
                 
     #Custom Keybinds for Development...
@@ -842,6 +894,7 @@ class ClockPauseManager():
                     new_scheduled_functions.append((func, remaining_delay, scheduled_funcID))
                     
                     if temp_counter <= 1:
+                        """  
                         print(f"Rescheduling function {func}({temp_counter}) with delay {remaining_delay}")
                         print(f"Original delay: {delay}")
                         print(f"Start time was: {self.start_time.time()} and pause time was: {self.pause_time.time()}")
@@ -849,6 +902,7 @@ class ClockPauseManager():
                         print(f"New delay: {remaining_delay}")
                         print("The current time is: ", datetime.datetime.now().time())
                         print("-------------------")
+                        """
                         temp_counter += 1
                     
                 else:

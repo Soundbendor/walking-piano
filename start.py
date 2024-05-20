@@ -12,16 +12,23 @@ song_database = {
     2: {"name": "Peter Peter Pumpkin Eater", "artist": "Nursery Rhyme (Easy)", "file": "PeterPeter.mid", "difficulty": "Easy", "players": 1},
     3: {"name": "The Wishing Well", "artist": "Nursery Rhyme (Easy)", "file": "TheWishingWell.mid", "difficulty": "Easy", "players": 1},
     4: {"name": "A Lion", "artist": "Nursery Rhyme (Easy)", "file": "A_Lion.mid", "difficulty": "Easy", "players": 1},
-    5:  {"name": "Song for Beginners ", "artist": "Nikodem Kulczyk", "file": "beginner.mid", "difficulty": "Easy", "players": 2},
+    5: {"name": "Song for Beginners ", "artist": "Nikodem Kulczyk", "file": "beginner.mid", "difficulty": "Easy", "players": 2},
     6: {"name": "Minuet in G Minor", "artist": "Bach", "file": "Bach_Minuet_in_G_Minor.mid", "difficulty": "Medium", "players": 2},
     7: {"name": "Cornfield Chase", "artist": "Hans Zimmer (Interstellar)", "file": "cornfield_chase.mid", "difficulty": "Medium", "players": 2},
     8: {"name": " Dry Hands", "artist": "C418" , "file": "Dry_Hands.mid", "difficulty": "Medium", "players": 2},
     9: {"name": "Golden Hour", "artist": "JVKE", "file": "Golden_HOUR.mid", "difficulty": "Hard", "players": 2},   #Jukebox example
+    10: {"name": "sir Duke", "artist": "stevie wonder", "file": "stevie.mid", "difficulty": "Hard", "players": 2},   #Jukebox example
+    
+    #10: {"name": "If I ain't got you", "artist": "Alicia Keys", "file": "if_i_aint_got_you.mid", "difficulty": "Hard", "players": 2},   #Jukebox example
+   
+    #10: {"name": "Best Part", "artist": "Daniel Caesar", "file": "best_part.mid", "difficulty": "Hard", "players": 2},   #Jukebox example
+
+    
+    #10: {"name": "Im Still Standing", "artist": "Elton John", "file": "still_standing.mid", "players": 2},  
+
 
 #REDACTED 5: {"name": "NULL", "artist": "Debussy", "file": "debussy.mid"},
-#REDACTED 6: {"name": "sir Duke", "artist": "stevie wonder", "file": "stevie.mid"},  
-#REDACTED 8: {"name": "Im Still Standing", "artist": "Elton John", "file": "still_standing.mid"},  
-#REDACTED 1: {"name": "Best Part", "artist": "Daniel Caesar", "file": "best_part.mid"},
+     
 }
 
 def csv_to_song_database(csv_filename):
