@@ -17,13 +17,12 @@ song_database = {
     7: {"name": "Cornfield Chase", "artist": "Hans Zimmer (Interstellar)", "file": "cornfield_chase.mid", "difficulty": "Medium", "players": 2},
     8: {"name": " Dry Hands", "artist": "C418" , "file": "Dry_Hands.mid", "difficulty": "Medium", "players": 2},
     9: {"name": "Golden Hour", "artist": "JVKE", "file": "Golden_HOUR.mid", "difficulty": "Hard", "players": 2},   #Jukebox example
-    10: {"name": "Sir Duke", "artist": "Stevie Wonder", "file": "stevie.mid", "difficulty": "Hard", "players": 2},   #Jukebox example
-    11: {"name": "Morning", "artist": "Edvard Grieg - Adapted", "file": "morning.mid", "difficulty": "Easy", "players": 1},
-    12: {"name": "Piano Polka", "artist": "Kevin Olson", "file": "piano_polka.mid", "difficulty": "Easy", "players": 1},
-    13: {"name": "Yankee Doodle", "artist": "Mary Leaf", "file": "Yankee_Doodle.mid", "difficulty": "Easy", "players": 1},
-    14: {"name": "A Happy Bass Melody", "artist": "G. Turk - Adapted", "file": "A_Happy_Bass_Melody.mid", "difficulty": "Easy", "players": 1},
-    15: {"name": "A Happy Treble Melody", "artist": "G. Turk - Adapted", "file": "A_Happy_Treble_Melody.mid", "difficulty": "Easy", "players": 1},
-    16: {"name": "Ode to Joy", "artist": "Ludwig van Beethoven - Adapted", "file": "Ode_to_joy.mid", "difficulty": "Easy", "players": 1},
+    10: {"name": "Morning", "artist": "Edvard Grieg - Adapted", "file": "morning.mid", "difficulty": "Easy", "players": 1},
+    11: {"name": "Piano Polka", "artist": "Kevin Olson", "file": "piano_polka.mid", "difficulty": "Easy", "players": 1},
+    12: {"name": "Yankee Doodle", "artist": "Mary Leaf", "file": "Yankee_Doodle.mid", "difficulty": "Easy", "players": 1},
+    13: {"name": "A Happy Bass Melody", "artist": "G. Turk - Adapted", "file": "A_Happy_Bass_Melody.mid", "difficulty": "Easy", "players": 1},
+    14: {"name": "A Happy Treble Melody", "artist": "G. Turk - Adapted", "file": "A_Happy_Treble_Melody.mid", "difficulty": "Easy", "players": 1},
+    15: {"name": "Ode to Joy", "artist": "Ludwig van Beethoven - Adapted", "file": "Ode_to_joy.mid", "difficulty": "Easy", "players": 1},
     
     #10: {"name": "If I ain't got you", "artist": "Alicia Keys", "file": "if_i_aint_got_you.mid", "difficulty": "Hard", "players": 2},   #Jukebox example
    
