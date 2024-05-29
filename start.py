@@ -95,8 +95,7 @@ class WalkingPianoGame(pyglet.window.Window):
         self.song_select_batch_jukebox = pyglet.graphics.Batch()
         self.settings_batch = pyglet.graphics.Batch()
         self.player_mode_batch = pyglet.graphics.Batch()
-        
-        
+                
         self.game_modes = ['Challenge Mode', 'Practice', 'FreePlay', 'Settings', 'JukeBox', 'Exit']
         
         self.selected_game_mode = None
@@ -284,10 +283,10 @@ class WalkingPianoGame(pyglet.window.Window):
 
     def on_draw(self):
         
+
         if self.game_state == 'MENU':
             self.clear()
             self.menu_batch.draw()
-            
 
         if self.game_state == 'SONG_SELECTION':
             self.clear()
@@ -309,6 +308,7 @@ class WalkingPianoGame(pyglet.window.Window):
             # print("Game is running")
             # May need to edit this when adding more functionality in future...
             pass
+
 
     def on_mouse_press(self, x, y, button, modifiers):
             if self.game_state == 'MENU':

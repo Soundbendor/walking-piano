@@ -120,7 +120,7 @@ class MIDIProcessor(pyglet.event.EventDispatcher):
 # 4. Run the script and listen to the MIDI file being played in real time
 if __name__ == "__main__":
     midi_file_path = 'songs/Golden_HOUR.mid'
-    midi_port_name = 'loopMIDI Port 1 1'  # Replace with your MIDI port name
+    midi_port_name = 'loopMIDI Port 1 2'  # Replace with your MIDI port name
     
     outport = open_output(midi_port_name)
 
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     track_messages = processor.extract_track_messages(track_number)
     
     track_messages2 = processor.extract_track_messages(0)
-    thread = threading.Thread(target=processor.play_track, args=(track_messages2, outport))
-    thread.start()
+  #  thread = threading.Thread(target=processor.play_track, args=(track_messages2, outport))
+   # thread.start()
     
     processor.play_track(track_messages, outport)

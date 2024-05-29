@@ -26,6 +26,14 @@ class PianoGameUI(pyglet.event.EventDispatcher):
 
         self.player_count = player_count
 
+        self.fps_display = pyglet.window.FPSDisplay(window=self.window)  # Display the FPS
+
+        #self.white_key_width = 26
+        self.white_key_width = 26
+        self.white_key_height = 250
+
+        self.number_of_white_keys = 52
+
         # Array for holding white keys
         self.white_keys = []
 
@@ -269,13 +277,16 @@ class PianoGameUI(pyglet.event.EventDispatcher):
     # Function to create the entire piano, using single white and black keys.
     def create_piano(self):
         """ Create piano keys """
+
+        #I black keys should be 2/3 height of the white key and half the whidth.
+
         # White Key size:
-        white_key_width = 20
-        white_key_height = 100
+        white_key_width = self.white_key_width
+        white_key_height = self.white_key_height
 
         # Black key size:
         black_key_width = white_key_width / 2
-        black_key_height = 60
+        black_key_height = white_key_height * (2 / 3)
 
         # Piano location:
         x_position = (self.window.width - white_key_width * 52) / 2
@@ -327,8 +338,10 @@ class PianoGameUI(pyglet.event.EventDispatcher):
 
     # Function to draw 'imaginary' line where our notes will fall from
     def create_active_notes_line(self):
-        white_key_width = 20
+        
+        white_key_width = self.white_key_width
         black_key_width = white_key_width / 2
+
         y_position = self.window.height # Position the line near the top of the window
         x_position = (self.window.width - white_key_width * 52) / 2
         border_size = 1
@@ -368,6 +381,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         # Draw black keys
         for black_key in self.black_keys:
             black_key.draw()
+
 
     # Function to draw all aspects of the game. This includes pianos, rectangles and any other buttons. This method is called automatically by Pyglet every frame.
     def on_draw(self):
@@ -411,6 +425,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             # Draw Game Over message if the game is over
             if self.game_over:
                 self.game_over_label.draw()
+
+            #self.fps_display.draw()
                 
     # Function to highlight a specific key based on the key number
     def highlight_key(self, key_number):
@@ -624,7 +640,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         
         cleanup_list = []
 
-        move_speed = 100  # Speed of the falling rectangles
+        move_speed = 150  # Speed of the falling rectangles
         for rectangle in (self.falling_rectangles_list):
             
            # print("Top of this rectangle is: ", rectangle.y + rectangle.height, " and the note number is: ", rectangle.note_number)
@@ -634,26 +650,29 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             if rectangle.lock is False:
                 rectangle.height += move_speed * dt
 
-            if rectangle.y >= 100:
+            if rectangle.y >= self.white_key_height:
                 rectangle.y -= move_speed * dt
 
-            if rectangle.y <= 170 and rectangle.y > 120 and self.incoming_notes[rectangle.note_number]['note_timing'] != 2:
+            if rectangle.y <= self.white_key_height + 70 and rectangle.y > self.white_key_height + 20 and self.incoming_notes[rectangle.note_number]['note_timing'] != 2:
                 # we need to flag this note as 'close' to the line segment
                 self.incoming_notes[rectangle.note_number]['note_timing'] = 1
 
-            elif rectangle.y <= 120 and rectangle.y >= 80:
+            elif rectangle.y <= self.white_key_height + 20 and rectangle.y >= self.white_key_height - 20:
                 self.incoming_notes[rectangle.note_number]['note_timing'] = 2
                 
             if rectangle.height == 1:
+                """THIS WAS A TEST! REMOVE THIS LATER!"""
+                # please see this comment ^ !!
+                # !
                 rectangle.color = (0, 255, 0)
                 cleanup_list.append(rectangle)
 
-            if rectangle.y <= 100 and rectangle.played == True:
+            if rectangle.y <= self.white_key_height and rectangle.played == True:
             
-                diff = 100 - rectangle.y
+                diff = self.white_key_height - rectangle.y
                 rectangle.height -= diff
                 rectangle.negative_y += diff
-                rectangle.y = 100
+                rectangle.y = self.white_key_height
     
                 if rectangle.height > 0 and rectangle.negative_y > 20:
                     self.incoming_notes[rectangle.note_number]['note_timing'] = 1
@@ -673,11 +692,11 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                         
                     cleanup_list.append(rectangle)
 
-            elif rectangle.y <= 100 and rectangle.played == False:
+            elif rectangle.y <= self.white_key_height and rectangle.played == False:
                 
-                diff = 100 - rectangle.y
+                diff = self.white_key_height - rectangle.y
                 rectangle.height -= diff
-                rectangle.y = 100
+                rectangle.y = self.white_key_height
                 rectangle.negative_y += diff
                 
                 if rectangle.height < 0:
@@ -699,8 +718,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                 if self.game_mode == "Practice":
                     (key_in_question, note_number) = self.all_midi_keys[rectangle.note_number - 21]
                     #print key in question color
-                    print("Key in question color is: ", key_in_question.color)
-                    print("The colors we are checking for are: ", self.okay_color_white, self.okay_color_black, self.perfect_color_white, self.perfect_color_black)
+                    #print("Key in question color is: ", key_in_question.color)
+                    #print("The colors we are checking for are: ", self.okay_color_white, self.okay_color_black, self.perfect_color_white, self.perfect_color_black)
                     if key_in_question.color in (self.okay_color_white, self.okay_color_white + (255,),
                                                  self.okay_color_black, self.okay_color_black +  (255,),
                                                  self.perfect_color_white, self.perfect_color_white +  (255,),
