@@ -28,6 +28,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
 
         self.fps_display = pyglet.window.FPSDisplay(window=self.window)  # Display the FPS
 
+        self.visibility_lines = []  # Array for holding visibility lines
+
         #self.white_key_width = 26
         self.white_key_width = 26
         self.white_key_height = 250
@@ -306,6 +308,12 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             midi_key_counter += 1
             self.all_midi_keys.append((white_key, midi_key_counter))
 
+
+            #This is not part of the piano itself, but lines to help the user see. To the right of every line is C.
+            if (midi_key_counter - 24) % 12 == 0:
+                self.visibility_lines.append(pyglet.shapes.Line(
+                x_position, self.white_key_height, x_position, self.window.height, width=1, color=(123, 123, 123)))  # Add this line
+            
             # Base case: place a black key between the first and second white keys
             if i == 0:
                 black_key_x = x_position + white_key_width - border_size - black_key_width / 2
@@ -401,10 +409,13 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             # Draw falling rectangles
             for rectangle in self.falling_rectangles_list:
                 rectangle.draw()
-            
-            
+
+            # Draw visibility lines for C keys
+            for line in self.visibility_lines:
+                line.draw()
+
             if self.game_mode == "Challenge":
-                 # Draw score
+                # Draw score
                 score_text = f"{self.score}"
                 score_label = pyglet.text.Label(
                     score_text,
