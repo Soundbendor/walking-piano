@@ -8,6 +8,7 @@ from midi_processor import MIDIProcessor
 class PianoGameUI(pyglet.event.EventDispatcher):
 
     def __init__(self, window, midi_file_path, game_mode, inport_name, outport_name, player_count=1,  auto_play=False):
+        
         """ Initialize Pyglet window and other UI elements """
         # Create a window
         self.window = window
@@ -42,11 +43,36 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         self.black_keys = []
 
         # SORTED array of all MIDI keys. Allows access by MIDI notes 21-108.
-        self.all_midi_keys = []         
+        self.all_midi_keys = []     
            
         # MIDI numbers for black keys (sharps/flats) in each octave
         self.black_keys_midi = [22, 25, 27, 30, 32, 34, 37, 39, 42, 44, 46, 49, 51, 54, 56, 58,
                                 61, 63, 66, 68, 70, 73, 75, 78, 80, 82, 85, 87, 90, 92, 94, 97, 99, 102, 104, 106]
+
+        #All the note names... "b" is placeholder for the flat symbol, which can be printed formally using '\u266D'.
+        self.note_names = {
+                21: "A", 22: "A#/Bb", 23: "B", 24: "C", 25: "C#/Db", 26: "D", 27: "D#/Eb", 28: "E", 29: "F", 30: "F#/Gb", 31: "G", 32: "G#/Ab",
+            33: "A", 34: "A#/Bb", 35: "B", 36: "C", 37: "C#/Db", 38: "D", 39: "D#/Eb", 40: "E", 41: "F", 42: "F#/Gb", 43: "G", 44: "G#/Ab",
+            45: "A", 46: "A#/Bb", 47: "B", 48: "C", 49: "C#/Db", 50: "D", 51: "D#/Eb", 52: "E", 53: "F", 54: "F#/Gb", 55: "G", 56: "G#/Ab",
+            57: "A", 58: "A#/Bb", 59: "B", 60: "C", 61: "C#/Db", 62: "D", 63: "D#/Eb", 64: "E", 65: "F", 66: "F#/Gb", 67: "G", 68: "G#/Ab",
+            69: "A", 70: "A#/Bb", 71: "B", 72: "C", 73: "C#/Db", 74: "D", 75: "D#/Eb", 76: "E", 77: "F", 78: "F#/Gb", 79: "G", 80: "G#/Ab",
+            81: "A", 82: "A#/Bb", 83: "B", 84: "C", 85: "C#/Db", 86: "D", 87: "D#/Eb", 88: "E", 89: "F", 90: "F#/Gb", 91: "G", 92: "G#/Ab",
+            93: "A", 94: "A#/Bb", 95: "B", 96: "C", 97: "C#/Db", 98: "D", 99: "D#/Eb", 100: "E", 101: "F", 102: "F#/Gb", 103: "G", 104: "G#/Ab",
+            105: "A", 106: "A#/Bb", 107: "B", 108: "C"
+        }
+        
+        # Note label colors
+        self.note_label_colors = {
+            'A': (5,166,245,255),   # Light Blue
+            'B': (1,167,89,255),     # Green
+            'C': (213,18,132,255),   # Pink
+            'D': (240,114,36,255),   # Orange
+            'E': (128,42,146,255),   # Purple
+            'F': (137,198,61,255), # Light Green
+            'G': (46,45,143,255)    # Dark Purple
+        }
+        
+        self.middle_c_special_label = None  # Label for middle C; will create within the create piano loop
 
         # Placeholder array for notes currently being drawn.
         self.active_notes = {note: False for note in range(21, 109)}
@@ -97,6 +123,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             self.window.close()
 
         window.on_close = on_window_close
+        
         
         self.game_mode = game_mode
         
@@ -274,6 +301,9 @@ class PianoGameUI(pyglet.event.EventDispatcher):
     def create_black_key(self, x, y, width, height, color):
         """ Create a piano black key """
         return pyglet.shapes.Rectangle(x, y, width, height, color=color)
+    
+    def get_note_label_color(self, note_name):
+        return self.note_label_colors.get(note_name[0], (0, 0, 0, 255))  # Default to black if not found
 
     # Function to create the entire piano, using single white and black keys.
     def create_piano(self):
@@ -296,33 +326,95 @@ class PianoGameUI(pyglet.event.EventDispatcher):
 
         # 21 is the lowest MIDI note on our piano. Start out couting at 20 for 'zero'
         midi_key_counter = 20
+        
 
         # Create the piano keys
         for i in range(52):  # 52 white keys in total
-            # Create white key
+
+              # Create white key
             white_key = self.create_white_key(
                 x_position + border_size, 0, white_key_width - 2 * border_size, white_key_height - 2 * border_size, (255, 255, 255))
-            self.white_keys.append((white_key, i + 1))
-
             midi_key_counter += 1
             self.all_midi_keys.append((white_key, midi_key_counter))
-
-
-            #This is not part of the piano itself, but lines to help the user see. To the right of every line is C.
+            
+            
+            #This is not part of the piano itself, but lines to help the user see. To the right of every line is the C key.
             if (midi_key_counter - 24) % 12 == 0:
                 self.visibility_lines.append(pyglet.shapes.Line(
                 x_position, self.white_key_height, x_position, self.window.height, width=1, color=(123, 123, 123)))  # Add this line
+                
+          
+            
+            # Add note name label for white key
+            note_name = self.note_names[midi_key_counter]
+            note_label_color = self.get_note_label_color(note_name)
+            
+            if midi_key_counter == 60:  # Special case for labelling middle C
+                
+                # Draw the colored circle for middle C
+                circle = pyglet.shapes.Circle(
+                    x=x_position + white_key_width / 2,
+                    y=y_position + white_key_height / 7,
+                    radius=16,  # Adjust radius as needed
+                    color=note_label_color[:3],  # Use the color defined for C
+                )
+                
+                self.middle_c_special_label = circle
+                
+                # Draw the note label in white
+                note_label = pyglet.text.Label(
+                    note_name,
+                    font_name='Georgia',
+                    bold=True,
+                    font_size=23,
+                    x= (x_position + white_key_width / 2) - 2, # Adjust x position as needed... it was looking weird.
+                    y=y_position + white_key_height / 7,
+                    anchor_x='center',
+                    anchor_y='center',
+                    color=(255, 255, 255, 255)  # White color
+                )
+                
+                self.white_keys.append((white_key, note_label))
+            else:
+                note_label = pyglet.text.Label(
+                    note_name,
+                    font_name='Georgia',
+                    bold=True,
+                    font_size=23,
+                    x=x_position + white_key_width / 2,
+                    y=y_position + white_key_height / 7,
+                    anchor_x='center',
+                    anchor_y='center',
+                    color=note_label_color
+                )
+                self.white_keys.append((white_key, note_label))
             
             # Base case: place a black key between the first and second white keys
             if i == 0:
+                
+                #Create black key
                 black_key_x = x_position + white_key_width - border_size - black_key_width / 2
                 black_key_y = y_position + white_key_height - black_key_height
                 black_key = self.create_black_key(
                     black_key_x, black_key_y, black_key_width, black_key_height, (0, 0, 0))
-                self.black_keys.append(black_key)
 
                 midi_key_counter += 1
                 self.all_midi_keys.append((black_key, midi_key_counter))
+                
+                # Add note name label for black key
+                note_label = pyglet.text.Label(
+                    self.note_names[midi_key_counter],
+                    font_name='Times New Roman',
+                    font_size=23,
+                    x=black_key_x + black_key_width / 2,
+                    y=black_key_y + black_key_height - 10,
+                    anchor_x='center',
+                    anchor_y='center',
+                    color=(255, 255, 255, 255)
+                )
+                
+                #Insert black key into list with note label
+                self.black_keys.append((black_key, note_label))
 
             # Repeating pattern: place black keys for the remaining white keys
             elif (1 <= (i - 1) % 7 <= 2) or (4 <= (i - 1) % 7 <= 6):
@@ -334,11 +426,24 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                     black_key_y = y_position + white_key_height - black_key_height
                     black_key = self.create_black_key(
                         black_key_x, black_key_y, black_key_width, black_key_height, (0, 0, 0))
-                    self.black_keys.append(black_key)
 
                     midi_key_counter += 1
                     self.all_midi_keys.append((black_key, midi_key_counter))
 
+                    # Add note name label for black key
+                    note_label = pyglet.text.Label(
+                        self.note_names[midi_key_counter],
+                        font_name='Times New Roman',
+                        font_size=10,
+                        x=black_key_x + black_key_width / 2,
+                        y=black_key_y + black_key_height - 10,
+                        anchor_x='center',
+                        anchor_y='center',
+                        color=(255, 255, 255, 255)
+                    )
+                    self.black_keys.append((black_key, note_label))
+                    
+            # Move to the next key position
             x_position += white_key_width
 
         # Draw the piano keys and labels
@@ -382,12 +487,25 @@ class PianoGameUI(pyglet.event.EventDispatcher):
 
         self.window.clear()
         # Draw white keys
-        for white_key, _ in self.white_keys:
+        for white_key, note_label in self.white_keys:
             white_key.draw()
-
+            
         # Draw black keys
-        for black_key in self.black_keys:
+        for black_key,  note_label in self.black_keys:
             black_key.draw()
+            #note_label.draw() #We not using black key labels yet but they setup for future use...
+        
+        #Only draw white key labels if not in FreePlay mode.
+        if self.game_mode != "JukeBox":
+            
+            self.middle_c_special_label.draw()
+            
+            for white_key, note_label in self.white_keys:
+                note_label.draw()
+            
+            
+
+       
 
 
     # Function to draw all aspects of the game. This includes pianos, rectangles and any other buttons. This method is called automatically by Pyglet every frame.
@@ -780,7 +898,6 @@ class PianoGameUI(pyglet.event.EventDispatcher):
 
         # Reset window handlers
         self.window.remove_handlers(on_draw=self.on_draw)
-        self.window.remove_handlers(on_mouse_press=self.on_mouse_press)
         self.window.pop_handlers()
 
         self.window.clear()
