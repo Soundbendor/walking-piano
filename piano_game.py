@@ -29,11 +29,10 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         self.fps_display = pyglet.window.FPSDisplay(window=self.window)  # Display the FPS
 
         self.visibility_lines = []  # Array for holding visibility lines
-
-        #self.white_key_width = 26
-        self.white_key_width = 26
-        self.white_key_height = 250
-
+      
+        self.white_key_height = 225  # Height of the white keys
+        self.white_key_width = self.white_key_height * 0.146 #Ideally width should be height * about 0.146; matches true dimensions of piano keys.
+      
         self.number_of_white_keys = 52
 
         # Array for holding white keys
