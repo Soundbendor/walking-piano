@@ -16,6 +16,7 @@ Authors: Devin Martin and Wesley Jake Anding
 from mido import MidiFile, open_output, bpm2tempo
 import threading
 import time
+import os
 
 class MIDIProcessor():
     """
@@ -41,6 +42,9 @@ class MIDIProcessor():
         self.file_path = file_path
         self.midi_file = self.read_midi_file()
         self.bpm = None  # Is set in extract_track_messages
+        self.global_tempo_changes = []
+        self.extract_global_tempo()
+        
 
     def read_midi_file(self):
         """
@@ -56,82 +60,60 @@ class MIDIProcessor():
         except IOError:
             print(f"Error: Could not read file {self.file_path}.")
             return None
-
-    def extract_track_messages(self, track_number, default_BPM=80):
-        """
-        Extracts messages from a specified MIDI track.
-
-        Parameters
-        ----------
-        track_number : int
-            The index of the track to be processed.
-        default_BPM : int, optional
-            The tempo in BPM (default is 80).
-
-        Returns
-        -------
-        list
-            A list of (message, delay) tuples representing the messages in the track.
-        """
-        if not self.midi_file:
-            return []
-
-        track = self.midi_file.tracks[track_number]
-        messages = []
-
-        # Look for tempo in MIDI file
-        tempo = None
-        for msg in self.midi_file.tracks[0]:
-            if msg.type == 'set_tempo':
-                tempo = msg.tempo
-                self.bpm = bpm2tempo(tempo)
-                break
-
-        if tempo is None:
-            tempo = default_BPM
-
-        # ALERT: Tempo is slower for playability
-        # tempo = tempo * 1.75
-        tempo = bpm2tempo(default_BPM)
-
-        ticks_per_beat = self.midi_file.ticks_per_beat
-                
-         # Specific handling for 'viva_la_vida.mid' track
-        if self.file_path == 'Viva_la_vida.mid':
-            for msg in self.midi_file.tracks[0]:
-                if msg.type == 'set_tempo':
-                    tempo = msg.tempo
-                    break
-                
-        if self.file_path == 'september.mid':
-            for msg in self.midi_file.tracks[0]:
-                if msg.type == 'set_tempo':
-                    tempo = msg.tempo
-                    break
-        
-        if self.file_path == 'runaway.mid':
-            for msg in self.midi_file.tracks[0]:
-                if msg.type == 'set_tempo':
-                    tempo = msg.tempo
-                    break
+    
+    def extract_global_tempo(self):
+        track = self.midi_file.tracks[0]
+        elapsed_ticks = 0
+        cumulative_time = 0.0  # Cumulative time in seconds
+        current_tempo = bpm2tempo(120)  # Default tempo (microseconds per beat)
 
         for msg in track:
+            if msg.time > 0:
+                cumulative_time += (msg.time * current_tempo) / (self.midi_file.ticks_per_beat * 1e6)
             if msg.type == 'set_tempo':
-                pass
-                # ALERT: Tempo is slower for playability
-                # tempo = tempo * 1.75
-            elif not msg.is_meta:
-                delay = msg.time * tempo / ticks_per_beat / 1e6
+                self.global_tempo_changes.append((cumulative_time, msg.tempo))
+                print(f"Tempo change to {msg.tempo} at {cumulative_time:.2f} seconds")
+                current_tempo = msg.tempo  # Update current tempo
+            elapsed_ticks += msg.time
+
+   
+    def extract_track_messages(self, track_number):
+        """
+        Extracts messages from the specified track, applying global tempo changes accurately,
+        calculating the correct delays for each event, ensuring the playback tempo feels correct.
+        """
+        track = self.midi_file.tracks[track_number]
+        messages = []
+        elapsed_ticks = 0  # Total ticks since the last reset
+        current_tempo = bpm2tempo(120)  # Start with a default tempo
+
+        # Initialize tempo change handling
+        tempo_change_index = 0
+        if self.global_tempo_changes:
+            # Start with the first tempo change if it exists
+            _, current_tempo = self.global_tempo_changes[tempo_change_index]
+
+        for msg in track:
+            elapsed_ticks += msg.time
+
+            # Check for and apply tempo changes
+            while (tempo_change_index < len(self.global_tempo_changes) and
+                elapsed_ticks >= self.global_tempo_changes[tempo_change_index][0] * self.midi_file.ticks_per_beat):
+                _, current_tempo = self.global_tempo_changes[tempo_change_index]
+                tempo_change_index += 1
+
+            if msg.type in ['note_on', 'note_off']:
+                # Calculate delay using current tempo and ticks per beat
+                delay = (elapsed_ticks * current_tempo) / (self.midi_file.ticks_per_beat * 1e6)
                 messages.append((msg, delay))
+                elapsed_ticks = 0  # Reset ticks after processing a note
 
         return messages
 
     def play_track(self, messages, outport):
         """
-        Plays messages from a MIDI track in real time. 
-        This is used for testing our extract_track_messages function.
-        We can listen to how our interpretation of the MIDI file sounds compared to the original.
-
+        Plays messages from a MIDI track in real time, and prints tempo changes when they occur.
+        
         Parameters
         ----------
         messages : list
@@ -140,12 +122,20 @@ class MIDIProcessor():
         outport : str
             The MIDI output port name.
         """
-        try:
-            for msg, delay in messages:
-                time.sleep(delay)
-                outport.send(msg)
-        except IOError:
-            print(f"Error: Could not open MIDI output port {outport}.")
+        total_time_elapsed = 0.0
+        current_tempo_index = 0
+
+        for msg, delay in messages:
+            time.sleep(delay)
+            total_time_elapsed += delay
+            outport.send(msg)
+
+            while (current_tempo_index < len(self.global_tempo_changes) and
+                total_time_elapsed >= self.global_tempo_changes[current_tempo_index][0]):
+                _, tempo = self.global_tempo_changes[current_tempo_index]
+                print(f"Tempo change to {tempo} at {total_time_elapsed:.2f} seconds")
+                current_tempo_index += 1
+
 
 if __name__ == "__main__":
     """
@@ -155,23 +145,33 @@ if __name__ == "__main__":
     2. Specify the track number you want to play (0-indexed).
     3. Use threading to play multiple tracks simultaneously for debugging/testing.
     """
-    midi_file_path = 'songs/married_life.mid'
+    
+    os.chdir('songs')
+    
+    midi_file_path = 'best_part_jacob.mid'
     midi_port_name = 'Microsoft GS Wavetable Synth 0'  # Replace with your MIDI port name
     
     outport = open_output(midi_port_name)
 
     processor = MIDIProcessor(midi_file_path)
     track_number = 1  # Specify the track number you want to play
-    track_messages = processor.extract_track_messages(track_number)
     
-    track_messages2 = processor.extract_track_messages(0)
-    thread = threading.Thread(target=processor.play_track, args=(track_messages2, outport))
+    track_messages1 = processor.extract_track_messages(track_number)
+    
+    
+    track_messages0 = processor.extract_track_messages(0)
+    
+    print('===============================')
+    
+    thread = threading.Thread(target=processor.play_track, args=(track_messages0, outport))
     thread.start()
     
-    processor.play_track(track_messages, outport)
+    processor.play_track(track_messages1, outport)
     
     print("\nTrack Messages 0:")
-    print(track_messages2[:20])
+    for message in track_messages0[:20]:
+        print(message)
     
     print("\nTrack Messages 1:")
-    print(track_messages[:20])
+    #for message in track_messages1[:20]:
+    #    print(message)

@@ -876,6 +876,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             #If two messages are scheduled at same time, there are bugs. Add tiny delay to avoid this... hope this delay doesn't accumulate and cause more issues. :')
             if delay == 0:
                 delay = 0.000001
+                
             total_delay += delay
         
             

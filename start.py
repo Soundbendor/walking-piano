@@ -44,18 +44,27 @@ song_database = {
     16: {"name": "Golden Hour", "artist": "JVKE (Demo song)", "file": "Golden_HOUR.mid", "difficulty": "Hard", "players": 2},   #Jukebox example
     17: {"name": "September", "artist": "Earth, Wind & Fire (Demo song)", "file": "september.mid", "difficulty": "Impossible", "players": 2},
     
-    #runaway kanye 
-    #XX: {"name": "Runaway", "artist": "Kanye West", "file": "runaway.mid", "difficulty": "Impossible", "players": 2},
     
     #married life from up. married_life.mid
-    #XX: {"name": "Married Life", "artist": "Michael Giacchino (Up)", "file": "married_life.mid", "difficulty": "Impossible (showcase song)", "players": 2},
+    18: {"name": "Married Life", "artist": "Michael Giacchino (Up)", "file": "married_life.mid", "difficulty": "Impossible (showcase song)", "players": 2},
+    19: {"name": "Im Still Standing", "artist": "Elton John", "file": "still_standing.mid", "players": 2},  
     
-    #XX: {"name": "Rush E", "artist": "Rush E", "file": "rush_e.mid", "difficulty": "Impossible", "players": 2},
+    #runaway kanye 
+    20: {"name": "Runaway", "artist": "Kanye West", "file": "runaway.mid", "difficulty": "Impossible", "players": 2},
+    21: {"name": "Moon River", "artist": "Johnny Mercer and Henry Mancini", "file": "moon_river.mid", "difficulty": "Impossible", "players": 2},
+
+    22: {"name": "You've Got A Friend In Me", "artist": "Randy Newman", "file": "friend_in_me.mid", "difficulty": "Impossible", "players": 2},
+
+    23: {"name": "Uptown Girl Piano", "artist": "Westlife", "file": "uptown_girl.mid", "difficulty": "Impossible", "players": 2},
+
+    24: {"name": "Hallelujah", "artist": "Leonard Cohen", "file": "hallelujah.mid", "difficulty": "Impossible", "players": 2},
+
+    25: {"name": "Clark (Minecraft)", "artist": "C418", "file": "clark_minecraft.mid", "difficulty": "Impossible", "players": 2},
+
+    26: {"name": "Christmas Don't Be Late", "artist": "The Chipmunks", "file": "christmas_dont_be_late.mid", "difficulty": "Impossible", "players": 2}
+
     
-    #XX: {"name": "Best Part", "artist": "Daniel Caesar", "file": "best_part.mid", "difficulty": "Hard", "players": 2},   #Jukebox example
     
-    #XX: {"name": "Im Still Standing", "artist": "Elton John", "file": "still_standing.mid", "players": 2},  
-         
 }
 
 def csv_to_song_database(csv_filename):
