@@ -10,7 +10,9 @@ Welcome to WalkingPiano's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   start_module
+   midi_processor_module
+   piano_game_module
 
 Indices and tables
 ==================

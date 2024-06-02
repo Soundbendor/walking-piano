@@ -11,8 +11,8 @@ os.chdir("songs")
 
 #play midi song in your outport
 #for help setting up outport, checkout debug.py
-outport = mido.open_output('loopMIDI Port 1 1')
-mid = mido.MidiFile('stevie.mid')
+outport = mido.open_output('Microsoft GS Wavetable Synth 0')
+mid = mido.MidiFile('married_life.mid')
 for msg in mid.play():
     outport.send(msg)
     
