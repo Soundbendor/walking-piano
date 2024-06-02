@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>start.py &#8212; WalkingPiano 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-start">
+<span id="start-py"></span><h1>start.py<a class="headerlink" href="#module-start" title="Link to this heading">¶</a></h1>
+<section id="id1">
+<h2>Start.py:<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p>This file contains the main menu and game logic for the Walking Piano Game.
+The main menu allows the user to select between different game modes, 
+such as Challenge Mode, Practice Mode, FreePlay, Settings, JukeBox, and Exit. 
+The user can navigate through the menu using the mouse and select different options.</p>
+<dl class="simple">
+<dt>Classes:</dt><dd><p>ClickableLabel
+WalkingPianoGame</p>
+</dd>
+<dt>Functions:</dt><dd><p>csv_to_song_database</p>
+</dd>
+</dl>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="start.ClickableLabel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">start.</span></span><span class="sig-name descname"><span class="pre">ClickableLabel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">song_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(255,</span> <span class="pre">255,</span> <span class="pre">255,</span> <span class="pre">255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highlightable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#start.ClickableLabel" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class representing a clickable label in the game UI.</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>label<span class="classifier">pyglet.text.Label</span></dt><dd><p>The Pyglet label object.</p>
+</dd>
+<dt>song_id<span class="classifier">int</span></dt><dd><p>The ID of the song associated with the label.</p>
+</dd>
+<dt>original_color<span class="classifier">tuple</span></dt><dd><p>The original color of the label.</p>
+</dd>
+<dt>highlight_color<span class="classifier">tuple</span></dt><dd><p>The color of the label when highlighted.</p>
+</dd>
+<dt>highlightable<span class="classifier">bool</span></dt><dd><p>Whether the label is highlightable or not.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="start.ClickableLabel.is_clicked">
+<span class="sig-name descname"><span class="pre">is_clicked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#start.ClickableLabel.is_clicked" title="Link to this definition">¶</a></dt>
+<dd><p>Checks if the label was clicked based on the provided coordinates.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>x<span class="classifier">int</span></dt><dd><p>The x-coordinate of the click.</p>
+</dd>
+<dt>y<span class="classifier">int</span></dt><dd><p>The y-coordinate of the click.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>bool</dt><dd><p>True if the label was clicked, False otherwise.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.ClickableLabel.update_highlight">
+<span class="sig-name descname"><span class="pre">update_highlight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#start.ClickableLabel.update_highlight" title="Link to this definition">¶</a></dt>
+<dd><p>Updates the label’s highlight state based on the provided coordinates.</p>
+<section id="id2">
+<h3>Parameters<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>x<span class="classifier">int</span></dt><dd><p>The x-coordinate of the mouse.</p>
+</dd>
+<dt>y<span class="classifier">int</span></dt><dd><p>The y-coordinate of the mouse.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="start.WalkingPianoGame">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">start.</span></span><span class="sig-name descname"><span class="pre">WalkingPianoGame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseWindow</span></code></p>
+<p>A class representing the Walking Piano Game
+This is sets up the menu and many parameters 
+that can be changed within the settings before 
+playing the piano game.</p>
+<section id="id3">
+<h2>Attributes<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>menu_batch<span class="classifier">pyglet.graphics.Batch</span></dt><dd><p>Batch for the main menu.</p>
+</dd>
+<dt>song_select_batch<span class="classifier">pyglet.graphics.Batch</span></dt><dd><p>Batch for the song selection menu.</p>
+</dd>
+<dt>song_select_batch_jukebox<span class="classifier">pyglet.graphics.Batch</span></dt><dd><p>Batch for the jukebox song selection menu.</p>
+</dd>
+<dt>settings_batch<span class="classifier">pyglet.graphics.Batch</span></dt><dd><p>Batch for the settings menu.</p>
+</dd>
+<dt>player_mode_batch<span class="classifier">pyglet.graphics.Batch</span></dt><dd><p>Batch for the player mode selection menu.</p>
+</dd>
+<dt>game_modes<span class="classifier">list</span></dt><dd><p>List of game modes.</p>
+</dd>
+<dt>selected_game_mode<span class="classifier">str</span></dt><dd><p>The currently selected game mode.</p>
+</dd>
+<dt>game_state<span class="classifier">str</span></dt><dd><p>The current state of the game.</p>
+</dd>
+<dt>player_count<span class="classifier">int</span></dt><dd><p>The number of players.</p>
+</dd>
+<dt>autoplay<span class="classifier">bool</span></dt><dd><p>Whether autoplay is enabled.</p>
+</dd>
+<dt>controller_size<span class="classifier">str</span></dt><dd><p>The size of the controller.</p>
+</dd>
+<dt>menu_options_labels<span class="classifier">list</span></dt><dd><p>List of labels for the main menu options.</p>
+</dd>
+<dt>song_options_labels<span class="classifier">list</span></dt><dd><p>List of labels for the song selection menu.</p>
+</dd>
+<dt>song_options_labels_jukebox<span class="classifier">list</span></dt><dd><p>List of labels for the jukebox song selection menu.</p>
+</dd>
+<dt>settings_options_labels<span class="classifier">list</span></dt><dd><p>List of labels for the settings menu options.</p>
+</dd>
+<dt>player_mode_options_labels<span class="classifier">list</span></dt><dd><p>List of labels for the player mode selection menu.</p>
+</dd>
+<dt>game<span class="classifier">PianoGameUI</span></dt><dd><p>The current game instance.</p>
+</dd>
+<dt>outport<span class="classifier">str</span></dt><dd><p>The MIDI output port.</p>
+</dd>
+<dt>inport<span class="classifier">str</span></dt><dd><p>The MIDI input port.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.filter_songs_based_on_mode_and_players">
+<span class="sig-name descname"><span class="pre">filter_songs_based_on_mode_and_players</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.filter_songs_based_on_mode_and_players" title="Link to this definition">¶</a></dt>
+<dd><p>Filters the song database based on the selected game mode and number of players.</p>
+<section id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>dict</dt><dd><p>A dictionary of valid songs based on the selected game mode and number of players.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.get_song_id_from_label">
+<span class="sig-name descname"><span class="pre">get_song_id_from_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.get_song_id_from_label" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves the song ID from the given label.</p>
+<section id="id5">
+<h3>Parameters<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>label<span class="classifier">ClickableLabel</span></dt><dd><p>The label from which to retrieve the song ID.</p>
+</dd>
+</dl>
+</section>
+<section id="id6">
+<h3>Returns<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>int</dt><dd><p>The ID of the song associated with the label.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.handle_next_page">
+<span class="sig-name descname"><span class="pre">handle_next_page</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.handle_next_page" title="Link to this definition">¶</a></dt>
+<dd><p>Handles navigation to the next page of songs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.handle_prev_page">
+<span class="sig-name descname"><span class="pre">handle_prev_page</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.handle_prev_page" title="Link to this definition">¶</a></dt>
+<dd><p>Handles navigation to the previous page of songs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.on_draw">
+<span class="sig-name descname"><span class="pre">on_draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.on_draw" title="Link to this definition">¶</a></dt>
+<dd><p>Handles the drawing of the game window based on the current game state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.on_mouse_motion">
+<span class="sig-name descname"><span class="pre">on_mouse_motion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.on_mouse_motion" title="Link to this definition">¶</a></dt>
+<dd><p>Handles mouse motion events to update label highlights based on the current game state.</p>
+<section id="id7">
+<h3>Parameters<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>x<span class="classifier">int</span></dt><dd><p>The x-coordinate of the mouse.</p>
+</dd>
+<dt>y<span class="classifier">int</span></dt><dd><p>The y-coordinate of the mouse.</p>
+</dd>
+<dt>dx<span class="classifier">int</span></dt><dd><p>The change in the x-coordinate of the mouse.</p>
+</dd>
+<dt>dy<span class="classifier">int</span></dt><dd><p>The change in the y-coordinate of the mouse.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.on_mouse_press">
+<span class="sig-name descname"><span class="pre">on_mouse_press</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">button</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.on_mouse_press" title="Link to this definition">¶</a></dt>
+<dd><p>Handles mouse press events based on the current game state.</p>
+<section id="id8">
+<h3>Parameters<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>x<span class="classifier">int</span></dt><dd><p>The x-coordinate of the mouse press.</p>
+</dd>
+<dt>y<span class="classifier">int</span></dt><dd><p>The y-coordinate of the mouse press.</p>
+</dd>
+<dt>button<span class="classifier">int</span></dt><dd><p>The mouse button pressed.</p>
+</dd>
+<dt>modifiers<span class="classifier">int</span></dt><dd><p>Any modifier keys pressed.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.return_to_menu">
+<span class="sig-name descname"><span class="pre">return_to_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.return_to_menu" title="Link to this definition">¶</a></dt>
+<dd><p>Returns to the main menu.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.setup_jukebox_song_selection">
+<span class="sig-name descname"><span class="pre">setup_jukebox_song_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_page</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.setup_jukebox_song_selection" title="Link to this definition">¶</a></dt>
+<dd><p>Sets up the jukebox song selection labels with pagination.</p>
+<section id="id9">
+<h3>Parameters<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>current_page<span class="classifier">int, optional</span></dt><dd><p>The current page of the song selection (default is 0).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.setup_menu">
+<span class="sig-name descname"><span class="pre">setup_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.setup_menu" title="Link to this definition">¶</a></dt>
+<dd><p>Sets up the main menu labels.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.setup_player_mode_selection">
+<span class="sig-name descname"><span class="pre">setup_player_mode_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.setup_player_mode_selection" title="Link to this definition">¶</a></dt>
+<dd><p>Sets up the player mode selection labels.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.setup_settings">
+<span class="sig-name descname"><span class="pre">setup_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.setup_settings" title="Link to this definition">¶</a></dt>
+<dd><p>Sets up the settings menu labels.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.setup_song_selection">
+<span class="sig-name descname"><span class="pre">setup_song_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.setup_song_selection" title="Link to this definition">¶</a></dt>
+<dd><p>Sets up the song selection labels.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.start_game">
+<span class="sig-name descname"><span class="pre">start_game</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">midi_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">game_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inport</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outport</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'88</span> <span class="pre">key'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autoplay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.start_game" title="Link to this definition">¶</a></dt>
+<dd><p>Starts the game with the selected settings.</p>
+<section id="id10">
+<h3>Parameters<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>midi_file<span class="classifier">str</span></dt><dd><p>The MIDI file to play.</p>
+</dd>
+<dt>game_mode<span class="classifier">str</span></dt><dd><p>The selected game mode.</p>
+</dd>
+<dt>inport<span class="classifier">str</span></dt><dd><p>The MIDI input port.</p>
+</dd>
+<dt>outport<span class="classifier">str</span></dt><dd><p>The MIDI output port.</p>
+</dd>
+<dt>controller_size<span class="classifier">str, optional</span></dt><dd><p>The size of the controller (default is ‘88 key’).</p>
+</dd>
+<dt>player_count<span class="classifier">int, optional</span></dt><dd><p>The number of players (default is 1).</p>
+</dd>
+<dt>autoplay<span class="classifier">bool, optional</span></dt><dd><p>Whether autoplay is enabled (default is False).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="start.csv_to_song_database">
+<span class="sig-prename descclassname"><span class="pre">start.</span></span><span class="sig-name descname"><span class="pre">csv_to_song_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#start.csv_to_song_database" title="Link to this definition">¶</a></dt>
+<dd><p>Converts a CSV file into a song database dictionary.</p>
+<section id="id11">
+<h2>Parameters<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>csv_filename<span class="classifier">str</span></dt><dd><p>The path to the CSV file.</p>
+</dd>
+</dl>
+</section>
+<section id="id12">
+<h2>Returns<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>dict</dt><dd><p>A dictionary representing the song database.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">WalkingPiano</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="midi_processor_module.html">midi_processor.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="piano_game_module.html">piano_game.py</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Devin Martin and Wesley Anding.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/star_module.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,931 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>piano_game.py &#8212; WalkingPiano 1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="_static/documentation_options.js?v=a681ed88"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'piano_game_module';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="midi_processor.py" href="midi_processor_module.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">WalkingPiano 1.0 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="start_module.html">start.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="midi_processor_module.html">midi_processor.py</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">piano_game.py</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/piano_game_module.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>piano_game.py</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">piano_game.py</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.ClockPauseManager"><code class="docutils literal notranslate"><span class="pre">ClockPauseManager</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.ClockPauseManager.clear"><code class="docutils literal notranslate"><span class="pre">ClockPauseManager.clear()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.ClockPauseManager.pause"><code class="docutils literal notranslate"><span class="pre">ClockPauseManager.pause()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.ClockPauseManager.resume"><code class="docutils literal notranslate"><span class="pre">ClockPauseManager.resume()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.ClockPauseManager.schedule_function"><code class="docutils literal notranslate"><span class="pre">ClockPauseManager.schedule_function()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI"><code class="docutils literal notranslate"><span class="pre">PianoGameUI</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.create_active_notes_line"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.create_active_notes_line()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.create_black_key"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.create_black_key()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.create_piano"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.create_piano()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.create_white_key"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.create_white_key()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.draw_piano"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.draw_piano()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.end_of_song"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.end_of_song()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.exit_game"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.exit_game()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.falling_rectangles_list"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.falling_rectangles_list</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.flag_note"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.flag_note()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.get_note_label_color"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.get_note_label_color()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.highlight_key"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.highlight_key()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.incoming_notes"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.incoming_notes</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.jukebox_mode"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.jukebox_mode()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.load_midi_file"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.load_midi_file()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.on_draw"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.on_draw()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.on_key_press"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.on_key_press()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.on_mouse_press"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.on_mouse_press()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.play_piano_user"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.play_piano_user()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.prepare_falling_rectangle"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.prepare_falling_rectangle()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.schedule_flag_note_off"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.schedule_flag_note_off()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.schedule_flag_note_on"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.schedule_flag_note_on()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.start_rectangle_game"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.start_rectangle_game()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.start_rectangle_game_thread"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.start_rectangle_game_thread()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.unhighlight_key"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.unhighlight_key()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.update_rectangles"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.update_rectangles()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.update_score"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.update_score()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-piano_game">
+<span id="piano-game-py"></span><h1>piano_game.py<a class="headerlink" href="#module-piano_game" title="Link to this heading">#</a></h1>
+<section id="id1">
+<h2>piano_game.py<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>This file contains the implementation of the PianoGameUI class, which is responsible for handling the user interface
+and game logic for the Walking Piano game. The class integrates with Pyglet for rendering the UI and Mido for MIDI 
+input/output handling.</p>
+<dl class="simple">
+<dt>Classes:</dt><dd><p>PianoGameUI: Manages the piano game UI, including drawing the piano, handling MIDI input, and game mechanics.
+ClockPauseManager: Manages the clock and scheduled functions, allowing pausing and resuming of the game.</p>
+</dd>
+<dt>Functions:</dt><dd><p>None (all functionality is encapsulated within classes).</p>
+</dd>
+</dl>
+<p>Author: Devin Martin and Wesley Jake Anding</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="piano_game.ClockPauseManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">piano_game.</span></span><span class="sig-name descname"><span class="pre">ClockPauseManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">update_rectangles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.ClockPauseManager" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>ClockPauseManager is responsible for managing the clock and scheduled functions,
+allowing pausing and resuming of the game. Mostly used for the Piano game in practice mode.
+The implementation is based on the Pyglet clock and scheduling functions.</p>
+<p>This method is buggy and needs to be improved in future development!</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>scheduled_functions<span class="classifier">list</span></dt><dd><p>List of scheduled functions.</p>
+</dd>
+<dt>start_time<span class="classifier">datetime.datetime</span></dt><dd><p>The start time of the game.</p>
+</dd>
+<dt>update_rectangles<span class="classifier">callable</span></dt><dd><p>Method to update rectangles.</p>
+</dd>
+<dt>paused<span class="classifier">bool</span></dt><dd><p>Flag indicating if the game is paused.</p>
+</dd>
+<dt>pause_time<span class="classifier">datetime.datetime</span></dt><dd><p>The time when the game was paused.</p>
+</dd>
+<dt>unpause_time<span class="classifier">datetime.datetime</span></dt><dd><p>The time when the game was unpaused.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.ClockPauseManager.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.ClockPauseManager.clear" title="Link to this definition">#</a></dt>
+<dd><p>Clear all scheduled functions and reset the pause state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.ClockPauseManager.pause">
+<span class="sig-name descname"><span class="pre">pause</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.ClockPauseManager.pause" title="Link to this definition">#</a></dt>
+<dd><p>Pause the clock and all scheduled functions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.ClockPauseManager.resume">
+<span class="sig-name descname"><span class="pre">resume</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.ClockPauseManager.resume" title="Link to this definition">#</a></dt>
+<dd><p>Resume the clock and all scheduled functions with adjusted intervals.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.ClockPauseManager.schedule_function">
+<span class="sig-name descname"><span class="pre">schedule_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.ClockPauseManager.schedule_function" title="Link to this definition">#</a></dt>
+<dd><p>Schedule a function with a delay.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>func<span class="classifier">callable</span></dt><dd><p>The function to be scheduled.</p>
+</dd>
+<dt>delay<span class="classifier">float</span></dt><dd><p>The delay in seconds.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">piano_game.</span></span><span class="sig-name descname"><span class="pre">PianoGameUI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">midi_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">game_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inport_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outport_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_play</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">EventDispatcher</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.create_active_notes_line">
+<span class="sig-name descname"><span class="pre">create_active_notes_line</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.create_active_notes_line" title="Link to this definition">#</a></dt>
+<dd><p>Create ‘imaginary’ line where notes will fall from.
+This lines up with the piano keys and utilizes very similar logic to the create_piano function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.create_black_key">
+<span class="sig-name descname"><span class="pre">create_black_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.create_black_key" title="Link to this definition">#</a></dt>
+<dd><p>Create a piano black key.</p>
+<section id="id2">
+<h2>Parameters<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>x<span class="classifier">int</span></dt><dd><p>The x-coordinate of the key.</p>
+</dd>
+<dt>y<span class="classifier">int</span></dt><dd><p>The y-coordinate of the key.</p>
+</dd>
+<dt>width<span class="classifier">int</span></dt><dd><p>The width of the key.</p>
+</dd>
+<dt>height<span class="classifier">int</span></dt><dd><p>The height of the key.</p>
+</dd>
+<dt>color<span class="classifier">tuple</span></dt><dd><p>The color of the key.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>pyglet.shapes.Rectangle</dt><dd><p>The created black key.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.create_piano">
+<span class="sig-name descname"><span class="pre">create_piano</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.create_piano" title="Link to this definition">#</a></dt>
+<dd><p>Utilize create_white_key and create_black_key to create the entire piano with all keys.
+There are two modes for the piano, 49 key and 88 key.
+A parameter passed into the class will determine which mode to use.
+See attribute ‘controller_size’ for more details.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.create_white_key">
+<span class="sig-name descname"><span class="pre">create_white_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.create_white_key" title="Link to this definition">#</a></dt>
+<dd><p>Create a piano white key.</p>
+<section id="id3">
+<h2>Parameters<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>x<span class="classifier">int</span></dt><dd><p>The x-coordinate of the key.</p>
+</dd>
+<dt>y<span class="classifier">int</span></dt><dd><p>The y-coordinate of the key.</p>
+</dd>
+<dt>width<span class="classifier">int</span></dt><dd><p>The width of the key.</p>
+</dd>
+<dt>height<span class="classifier">int</span></dt><dd><p>The height of the key.</p>
+</dd>
+<dt>color<span class="classifier">tuple</span></dt><dd><p>The color of the key.</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h2>Returns<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>pyglet.shapes.Rectangle</dt><dd><p>The created white key.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.draw_piano">
+<span class="sig-name descname"><span class="pre">draw_piano</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.draw_piano" title="Link to this definition">#</a></dt>
+<dd><p>As helper function to draw the piano keys and labels.
+It is utilized by the on_draw function which is called automatically by Pyglet every frame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.end_of_song">
+<span class="sig-name descname"><span class="pre">end_of_song</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.end_of_song" title="Link to this definition">#</a></dt>
+<dd><p>Acknowledge the end of the song.
+Once the song is over, on_draw will display the game over message.</p>
+<section id="id5">
+<h2>Parameters<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>dt<span class="classifier">float</span></dt><dd><p>The delta time.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.exit_game">
+<span class="sig-name descname"><span class="pre">exit_game</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.exit_game" title="Link to this definition">#</a></dt>
+<dd><p>Exit the game and clean up resources.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.falling_rectangles_list">
+<span class="sig-name descname"><span class="pre">falling_rectangles_list</span></span><a class="headerlink" href="#piano_game.PianoGameUI.falling_rectangles_list" title="Link to this definition">#</a></dt>
+<dd><p>Todo: Get this note list working with ‘extract_track_messages()’ from MIDIprocessor class</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.flag_note">
+<span class="sig-name descname"><span class="pre">flag_note</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">note_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.flag_note" title="Link to this definition">#</a></dt>
+<dd><p>Flag a note as being played or not.</p>
+<section id="id6">
+<h2>Parameters<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>note_number<span class="classifier">int</span></dt><dd><p>The number of the note.</p>
+</dd>
+<dt>bool<span class="classifier">bool</span></dt><dd><p>Flag indicating if the note is played.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.get_note_label_color">
+<span class="sig-name descname"><span class="pre">get_note_label_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">note_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.get_note_label_color" title="Link to this definition">#</a></dt>
+<dd><p>Get the color for the note label.
+Default to black if not found.</p>
+<section id="id7">
+<h2>Parameters<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>note_name<span class="classifier">str</span></dt><dd><p>The name of the note.</p>
+</dd>
+</dl>
+</section>
+<section id="id8">
+<h2>Returns<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>tuple</dt><dd><p>The color of the note label.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.highlight_key">
+<span class="sig-name descname"><span class="pre">highlight_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_number</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.highlight_key" title="Link to this definition">#</a></dt>
+<dd><p>Highlight a specific key based on the key number.</p>
+<section id="id9">
+<h2>Parameters<a class="headerlink" href="#id9" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>key_number<span class="classifier">int</span></dt><dd><p>The number of the key to highlight.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.incoming_notes">
+<span class="sig-name descname"><span class="pre">incoming_notes</span></span><a class="headerlink" href="#piano_game.PianoGameUI.incoming_notes" title="Link to this definition">#</a></dt>
+<dd><p>#Temp for testing visuals</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.jukebox_mode">
+<span class="sig-name descname"><span class="pre">jukebox_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">midi_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.jukebox_mode" title="Link to this definition">#</a></dt>
+<dd><p>Play the piano automatically in jukebox mode.</p>
+<section id="id10">
+<h2>Parameters<a class="headerlink" href="#id10" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>midi_file_path<span class="classifier">str</span></dt><dd><p>The path to the MIDI file to be played.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.load_midi_file">
+<span class="sig-name descname"><span class="pre">load_midi_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">midi_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.load_midi_file" title="Link to this definition">#</a></dt>
+<dd><p>Load a MIDI file into the game.
+Utilizes the MIDIProcessor class from midi_processor.py</p>
+<section id="id11">
+<h2>Parameters<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>midi_file_path<span class="classifier">str</span></dt><dd><p>The path to the MIDI file.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.on_draw">
+<span class="sig-name descname"><span class="pre">on_draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.on_draw" title="Link to this definition">#</a></dt>
+<dd><p>Draw all aspects of the game. This method is called automatically by Pyglet every frame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.on_key_press">
+<span class="sig-name descname"><span class="pre">on_key_press</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.on_key_press" title="Link to this definition">#</a></dt>
+<dd><p>Handle custom keybinds for development.</p>
+<section id="id12">
+<h2>Parameters<a class="headerlink" href="#id12" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>symbol<span class="classifier">int</span></dt><dd><p>The key symbol pressed.</p>
+</dd>
+<dt>modifiers<span class="classifier">int</span></dt><dd><p>Any modifier keys pressed.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.on_mouse_press">
+<span class="sig-name descname"><span class="pre">on_mouse_press</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">button</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.on_mouse_press" title="Link to this definition">#</a></dt>
+<dd><p>Handle mouse press to quit the game.</p>
+<section id="id13">
+<h2>Parameters<a class="headerlink" href="#id13" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>x<span class="classifier">int</span></dt><dd><p>The x-coordinate of the mouse press.</p>
+</dd>
+<dt>y<span class="classifier">int</span></dt><dd><p>The y-coordinate of the mouse press.</p>
+</dd>
+<dt>button<span class="classifier">int</span></dt><dd><p>The mouse button pressed.</p>
+</dd>
+<dt>modifiers<span class="classifier">int</span></dt><dd><p>Any modifier keys pressed.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.play_piano_user">
+<span class="sig-name descname"><span class="pre">play_piano_user</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.play_piano_user" title="Link to this definition">#</a></dt>
+<dd><p>Allow user to  play the piano using the MIDI keyboard.
+Starts a seperate thread to avoid blocking the main thread.
+Allows user to play the piano in real time with no interference with/from the game.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.prepare_falling_rectangle">
+<span class="sig-name descname"><span class="pre">prepare_falling_rectangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">note_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.prepare_falling_rectangle" title="Link to this definition">#</a></dt>
+<dd><p>Prepare a falling rectangle for a specific note number.</p>
+<section id="id14">
+<h2>Parameters<a class="headerlink" href="#id14" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>note_number<span class="classifier">int</span></dt><dd><p>The number of the note.</p>
+</dd>
+<dt>player<span class="classifier">int</span></dt><dd><p>The player number.</p>
+</dd>
+</dl>
+</section>
+<section id="id15">
+<h2>Returns<a class="headerlink" href="#id15" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>pyglet.shapes.BorderedRectangle</dt><dd><p>The created falling rectangle.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.schedule_flag_note_off">
+<span class="sig-name descname"><span class="pre">schedule_flag_note_off</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">note</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.schedule_flag_note_off" title="Link to this definition">#</a></dt>
+<dd><p>Schedule a note to be flagged as not being played.</p>
+<section id="id16">
+<h2>Parameters<a class="headerlink" href="#id16" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>dt<span class="classifier">float</span></dt><dd><p>The delta time.</p>
+</dd>
+<dt>note<span class="classifier">int</span></dt><dd><p>The note number.</p>
+</dd>
+<dt>velocity<span class="classifier">int</span></dt><dd><p>The velocity of the note.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.schedule_flag_note_on">
+<span class="sig-name descname"><span class="pre">schedule_flag_note_on</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">note</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.schedule_flag_note_on" title="Link to this definition">#</a></dt>
+<dd><p>Schedule a note to be flagged as being played.</p>
+<section id="id17">
+<h2>Parameters<a class="headerlink" href="#id17" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>dt<span class="classifier">float</span></dt><dd><p>The delta time.</p>
+</dd>
+<dt>note<span class="classifier">int</span></dt><dd><p>The note number.</p>
+</dd>
+<dt>velocity<span class="classifier">int</span></dt><dd><p>The velocity of the note.</p>
+</dd>
+<dt>player<span class="classifier">int</span></dt><dd><p>The player number.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.start_rectangle_game">
+<span class="sig-name descname"><span class="pre">start_rectangle_game</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_messages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.start_rectangle_game" title="Link to this definition">#</a></dt>
+<dd><p>Function to schedule notes for our Piano game. 
+This function is called during initialization by the MIDIProcessor class.</p>
+<section id="id18">
+<h2>Parameters<a class="headerlink" href="#id18" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>dt<span class="classifier">float </span></dt><dd><p>The delta time.</p>
+</dd>
+<dt>track_messages<span class="classifier">list</span></dt><dd><p>The list of track messages.</p>
+</dd>
+<dt>player<span class="classifier">int</span></dt><dd><p>The player number.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.start_rectangle_game_thread">
+<span class="sig-name descname"><span class="pre">start_rectangle_game_thread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_messages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.start_rectangle_game_thread" title="Link to this definition">#</a></dt>
+<dd><p>Wrapper function for threading.
+Just calls start_rectangle_game with the given parameters and starts the seperate game thread.</p>
+<section id="id19">
+<h2>Parameters<a class="headerlink" href="#id19" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>dt<span class="classifier">float</span></dt><dd><p>The delta time.</p>
+</dd>
+<dt>track_messages<span class="classifier">list</span></dt><dd><p>The list of track messages.</p>
+</dd>
+<dt>player<span class="classifier">int</span></dt><dd><p>The player number.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.unhighlight_key">
+<span class="sig-name descname"><span class="pre">unhighlight_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_number</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.unhighlight_key" title="Link to this definition">#</a></dt>
+<dd><p>Unhighlight a specific key based on the key number.</p>
+<section id="id20">
+<h2>Parameters<a class="headerlink" href="#id20" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>key_number<span class="classifier">int</span></dt><dd><p>The number of the key to unhighlight.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.update_rectangles">
+<span class="sig-name descname"><span class="pre">update_rectangles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.update_rectangles" title="Link to this definition">#</a></dt>
+<dd><p>Update the falling rectangles.
+This function is called every frame to update the falling rectangles.
+Most of the logic for the game is handled here.
+A deep understanding of the game logic is recommended before making changes here.</p>
+<section id="id21">
+<h2>Parameters<a class="headerlink" href="#id21" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>dt<span class="classifier">float</span></dt><dd><p>The delta time.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="piano_game.PianoGameUI.update_score">
+<span class="sig-name descname"><span class="pre">update_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.update_score" title="Link to this definition">#</a></dt>
+<dd><p>Update the score based on currently playing notes.</p>
+<section id="id22">
+<h2>Parameters<a class="headerlink" href="#id22" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>dt<span class="classifier">float</span></dt><dd><p>The delta time.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="midi_processor_module.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">midi_processor.py</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">piano_game.py</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.ClockPauseManager"><code class="docutils literal notranslate"><span class="pre">ClockPauseManager</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.ClockPauseManager.clear"><code class="docutils literal notranslate"><span class="pre">ClockPauseManager.clear()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.ClockPauseManager.pause"><code class="docutils literal notranslate"><span class="pre">ClockPauseManager.pause()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.ClockPauseManager.resume"><code class="docutils literal notranslate"><span class="pre">ClockPauseManager.resume()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.ClockPauseManager.schedule_function"><code class="docutils literal notranslate"><span class="pre">ClockPauseManager.schedule_function()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI"><code class="docutils literal notranslate"><span class="pre">PianoGameUI</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.create_active_notes_line"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.create_active_notes_line()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.create_black_key"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.create_black_key()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.create_piano"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.create_piano()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.create_white_key"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.create_white_key()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.draw_piano"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.draw_piano()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.end_of_song"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.end_of_song()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.exit_game"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.exit_game()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.falling_rectangles_list"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.falling_rectangles_list</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.flag_note"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.flag_note()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.get_note_label_color"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.get_note_label_color()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.highlight_key"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.highlight_key()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.incoming_notes"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.incoming_notes</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.jukebox_mode"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.jukebox_mode()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.load_midi_file"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.load_midi_file()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.on_draw"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.on_draw()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.on_key_press"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.on_key_press()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.on_mouse_press"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.on_mouse_press()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.play_piano_user"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.play_piano_user()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.prepare_falling_rectangle"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.prepare_falling_rectangle()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.schedule_flag_note_off"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.schedule_flag_note_off()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.schedule_flag_note_on"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.schedule_flag_note_on()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.start_rectangle_game"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.start_rectangle_game()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.start_rectangle_game_thread"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.start_rectangle_game_thread()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.unhighlight_key"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.unhighlight_key()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.update_rectangles"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.update_rectangles()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.update_score"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.update_score()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Devin Martin and Wesley Anding
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Devin Martin and Wesley Anding.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
