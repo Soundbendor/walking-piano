@@ -62,6 +62,11 @@ class MIDIProcessor():
             return None
     
     def extract_global_tempo(self):
+        """
+        Extracts global tempo changes from the MIDI file, storing them in our list self.global_tempo_changes.
+        This list is used to accurately apply tempo changes to each track message.
+        Helper function for extract_track_messages.
+        """
         track = self.midi_file.tracks[0]
         elapsed_ticks = 0
         cumulative_time = 0.0  # Cumulative time in seconds
@@ -72,7 +77,6 @@ class MIDIProcessor():
                 cumulative_time += (msg.time * current_tempo) / (self.midi_file.ticks_per_beat * 1e6)
             if msg.type == 'set_tempo':
                 self.global_tempo_changes.append((cumulative_time, msg.tempo))
-                print(f"Tempo change to {msg.tempo} at {cumulative_time:.2f} seconds")
                 current_tempo = msg.tempo  # Update current tempo
             elapsed_ticks += msg.time
 
@@ -81,6 +85,16 @@ class MIDIProcessor():
         """
         Extracts messages from the specified track, applying global tempo changes accurately,
         calculating the correct delays for each event, ensuring the playback tempo feels correct.
+        
+        Parameters
+        ----------
+        track_number : int
+            The track number to extract messages from. (0-indexed)
+            
+        Returns
+        -------
+        list
+            A list of (message, delay) tuples representing the messages in the track.
         """
         track = self.midi_file.tracks[track_number]
         messages = []
@@ -112,7 +126,13 @@ class MIDIProcessor():
 
     def play_track(self, messages, outport):
         """
-        Plays messages from a MIDI track in real time, and prints tempo changes when they occur.
+        Plays messages from a MIDI track in real time. 
+        This is used for testing our extract_track_messages function.
+        We can listen to how our interpretation of the MIDI file sounds compared to the original.
+        THIS METHOD IS SLIGHTLY INNACURATE DUE TO THE FACT WE ARE USING TIME.SLEEP TO DELAY THE MESSAGES;
+        HOWEVER, IT IS USEFUL FOR TESTING AND DEBUGGING. THE SONGS SHOULD SOUND SIMILAR, BUT NOT EXACTLY THE SAME... BUT CORRECT IN GAME!
+        
+        To hear the song perfectly, use the test_midi_file.py script.
         
         Parameters
         ----------
@@ -133,7 +153,6 @@ class MIDIProcessor():
             while (current_tempo_index < len(self.global_tempo_changes) and
                 total_time_elapsed >= self.global_tempo_changes[current_tempo_index][0]):
                 _, tempo = self.global_tempo_changes[current_tempo_index]
-                print(f"Tempo change to {tempo} at {total_time_elapsed:.2f} seconds")
                 current_tempo_index += 1
 
 
@@ -148,7 +167,7 @@ if __name__ == "__main__":
     
     os.chdir('songs')
     
-    midi_file_path = 'best_part_jacob.mid'
+    midi_file_path = 'married_life.mid'
     midi_port_name = 'Microsoft GS Wavetable Synth 0'  # Replace with your MIDI port name
     
     outport = open_output(midi_port_name)
@@ -158,20 +177,17 @@ if __name__ == "__main__":
     
     track_messages1 = processor.extract_track_messages(track_number)
     
-    
     track_messages0 = processor.extract_track_messages(0)
-    
-    print('===============================')
     
     thread = threading.Thread(target=processor.play_track, args=(track_messages0, outport))
     thread.start()
     
     processor.play_track(track_messages1, outport)
     
-    print("\nTrack Messages 0:")
-    for message in track_messages0[:20]:
-        print(message)
+    #print("\nTrack Messages 0:")
+    #for message in track_messages0[:20]:
+    #    print(message)
     
-    print("\nTrack Messages 1:")
+   # print("\nTrack Messages 1:")
     #for message in track_messages1[:20]:
     #    print(message)
