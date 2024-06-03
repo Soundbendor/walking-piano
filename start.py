@@ -47,7 +47,7 @@ song_database = {
     
     #married life from up. married_life.mid
     18: {"name": "Married Life", "artist": "Michael Giacchino (Up)", "file": "married_life.mid", "difficulty": "Impossible (showcase song)", "players": 2},
-    19: {"name": "Im Still Standing", "artist": "Elton John", "file": "still_standing.mid", "players": 2},  
+    19: {"name": "Im Still Standing", "artist": "Elton John", "file": "still_standing.mid", "difficulty":"Impossible (showcase song)",  "players": 2},  
     
     #runaway kanye 
     20: {"name": "Runaway", "artist": "Kanye West", "file": "runaway.mid", "difficulty": "Impossible", "players": 2},

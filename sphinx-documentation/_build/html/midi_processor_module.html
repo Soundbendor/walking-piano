@@ -301,6 +301,7 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">midi_processor.py</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#midi_processor.MIDIProcessor"><code class="docutils literal notranslate"><span class="pre">MIDIProcessor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#midi_processor.MIDIProcessor.extract_global_tempo"><code class="docutils literal notranslate"><span class="pre">MIDIProcessor.extract_global_tempo()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#midi_processor.MIDIProcessor.extract_track_messages"><code class="docutils literal notranslate"><span class="pre">MIDIProcessor.extract_track_messages()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#midi_processor.MIDIProcessor.play_track"><code class="docutils literal notranslate"><span class="pre">MIDIProcessor.play_track()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#midi_processor.MIDIProcessor.read_midi_file"><code class="docutils literal notranslate"><span class="pre">MIDIProcessor.read_midi_file()</span></code></a></li>
@@ -344,15 +345,22 @@ document.write(`
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="midi_processor.MIDIProcessor.extract_global_tempo">
+<span class="sig-name descname"><span class="pre">extract_global_tempo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#midi_processor.MIDIProcessor.extract_global_tempo" title="Link to this definition">#</a></dt>
+<dd><p>Extracts global tempo changes from the MIDI file, storing them in our list self.global_tempo_changes.
+This list is used to accurately apply tempo changes to each track message.
+Helper function for extract_track_messages.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="midi_processor.MIDIProcessor.extract_track_messages">
-<span class="sig-name descname"><span class="pre">extract_track_messages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_BPM</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">80</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#midi_processor.MIDIProcessor.extract_track_messages" title="Link to this definition">#</a></dt>
-<dd><p>Extracts messages from a specified MIDI track.</p>
+<span class="sig-name descname"><span class="pre">extract_track_messages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track_number</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#midi_processor.MIDIProcessor.extract_track_messages" title="Link to this definition">#</a></dt>
+<dd><p>Extracts messages from the specified track, applying global tempo changes accurately,
+calculating the correct delays for each event, ensuring the playback tempo feels correct.</p>
 <section id="parameters">
 <h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
 <dl class="simple">
-<dt>track_number<span class="classifier">int</span></dt><dd><p>The index of the track to be processed.</p>
-</dd>
-<dt>default_BPM<span class="classifier">int, optional</span></dt><dd><p>The tempo in BPM (default is 80).</p>
+<dt>track_number<span class="classifier">int</span></dt><dd><p>The track number to extract messages from. (0-indexed)</p>
 </dd>
 </dl>
 </section>
@@ -370,7 +378,10 @@ document.write(`
 <span class="sig-name descname"><span class="pre">play_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">messages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outport</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#midi_processor.MIDIProcessor.play_track" title="Link to this definition">#</a></dt>
 <dd><p>Plays messages from a MIDI track in real time. 
 This is used for testing our extract_track_messages function.
-We can listen to how our interpretation of the MIDI file sounds compared to the original.</p>
+We can listen to how our interpretation of the MIDI file sounds compared to the original.
+THIS METHOD IS SLIGHTLY INNACURATE DUE TO THE FACT WE ARE USING TIME.SLEEP TO DELAY THE MESSAGES;
+HOWEVER, IT IS USEFUL FOR TESTING AND DEBUGGING. THE SONGS SHOULD SOUND SIMILAR, BUT NOT EXACTLY THE SAME… BUT CORRECT IN GAME!</p>
+<p>To hear the song perfectly, use the test_midi_file.py script.</p>
 <section id="id2">
 <h3>Parameters<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
 <dl class="simple">
@@ -448,6 +459,7 @@ Obtain this list using the extract_track_messages function.</p>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">midi_processor.py</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#midi_processor.MIDIProcessor"><code class="docutils literal notranslate"><span class="pre">MIDIProcessor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#midi_processor.MIDIProcessor.extract_global_tempo"><code class="docutils literal notranslate"><span class="pre">MIDIProcessor.extract_global_tempo()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#midi_processor.MIDIProcessor.extract_track_messages"><code class="docutils literal notranslate"><span class="pre">MIDIProcessor.extract_track_messages()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#midi_processor.MIDIProcessor.play_track"><code class="docutils literal notranslate"><span class="pre">MIDIProcessor.play_track()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#midi_processor.MIDIProcessor.read_midi_file"><code class="docutils literal notranslate"><span class="pre">MIDIProcessor.read_midi_file()</span></code></a></li>
