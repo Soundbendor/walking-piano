@@ -62,8 +62,11 @@ song_database = {
     25: {"name": "Clark (Minecraft)", "artist": "C418", "file": "clark_minecraft.mid", "difficulty": "Impossible", "players": 2},
 
     26: {"name": "Christmas Don't Be Late", "artist": "The Chipmunks", "file": "christmas_dont_be_late.mid", "difficulty": "Impossible", "players": 2},
-    27: {"name": "Jojo's Bizarre Adventure G", "artist": "Unknown", "file": "jojo.mid", "difficulty": "Unknown", "players": 2},
-    28: {"name": "Bluebird", "artist": "Naruto", "file": "bluebird_naruto.mid", "difficulty": "Medium", "players": 2}    
+    27: {"name": "Here With Me", "artist": "D4vd", "file": "here_with_me.mid", "difficulty": "Impossible", "players": 2},
+    28: {"name": "Jojo's Bizarre Adventure G", "artist": "Unknown", "file": "jojo.mid", "difficulty": "Unknown", "players": 2},
+    29: {"name": "Bluebird", "artist": "Naruto", "file": "bluebird_naruto.mid", "difficulty": "Medium", "players": 2}    
+
+    
     
 }
 
