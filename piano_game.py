@@ -35,6 +35,12 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         # Create a window
         self.window = window
 
+        #Batch for all graphics
+        self.white_keys_batch = pyglet.graphics.Batch()
+        self.black_keys_batch = pyglet.graphics.Batch()
+        self.game_elements_batch = pyglet.graphics.Batch()
+        self.rectangles_batch = pyglet.graphics.Batch()
+
         #Open outport You may need to change this to your specific MIDI port in settings.
         if outport_name is not None:
             self.outport = mido.open_output(outport_name, autoreset=True) # Open the MIDI output port
@@ -177,10 +183,11 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         self.points_for_hold = 10   # Points awarded per second for holding the note correctly 
         
         #Define back button
-        self.back_button = pyglet.shapes.Rectangle(10, self.window.height - 40, 100, 30, color=(50, 50, 50))
+        self.back_button = pyglet.shapes.Rectangle(10, self.window.height - 40, 100, 30, color=(50, 50, 50), batch = self.game_elements_batch)
+
         self.back_button_label = pyglet.text.Label(
             "Back", font_name='Times New Roman', font_size=18,
-            x=60, y=self.window.height - 25, anchor_x='center', anchor_y='center'
+            x=60, y=self.window.height - 25, anchor_x='center', anchor_y='center', batch = self.game_elements_batch
         )
             
         #Handle mouse press for back button
@@ -198,7 +205,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             y=self.window.height // 2, 
             anchor_x='center', 
             anchor_y='center', 
-            color=(255, 255, 255, 255)  # Red color
+            color=(255, 255, 255, 255),  # Red color
         )
         
         #INITIALIZE GAME MODES
@@ -350,7 +357,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         pyglet.shapes.Rectangle
             The created white key.
         """
-        return pyglet.shapes.Rectangle(x, y, width, height, color=color)
+        return pyglet.shapes.Rectangle(x, y, width, height, color=color, batch = self.white_keys_batch)
 
     # Function to create a single piano black key
     def create_black_key(self, x, y, width, height, color):
@@ -375,7 +382,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         pyglet.shapes.Rectangle
             The created black key.
         """
-        return pyglet.shapes.Rectangle(x, y, width, height, color=color)
+        return pyglet.shapes.Rectangle(x, y, width, height, color=color, batch = self.black_keys_batch)
     
     def get_note_label_color(self, note_name):
         """
@@ -462,7 +469,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             #This is not part of the piano itself, but lines to help the user see. To the right of every line is the C key.
             if (midi_key_counter - 24) % 12 == 0:
                 self.visibility_lines.append(pyglet.shapes.Line(
-                x_position, self.white_key_height, x_position, self.window.height, width=1, color=(123, 123, 123)))  # Add this line
+                x_position, self.white_key_height, x_position, self.window.height, width=1, color=(123, 123, 123), batch = self.game_elements_batch))  # Add this line
                 
             
             # Add note name label for white key
@@ -477,6 +484,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                     y=y_position + white_key_height / 7,
                     radius=16,  # Adjust radius as needed
                     color=note_label_color[:3],  # Use the color defined for C
+                    batch = self.white_keys_batch
                 )
                 
                 self.middle_c_special_label = circle
@@ -491,7 +499,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                     y=y_position + white_key_height / 7,
                     anchor_x='center',
                     anchor_y='center',
-                    color=(255, 255, 255, 255)  # White color
+                    color=(255, 255, 255, 255),  # White color
+                    batch = self.white_keys_batch
                 )
                 
                 self.white_keys.append((white_key, note_label))
@@ -505,7 +514,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                     y=y_position + white_key_height / 7,
                     anchor_x='center',
                     anchor_y='center',
-                    color=note_label_color
+                    color=note_label_color,
+                    batch = self.white_keys_batch
                 )
                 self.white_keys.append((white_key, note_label))
             
@@ -521,6 +531,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                 midi_key_counter += 1
                 self.all_midi_keys.append((black_key, midi_key_counter))
                 
+
+                """
                 # Add note name label for black key
                 note_label = pyglet.text.Label(
                     self.note_names[midi_key_counter],
@@ -532,6 +544,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                     anchor_y='center',
                     color=(255, 255, 255, 255)
                 )
+                """
+                note_label = None
                 
                 #Insert black key into list with note label
                 self.black_keys.append((black_key, note_label))
@@ -550,6 +564,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                     midi_key_counter += 1
                     self.all_midi_keys.append((black_key, midi_key_counter))
 
+                    """
                     # Add note name label for black key
                     note_label = pyglet.text.Label(
                         self.note_names[midi_key_counter],
@@ -561,6 +576,9 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                         anchor_y='center',
                         color=(255, 255, 255, 255)
                     )
+                    """
+                    note_label = None
+
                     self.black_keys.append((black_key, note_label))
                     
             # Move to the next key position
@@ -624,23 +642,23 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         It is utilized by the on_draw function which is called automatically by Pyglet every frame.
         """
 
-        self.window.clear()
+        #self.window.clear()
         # Draw white keys
-        for white_key, note_label in self.white_keys:
-            white_key.draw()
+        if self.game_mode != "JukeBox":
+            self.middle_c_special_label.draw()
+            
+            for white_key, note_label in self.white_keys:
+                note_label.draw()            
+                white_key.draw()
+
+        else:
+            for white_key, note_label in self.white_keys:
+                white_key.draw()
             
         # Draw black keys
         for black_key,  note_label in self.black_keys:
             black_key.draw()
-            #note_label.draw() #We not using black key labels yet but they setup for future use...
-        
-        #Only draw white key labels if not in FreePlay mode.
-        if self.game_mode != "JukeBox":
-            
-            self.middle_c_special_label.draw()
-            
-            for white_key, note_label in self.white_keys:
-                note_label.draw()
+            #note_label.draw() #We not using black key labels yet but they setup for future use...S
             
             
     # Function to draw all aspects of the game. This includes pianos, rectangles and any other buttons. This method is called automatically by Pyglet every frame.
@@ -653,20 +671,28 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         
         if self.window.game_state == 'GAME':
             #Draw the piano
-            self.draw_piano()
-
-            #Draw our line segment
-            for i in self.active_notes_line_segments:
-                self.active_notes_line_segments[i].draw()
+            #self.draw_piano()
 
             # Draw falling rectangles
-            for rectangle in self.falling_rectangles_list:
-                rectangle.draw()
+            #for rectangle in self.falling_rectangles_list:
+            #    rectangle.draw()
 
             # Draw visibility lines for C keys
-            for line in self.visibility_lines:
-                line.draw()
+            #for line in self.visibility_lines:
+            #    line.draw()
 
+            self.game_elements_batch.draw()
+            self.rectangles_batch.draw()
+            self.white_keys_batch.draw()
+            self.black_keys_batch.draw()
+
+
+            #self.fps_display.draw()
+          
+            # Draw Game Over message if the game is over
+            if self.game_over:
+                self.game_over_label.draw()
+            """  
             if self.game_mode == "Challenge":
                 # Draw score
                 score_text = f"{self.score}"
@@ -681,16 +707,15 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                     color=(255, 255, 255, 255)  # White color
                 )
                 score_label.draw()
+            """
+               
                 
             # Draw Back button
-            self.back_button.draw()
-            self.back_button_label.draw()
+            #self.back_button.draw()
+            #self.back_button_label.draw()
             
-            # Draw Game Over message if the game is over
-            if self.game_over:
-                self.game_over_label.draw()
+      
 
-            #self.fps_display.draw()
                 
     # Function to highlight a specific key based on the key number
     def highlight_key(self, key_number):
@@ -831,7 +856,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             height=height, 
             border=border_thickness, 
             color=inner_color, 
-            border_color=border_color
+            border_color=border_color,
+            batch = self.rectangles_batch
         )
 
         # Custom attributes for logic handling
@@ -867,7 +893,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         
 
         total_delay = 0
-        buffer_time = 15  # 10 seconds buffer time for end of song
+        buffer_time = 7  # 10 seconds buffer time for end of song
         
 
         for msg, delay in track_messages:
@@ -1105,7 +1131,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                                         
         for rectangle in cleanup_list:
             self.falling_rectangles_list.remove(rectangle)
-            #del self.active_note_events[rectangle.unique_id]
+            rectangle.delete()
             del rectangle
               
     # Method for handling mouse press to quit the game... can also use backspace but this is more intuitive.
