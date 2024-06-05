@@ -32,9 +32,13 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         this includes the user interface and all  logic for the piano game.
         """
         
+        print("Initializing Piano Game...")
+        
         # Create a window
         self.window = window
-
+        
+        self.window.push_handlers(self.on_key_press)
+        
         #Batch for all graphics
         self.white_keys_batch = pyglet.graphics.Batch()
         self.black_keys_batch = pyglet.graphics.Batch()
@@ -208,6 +212,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             color=(255, 255, 255, 255),  # Red color
         )
         
+        self.threads = []
+        
         #INITIALIZE GAME MODES
         if self.game_mode == "Challenge":
             #Schedule score update function
@@ -217,6 +223,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         if self.game_mode != "FreePlay" and self.game_mode!= "JukeBox" and midi_file_path is not None:
                   
             keyboard_thread = threading.Thread(target=self.play_piano_user)
+            self.threads.append(keyboard_thread)
             keyboard_thread.start()
           
             #Schedule updating rectangles function to move things down constantly.
@@ -228,12 +235,14 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         elif self.game_mode == "FreePlay":
             #Open the input port for the piano user. Allow playing piano, but no game.
             keyboard_thread = threading.Thread(target=self.play_piano_user)
+            self.threads.append(keyboard_thread)
             keyboard_thread.start()
             
         elif self.game_mode == "JukeBox":            
             #Automatic piano playing mode. No user input.
-            thread = threading.Thread(target=self.jukebox_mode, args=(midi_file_path,))
-            thread.start()
+            jukebox_thread = threading.Thread(target=self.jukebox_mode, args=(midi_file_path,))
+            self.threads.append(jukebox_thread)
+            jukebox_thread.start()
         
         
 
@@ -687,7 +696,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             self.black_keys_batch.draw()
 
 
-            #self.fps_display.draw()
+            self.fps_display.draw()
           
             # Draw Game Over message if the game is over
             if self.game_over:
@@ -1161,39 +1170,44 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         """
         Exit the game and clean up resources.
         """
-        self.clock_pause_manager.clear()  # Clear scheduled functions and pause manager
-        self.game_active = False  # Set game to inactive
+        self.game_active = False
 
-        # Reset MIDI output
+        # Terminate all running threads
+        for thread in self.threads:
+            if thread.is_alive():
+                thread.join(timeout=1)
+
+        self.threads = []
+
+        self.clock_pause_manager.clear()
+        
         if self.outport is not None:
             self.outport.reset()
             self.outport.close()
 
-        # Clear all active notes and playing notes
         self.active_notes = {note: False for note in range(21, 109)}
         self.playing_notes = {note: False for note in range(21, 109)}
         self.incoming_notes = {note: {'note_timing': 0, 'note_played': 0} for note in range(21, 109)}
 
-        # Clear the list of falling rectangles
+        for rectangle in self.falling_rectangles_list:
+            rectangle.delete()
         self.falling_rectangles_list.clear()
 
-        # Reset any note events
-        self.active_note_events.clear()
+        # Reinitialize batches to reset graphics
+        self.white_keys_batch = pyglet.graphics.Batch()
+        self.black_keys_batch = pyglet.graphics.Batch()
+        self.game_elements_batch = pyglet.graphics.Batch()
+        self.rectangles_batch = pyglet.graphics.Batch()
 
-        # Reset score and other game-specific variables
+        self.active_note_events.clear()
         self.score = 0
 
-        # Reset window handlers
-        self.window.remove_handlers(on_draw=self.on_draw)
+        self.window.remove_handlers(on_draw=self.on_draw, on_key_press=self.on_key_press)
         self.window.pop_handlers()
-
-        self.window.clear()
-        
-        #Reset game state
         self.game_over = False
-
-        # Call the method to return to the main menu or initial screen
         self.window.return_to_menu()
+        print("Game exited cleanly.")
+
                 
     #Custom Keybinds for Development...
     def on_key_press(self, symbol, modifiers):
@@ -1216,6 +1230,9 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             self.exit_game()
                 
         #PAUSE THE GAME ~ USEFUL FOR DEBUGGING PRACTICE MODE:
+        if symbol == pyglet.window.key.B:
+            print("B pressed")
+        
         """
         if symbol == pyglet.window.key.P:
             print("P pressed")

@@ -782,9 +782,9 @@ class WalkingPianoGame(pyglet.window.Window):
         Returns to the main menu.
         """
         # Logic to return to the main menu
-        self.game_state = 'MENU'
-        self.player_count = 1
         self.game = None
+        self.player_count = 1
+        self.game_state = 'MENU'
         pass
 
     def handle_prev_page(self):
