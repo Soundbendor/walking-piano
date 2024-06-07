@@ -443,7 +443,7 @@ class WalkingPianoGame(pyglet.window.Window):
             self.practice_mode_warning = ClickableLabel(
                 "Note: Practice mode is still buggy and may not function as expected.", 
                 None, 
-                13, 
+                18, 
                 self.width // 2, 
                 self.height - 90, 
                 'center', 
@@ -969,6 +969,7 @@ class WalkingPianoGame(pyglet.window.Window):
         Returns to the main menu.
         """
         # Logic to return to the main menu
+        self.song_select_batch = pyglet.graphics.Batch()
         self.current_page = 0
         self.game = None
         self.player_count = 1
@@ -1009,8 +1010,8 @@ if __name__ == "__main__":
     #Change to songs directory for access of song files within game.
     os.chdir("songs")
 
-    game = WalkingPianoGame(width=1920, height=1080, resizable=False, caption="Walking Piano", style=pyglet.window.Window.WINDOW_STYLE_BORDERLESS)
+    #game = WalkingPianoGame(width=1920, height=1080, resizable=False, caption="Walking Piano", style=pyglet.window.Window.WINDOW_STYLE_BORDERLESS)
     #game = WalkingPianoGame(fullscreen=True, resizable=False, caption="Walking Piano")
-    #game = WalkingPianoGame(width = 1920, height = 1080, resizable=False, caption="Walking Piano")
+    game = WalkingPianoGame(width = 1920, height = 1080, resizable=False, caption="Walking Piano")
 
     pyglet.app.run()
