@@ -437,6 +437,22 @@ class WalkingPianoGame(pyglet.window.Window):
             label = ClickableLabel(f"{song_info['name']} - {song_info['artist']}", song_id, 18, self.width // 2, y_position, 'center', 'center', self.song_select_batch)
             self.song_options_labels.append(label)
 
+
+         # Add warning about practice mode being buggy if in Practice mode
+        if self.selected_game_mode == 'Practice':
+            self.practice_mode_warning = ClickableLabel(
+                "Note: Practice mode is still buggy and may not function as expected.", 
+                None, 
+                13, 
+                self.width // 2, 
+                self.height - 90, 
+                'center', 
+                'center', 
+                self.song_select_batch, 
+                color=(255, 0, 0, 255),  # Red color for warning
+                highlightable=False
+            )
+            
         # Pagination buttons
         self.prev_page_button = ClickableLabel("Previous", None, 18, self.width // 2 - 200, 50, 'center', 'center', self.song_select_batch)
         self.next_page_button = ClickableLabel("Next", None, 18, self.width // 2 + 200, 50, 'center', 'center', self.song_select_batch)
@@ -605,7 +621,8 @@ class WalkingPianoGame(pyglet.window.Window):
             # Filter for 'Easy' songs for Practice mode regardless of player count
             for song_id, song_info in song_database.items():
                 if song_info['difficulty'] == 'Easy':
-                    filtered_songs[song_id] = song_info
+                    if song_info['file'] not in ['piano_polka.mid','TheWishingWell.mid','A_Lion.mid',"morning.mid","A_Happy_Treble_Melody.mid","A_Happy_Bass_Melody.mid","You_ve_Got_A_Friend_In_Me_Easy_Piano_Sheet_Music.mid", "silent_night.mid", "Pure_Imagination_Piano_Solo_-_Beginner.mid", "My_Heart_Will_Go_On_Piano.mid"]:
+                        filtered_songs[song_id] = song_info
                     
         elif self.selected_game_mode == 'Challenge':
             # In Challenge Mode, filter songs based on the number of players
