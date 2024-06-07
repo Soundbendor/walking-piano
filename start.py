@@ -326,7 +326,7 @@ class WalkingPianoGame(pyglet.window.Window):
         The current state of the game.
     player_count : int
         The number of players.
-    autoplay : bool
+    autoplay : int
         Whether autoplay is enabled.
     controller_size : str
         The size of the controller.
@@ -374,7 +374,7 @@ class WalkingPianoGame(pyglet.window.Window):
         self.selected_game_mode = None
         self.game_state = 'MENU'
         self.player_count = 1  # Default to 1 player
-        self.autoplay = False  # Default to no autoplay
+        self.autoplay = 0  # Default to no autoplay
         self.controller_size = '49 key'  # Default to smaller 49 key version
         self.selected_difficulty = 'Easy'  # Default to easy difficulty
 
@@ -492,14 +492,13 @@ class WalkingPianoGame(pyglet.window.Window):
         Sets up the settings menu labels.
         """
         
-        #Clear batch
+       # Clear batch
         self.settings_batch = pyglet.graphics.Batch()
-        
-        
+
         y_offset = 120  # Adjust for where settings options start
         all_out_ports = mido.get_output_names()
         all_in_ports = mido.get_input_names()
-        
+
         # Settings title
         self.settings_title = ClickableLabel("Settings", None, 32, self.width // 2, self.height - 50, 'center', 'center', self.settings_batch, highlightable=False)
 
@@ -528,32 +527,33 @@ class WalkingPianoGame(pyglet.window.Window):
                 y_position -= 30
         else:
             self.settings_options_labels.append(ClickableLabel("None", None, 18, self.width // 2, y_position, 'center', 'center', self.settings_batch, color=(255, 0, 0, 255)))
-        
-        
-        # Autoplay and Controller Size options on the same horizontal level
-        y_position -= 60  # Adjust y_position accordingly for next set of options
 
-        # Autoplay option
-        self.settings_options_labels.append(ClickableLabel("Autoplay:", None, 24, self.width // 2 - 150, y_position, 'center', 'center', self.settings_batch, highlightable=False))
+        # Autoplay options
+        y_position -= 40  # Extra spacing before listing autoplay options
+        self.settings_options_labels.append(ClickableLabel("Autoplay:", None, 24, self.width // 2, y_position, 'center', 'center', self.settings_batch, highlightable=False))
         y_position -= 30
-        true_color = (0, 255, 0, 255) if self.autoplay else (255, 255, 255, 255)
-        self.true_label = ClickableLabel("True", None, 18, self.width // 2 - 200, y_position, 'center', 'center', self.settings_batch, color=true_color)
-        self.settings_options_labels.append(self.true_label)
-        false_color = (255, 0, 0, 255) if not self.autoplay else (255, 255, 255, 255)
-        self.false_label = ClickableLabel("False", None, 18, self.width // 2 - 100, y_position, 'center', 'center', self.settings_batch, color=false_color)
-        self.settings_options_labels.append(self.false_label)
+        autoplay_off_color = (255, 0, 0, 255) if self.autoplay == 0 else (255, 255, 255, 255)
+        autoplay_left_color = (255, 165, 0, 255) if self.autoplay == 1 else (255, 255, 255, 255)
+        autoplay_both_color = (0, 255, 0, 255) if self.autoplay == 2 else (255, 255, 255, 255)
+        self.autoplay_off_label = ClickableLabel("Off", None, 18, self.width // 2 - 100, y_position, 'center', 'center', self.settings_batch, color=autoplay_off_color)
+        self.settings_options_labels.append(self.autoplay_off_label)
+        self.autoplay_left_label = ClickableLabel("Left", None, 18, self.width // 2, y_position, 'center', 'center', self.settings_batch, color=autoplay_left_color)
+        self.settings_options_labels.append(self.autoplay_left_label)
+        self.autoplay_both_label = ClickableLabel("Both", None, 18, self.width // 2 + 100, y_position, 'center', 'center', self.settings_batch, color=autoplay_both_color)
+        self.settings_options_labels.append(self.autoplay_both_label)
 
         # Controller Size option
-        self.settings_options_labels.append(ClickableLabel("Controller Size:", None, 24, self.width // 2 + 150, y_position + 30, 'center', 'center', self.settings_batch, highlightable=False))
+        y_position -= 90  # Adjust y_position accordingly for next set of options
+
+        self.settings_options_labels.append(ClickableLabel("Controller Size:", None, 24, self.width // 2, y_position + 30, 'center', 'center', self.settings_batch, highlightable=False))
         size_88_color = (255, 255, 255, 255) if self.controller_size == '49 key' else (0, 255, 0, 255)
-        self.size_88_label = ClickableLabel("88 key", None, 18, self.width // 2 + 100, y_position, 'center', 'center', self.settings_batch, color=size_88_color)
+        self.size_88_label = ClickableLabel("88 key", None, 18, self.width // 2 - 100, y_position, 'center', 'center', self.settings_batch, color=size_88_color)
         self.settings_options_labels.append(self.size_88_label)
         size_49_color = (0, 255, 0, 255) if self.controller_size == '49 key' else (255, 255, 255, 255)
-        self.size_49_label = ClickableLabel("49 key", None, 18, self.width // 2 + 200, y_position, 'center', 'center', self.settings_batch, color=size_49_color)
+        self.size_49_label = ClickableLabel("49 key", None, 18, self.width // 2 + 100, y_position, 'center', 'center', self.settings_batch, color=size_49_color)
         self.settings_options_labels.append(self.size_49_label)
 
-        
-        #Return to menu button
+        # Return to menu button
         self.home_button = ClickableLabel("Return to Menu", None, 24, self.width // 2, 50, 'center', 'center', self.settings_batch)
         self.settings_options_labels.append(self.home_button)
            
@@ -847,16 +847,20 @@ class WalkingPianoGame(pyglet.window.Window):
                         self.return_to_menu()
                         return
                 
-            if self.true_label.is_clicked(x, y):
-                self.autoplay = True
+            if self.autoplay_off_label.is_clicked(x, y):
+                self.autoplay = 0
                 self.setup_settings()  # Refresh settings to update highlighted selection
                 return
-            elif self.false_label.is_clicked(x, y):
-                self.autoplay = False
+            elif self.autoplay_left_label.is_clicked(x, y):
+                self.autoplay = 1
+                self.setup_settings()  # Refresh settings to update highlighted selection
+                return
+            elif self.autoplay_both_label.is_clicked(x, y):
+                self.autoplay = 2
                 self.setup_settings()  # Refresh settings to update highlighted selection
                 return
             
-                # Controller Size handling
+            # Controller Size handling
             elif self.size_88_label.is_clicked(x, y):
                 self.controller_size = '88 key'
                 self.setup_settings()  # Refresh settings to update highlighted selection
@@ -928,7 +932,7 @@ class WalkingPianoGame(pyglet.window.Window):
             The size of the controller (default is '88 key').
         player_count : int, optional
             The number of players (default is 1).
-        autoplay : bool, optional
+        autoplay : int: 0 for none, 1 for half autoplay (left hand automatic), 2 for full autoplay optional
             Whether autoplay is enabled (default is False).
         """
 

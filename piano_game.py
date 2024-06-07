@@ -25,7 +25,7 @@ from midi_processor import MIDIProcessor
 
 class PianoGameUI(pyglet.event.EventDispatcher):
 
-    def __init__(self, window, midi_file_path, game_mode, inport_name, outport_name, controller_size, player_count=1,  auto_play=False):
+    def __init__(self, window, midi_file_path, game_mode, inport_name, outport_name, controller_size, player_count=1,  auto_play=0):
         
         """
         PianoGameUI is responsible for handling the  entire game portion of the Walking Piano project,
@@ -164,8 +164,16 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         
         self.game_mode = game_mode
         
-        # TEMPORARY TESTING IF TRUE
-        self.testing_autoplay = auto_play
+        if auto_play == 1:
+            print("Half Auto Play Mode Enabled.")
+            self.half_autoplay = True
+            self.testing_autoplay = True
+        elif auto_play == 2:
+            self.half_autoplay = False
+            self.testing_autoplay = True
+        else:
+            self.half_autoplay = False
+            self.testing_autoplay = False
         
         self.okay_color_white = (255, 255, 0)
         self.okay_color_black =  (100, 100, 0)
@@ -668,7 +676,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             self.black_keys_batch.draw()
             self.game_elements_batch.draw()
             self.score_label.draw()
-            self.fps_display.draw()    
+            
+            #self.fps_display.draw()    
             
             # Draw Game Over message if the game is over
             if self.game_over:
@@ -794,17 +803,28 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         width = reference_segment.width
         height = 0  # Initial height of the rectangle
         
+        self.player1_white_color = (137, 207, 240)
+        self.player1_black_color = (70, 130, 255)
+        
+        self.player2_white_color = (255, 130, 67)
+        self.player2_black_color = (150, 80, 33)
+        
+        #make these notes dark so they dont stand out
+        if self.half_autoplay == True:
+            self.player2_white_color = (50, 50, 50)
+            self.player2_black_color = (30, 30, 30)
+        
         if player == 1:
-            inner_color = (137, 207, 240)  # Inner color for white keys
+            inner_color = self.player1_white_color  # Inner color for white keys
 
             if note_number in self.black_keys_midi:
-                inner_color = (70, 130, 255)  # Different inner color for black keys
+                inner_color = self.player1_black_color  # Different inner color for black keys
         
         elif player == 2:
-            inner_color = (255, 130, 67)
+            inner_color = self.player2_white_color  # Inner color for white keys
             
             if note_number in self.black_keys_midi:
-                inner_color = (150, 80, 33)
+                inner_color = self.player2_black_color  # Different inner color for black keys
 
         border_color = (0, 0, 0)  # Black border for visibility
         border_thickness = 2  # Thickness of the border
@@ -1042,11 +1062,20 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                     self.incoming_notes[rectangle.note_number]['note_played'] = 0
                     
                     if self.testing_autoplay == True and rectangle.note_off == False and self.playing_notes[rectangle.note_number] == True:
-                        rectangle.note_off = True
-                        off_message = mido.Message('note_off', note= rectangle.note_number)
-                        self.outport.send(off_message)
-                        self.playing_notes[rectangle.note_number] = False
-                        self.unhighlight_key(rectangle.note_number)
+                        
+                        if self.half_autoplay == True: #If half autoplay we only gonna autoplay the player2 notes...
+                            if rectangle.color == self.player2_white_color or rectangle.color == self.player2_black_color or rectangle.color == self.player2_white_color + (255,) or rectangle.color == self.player2_black_color + (255,):
+                                rectangle.note_off = True
+                                off_message = mido.Message('note_off', note= rectangle.note_number)
+                                self.outport.send(off_message)
+                                self.playing_notes[rectangle.note_number] = False
+                                self.unhighlight_key(rectangle.note_number)
+                        else: #Else we gonna autoplay all the notes!
+                            rectangle.note_off = True
+                            off_message = mido.Message('note_off', note= rectangle.note_number)
+                            self.outport.send(off_message)
+                            self.playing_notes[rectangle.note_number] = False
+                            self.unhighlight_key(rectangle.note_number)
                         
                     cleanup_list.append(rectangle)
 
@@ -1065,11 +1094,19 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                     
                     rectangle.played = True
                     if self.testing_autoplay == True:
-                        on_message = mido.Message('note_on', note= rectangle.note_number)
-                        self.outport.send(on_message)
-                        self.highlight_key(rectangle.note_number)
-                        self.playing_notes[rectangle.note_number] = True
-                        continue
+                        if self.half_autoplay == True:
+                            if rectangle.color == self.player2_white_color or rectangle.color == self.player2_black_color or rectangle.color == self.player2_white_color + (255,) or rectangle.color == self.player2_black_color + (255,):
+                                on_message = mido.Message('note_on', note= rectangle.note_number)
+                                self.outport.send(on_message)
+                                self.highlight_key(rectangle.note_number)
+                                self.playing_notes[rectangle.note_number] = True
+                                continue
+                        else: 
+                            on_message = mido.Message('note_on', note= rectangle.note_number)
+                            self.outport.send(on_message)
+                            self.highlight_key(rectangle.note_number)
+                            self.playing_notes[rectangle.note_number] = True
+                            continue
     
 
                 """LOGIC FOR PRACTICE GAME MODE"""
