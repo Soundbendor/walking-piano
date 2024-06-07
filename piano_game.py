@@ -193,7 +193,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             "Back", font_name='Times New Roman', font_size=18,
             x=60, y=self.window.height - 25, anchor_x='center', anchor_y='center', batch = self.game_elements_batch
         )
-            
+
         #Handle mouse press for back button
         self.window.push_handlers(on_mouse_press=self.on_mouse_press)
          
@@ -214,8 +214,10 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         
         self.threads = []
         
+        print(self.game_mode)
         #INITIALIZE GAME MODES
         if self.game_mode == "Challenge":
+            
             #Schedule score update function
             pyglet.clock.schedule_interval(self.update_score, 1/4)
             
@@ -644,31 +646,6 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             # Move to the next key position
             x_position += white_key_width
 
-    # Function to draw the piano keys and labels. Is utilized by the on_draw function.
-    def draw_piano(self):
-        """
-        As helper function to draw the piano keys and labels.
-        It is utilized by the on_draw function which is called automatically by Pyglet every frame.
-        """
-
-        #self.window.clear()
-        # Draw white keys
-        if self.game_mode != "JukeBox":
-            self.middle_c_special_label.draw()
-            
-            for white_key, note_label in self.white_keys:
-                note_label.draw()            
-                white_key.draw()
-
-        else:
-            for white_key, note_label in self.white_keys:
-                white_key.draw()
-            
-        # Draw black keys
-        for black_key,  note_label in self.black_keys:
-            black_key.draw()
-            #note_label.draw() #We not using black key labels yet but they setup for future use...S
-            
             
     # Function to draw all aspects of the game. This includes pianos, rectangles and any other buttons. This method is called automatically by Pyglet every frame.
     def on_draw(self):
@@ -679,30 +656,16 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         self.window.clear()
         
         if self.window.game_state == 'GAME':
-            #Draw the piano
-            #self.draw_piano()
-
-            # Draw falling rectangles
-            #for rectangle in self.falling_rectangles_list:
-            #    rectangle.draw()
-
-            # Draw visibility lines for C keys
-            #for line in self.visibility_lines:
-            #    line.draw()
-
-            self.game_elements_batch.draw()
+            
             self.rectangles_batch.draw()
             self.white_keys_batch.draw()
             self.black_keys_batch.draw()
+            self.game_elements_batch.draw()
+            
+            #self.fps_display.draw()
 
-
-            self.fps_display.draw()
-          
-            # Draw Game Over message if the game is over
-            if self.game_over:
-                self.game_over_label.draw()
-            """  
-            if self.game_mode == "Challenge":
+            """
+           if self.game_mode == "Challenge":
                 # Draw score
                 score_text = f"{self.score}"
                 score_label = pyglet.text.Label(
@@ -716,12 +679,13 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                     color=(255, 255, 255, 255)  # White color
                 )
                 score_label.draw()
-            """
-               
-                
-            # Draw Back button
-            #self.back_button.draw()
-            #self.back_button_label.draw()
+        
+                """        
+            
+            # Draw Game Over message if the game is over
+            if self.game_over:
+                self.game_over_label.draw()
+
             
       
 

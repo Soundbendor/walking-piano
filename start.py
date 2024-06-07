@@ -24,50 +24,149 @@ import os
 import signal
 import csv 
 
-# Database of songs
 song_database = {
-    1: {"name": "Mary had a little lamb", "artist": "Nursery Rhyme (Easy)", "file": "mary_lamb.mid", "difficulty": "Easy", "players": 1},
-    2: {"name": "Peter Peter Pumpkin Eater", "artist": "Nursery Rhyme (Easy)", "file": "PeterPeter.mid", "difficulty": "Easy", "players": 1},
-    3: {"name": "The Wishing Well", "artist": "Nursery Rhyme (Easy)", "file": "TheWishingWell.mid", "difficulty": "Easy", "players": 1},
-    4: {"name": "A Lion", "artist": "Nursery Rhyme (Easy)", "file": "A_Lion.mid", "difficulty": "Easy", "players": 1},
-    5: {"name": "Song for Beginners ", "artist": "Nikodem Kulczyk", "file": "beginner.mid", "difficulty": "Easy", "players": 2},
-    6: {"name": "Minuet in G Minor", "artist": "Bach", "file": "Bach_Minuet_in_G_Minor.mid", "difficulty": "Medium", "players": 2},
-    7: {"name": "Cornfield Chase (Interstellar)", "artist": "Hans Zimmer", "file": "cornfield_chase.mid", "difficulty": "Medium", "players": 2},
-    8: {"name": " Dry Hands", "artist": "C418" , "file": "Dry_Hands.mid", "difficulty": "Medium", "players": 2},
-    9: {"name": "Morning", "artist": "Edvard Grieg - Adapted", "file": "morning.mid", "difficulty": "Easy", "players": 1},
-    10: {"name": "Piano Polka", "artist": "Kevin Olson", "file": "piano_polka.mid", "difficulty": "Easy", "players": 1},
-    11: {"name": "Yankee Doodle", "artist": "Mary Leaf", "file": "Yankee_Doodle.mid", "difficulty": "Easy", "players": 1},
-    12: {"name": "A Happy Bass Melody", "artist": "G. Turk - Adapted", "file": "A_Happy_Bass_Melody.mid", "difficulty": "Easy", "players": 1},
-    13: {"name": "A Happy Treble Melody", "artist": "G. Turk - Adapted", "file": "A_Happy_Treble_Melody.mid", "difficulty": "Easy", "players": 1},
-    14: {"name": "Ode to Joy", "artist": "Ludwig van Beethoven - Adapted", "file": "Ode_to_joy.mid", "difficulty": "Easy", "players": 1},
-    15: {"name": "Viva la Vida", "artist": "Coldplay (Demo song)", "file": "Viva_la_vida.mid", "difficulty": "Medium", "players": 2}, 
-    16: {"name": "Golden Hour", "artist": "JVKE (Demo song)", "file": "Golden_HOUR.mid", "difficulty": "Hard", "players": 2},   #Jukebox example
-    17: {"name": "September", "artist": "Earth, Wind & Fire (Demo song)", "file": "september.mid", "difficulty": "Impossible", "players": 2},
-    
-    
-    #married life from up. married_life.mid
-    18: {"name": "Married Life", "artist": "Michael Giacchino (Up)", "file": "married_life.mid", "difficulty": "Impossible (showcase song)", "players": 2},
-    19: {"name": "Im Still Standing", "artist": "Elton John", "file": "still_standing.mid", "difficulty":"Impossible (showcase song)",  "players": 2},  
-    
-    #runaway kanye 
-    20: {"name": "Runaway", "artist": "Kanye West", "file": "runaway.mid", "difficulty": "Impossible", "players": 2},
+    # Easy songs
+    1: {"name": "A Happy Bass Melody", "artist": "G. Turk - Adapted", "file": "A_Happy_Bass_Melody.mid", "difficulty": "Easy", "players": 1},
+    2: {"name": "A Happy Treble Melody", "artist": "G. Turk - Adapted", "file": "A_Happy_Treble_Melody.mid", "difficulty": "Easy", "players": 1},
+    3: {"name": "A Lion", "artist": "Nursery Rhyme (Easy)", "file": "A_Lion.mid", "difficulty": "Easy", "players": 1},
+    4: {"name": "Mary had a little lamb", "artist": "Nursery Rhyme (Easy)", "file": "mary_lamb.mid", "difficulty": "Easy", "players": 1},
+    5: {"name": "Morning", "artist": "Edvard Grieg - Adapted", "file": "morning.mid", "difficulty": "Easy", "players": 1},
+    6: {"name": "Ode to Joy", "artist": "Ludwig van Beethoven - Adapted", "file": "Ode_to_joy.mid", "difficulty": "Easy", "players": 1},
+    7: {"name": "Peter Peter Pumpkin Eater", "artist": "Nursery Rhyme (Easy)", "file": "PeterPeter.mid", "difficulty": "Easy", "players": 1},
+    8: {"name": "Piano Polka", "artist": "Kevin Olson", "file": "piano_polka.mid", "difficulty": "Easy", "players": 1},
+    9: {"name": "The Wishing Well", "artist": "Nursery Rhyme (Easy)", "file": "TheWishingWell.mid", "difficulty": "Easy", "players": 1},
+    10: {"name": "Yankee Doodle", "artist": "Mary Leaf", "file": "Yankee_Doodle.mid", "difficulty": "Easy", "players": 1},
+    33: {"name": "Silent Night", "artist": "Traditional", "file": "silent_night.mid", "difficulty": "Easy", "players": 2},
+    34: {"name": "Twinkle Twinkle Little Star", "artist": "Nursery Rhyme", "file": "twinkle_twinkle.mid", "difficulty": "Easy", "players": 2},
+    45: {"name": "Jurassic Park Theme", "artist": "John Williams", "file": "Jurassic_Park_Theme_for_Beginner_EASY_Piano.mid", "difficulty": "Easy", "players": 2},
+    54: {"name": "Megalovania Theme from Undertale", "artist": "Toby Fox", "file": "Megalovania_Theme_from_Undertale__easy_piano.mid", "difficulty": "Easy", "players": 2},
+    58: {"name": "You've Got A Friend In Me", "artist": "Randy Newman", "file": "You_ve_Got_A_Friend_In_Me_Easy_Piano_Sheet_Music.mid", "difficulty": "Easy", "players": 2},
+    60: {"name": "Pure Imagination", "artist": "Leslie Bricusse & Anthony Newley", "file": "Pure_Imagination_Piano_Solo_-_Beginner.mid", "difficulty": "Easy", "players": 2},
+    71: {"name": "My Heart Will Go On", "artist": "Celine Dion", "file": "My_Heart_Will_Go_On_Piano.mid", "difficulty": "Easy", "players": 2},
+
+
+    # Challenge songs
+    11: {"name": "Cornfield Chase (Interstellar)", "artist": "Hans Zimmer", "file": "cornfield_chase.mid", "difficulty": "Challenge", "players": 2},
+    12: {"name": "Dry Hands", "artist": "C418", "file": "Dry_Hands.mid", "difficulty": "Challenge", "players": 2},
+    13: {"name": "Minuet in G Minor", "artist": "Bach", "file": "Bach_Minuet_in_G_Minor.mid", "difficulty": "Challenge", "players": 2},
+    14: {"name": "Song for Beginners", "artist": "Nikodem Kulczyk", "file": "beginner.mid", "difficulty": "Challenge", "players": 2},
+    15: {"name": "Viva la Vida", "artist": "Coldplay", "file": "Viva_la_vida.mid", "difficulty": "Challenge", "players": 2},
+    16: {"name": "Christmas Don't Be Late", "artist": "The Chipmunks", "file": "christmas_dont_be_late.mid", "difficulty": "Challenge", "players": 2},
+    17: {"name": "Clark (Minecraft)", "artist": "C418", "file": "clark_minecraft.mid", "difficulty": "Challenge", "players": 2},
+    18: {"name": "Hallelujah", "artist": "Leonard Cohen", "file": "hallelujah.mid", "difficulty": "Challenge", "players": 2},
+    19: {"name": "I'm Still Standing", "artist": "Elton John", "file": "still_standing.mid", "difficulty": "Challenge", "players": 2},
+    20: {"name": "Married Life", "artist": "Michael Giacchino (Up)", "file": "married_life.mid", "difficulty": "Challenge", "players": 2},
+    22: {"name": "Uptown Girl", "artist": "Westlife", "file": "uptown_girl.mid", "difficulty": "Challenge", "players": 2},
+    32: {"name": "A Whole New World", "artist": "Aladdin", "file": "whole_new_world.mid", "difficulty": "Challenge", "players": 2},
+    35: {"name": "Piano Man", "artist": "Billy Joel", "file": "piano_man.mid", "difficulty": "Challenge", "players": 2},
+    36: {"name": "Sweden (Minecraft)", "artist": "C418", "file": "sweden_minecraft.mid", "difficulty": "Challenge", "players": 2},
+    37: {"name": "My Heart Will Go On", "artist": "Celine Dion", "file": "heart_will_go_on.mid", "difficulty": "Challenge", "players": 2},
+    38: {"name": "Game of Thrones Theme", "artist": "Ramin Djawadi", "file": "game_of_thrones.mid", "difficulty": "Challenge", "players": 2},
+    39: {"name": "Captured Memories", "artist": "Zelda: Breath of the Wild", "file": "Zelda_Breath_of_the_Wild_-_Captured_Memories_piano.mid", "difficulty": "Challenge", "players": 2},
+    40: {"name": "He's a Pirate", "artist": "Klaus Badelt", "file": "hes_a_pirate.mid", "difficulty": "Challenge", "players": 2},
+    41: {"name": "Sadness and Sorrow", "artist": "Naruto", "file": "Sadness_and_Sorrow_for_PIANO_SOLO.mid", "difficulty": "Challenge", "players": 2},
+    42: {"name": "Heart and Soul", "artist": "Hoagy Carmichael", "file": "Heart_and_Soul_Piano.mid", "difficulty": "Challenge", "players": 2},
+    43: {"name": "Never Gonna Give You Up", "artist": "Rick Astley", "file": "Never_Gonna_Give_You_UP__Easy_Piano.mid", "difficulty": "Challenge", "players": 2},
+    44: {"name": "See You Again", "artist": "Wiz Khalifa ft. Charlie Puth", "file": "See_You_Again.mid", "difficulty": "Challenge", "players": 2},
+    46: {"name": "All of Me", "artist": "John Legend", "file": "All_of_Me_John_Legend.mid", "difficulty": "Challenge", "players": 2},
+    52: {"name": "Pirates of the Caribbean", "artist": "Klaus Badelt", "file": "Pirates_of_the_Caribbean.mid", "difficulty": "Challenge", "players": 2},
+    55: {"name": "Counting Stars", "artist": "OneRepublic", "file": "Counting_Stars_longer.mid", "difficulty": "Challenge", "players": 2},
+    56: {"name": "SAD!", "artist": "XXXTENTACION", "file": "SAD_-_XXXTENTACION_Piano.mid", "difficulty": "Challenge", "players": 2},
+    57: {"name": "Super Mario Theme Song", "artist": "Koji Kondo", "file": "Super_Mario_Theme_Song.mid", "difficulty": "Challenge", "players": 2},
+    59: {"name": "Moon River", "artist": "Henry Mancini", "file": "Moon_River(1).mid", "difficulty": "Challenge", "players": 2},
+    61: {"name": "7 Years", "artist": "Lukas Graham", "file": "7_Years.mid", "difficulty": "Challenge", "players": 2},
+    62: {"name": "Uptown Girl", "artist": "Billy Joel", "file": "Uptown_Girl(1).mid", "difficulty": "Challenge", "players": 2},
+    63: {"name": "Wet Hands", "artist": "C418", "file": "Wet_Hands_Minecraft.mid", "difficulty": "Challenge", "players": 2},
+    64: {"name": "La Vie En Rose", "artist": "Édith Piaf", "file": "La_vie_en_rose_Piano_Intermediate.mid", "difficulty": "Challenge", "players": 2},
+    61: {"name": "Perfect", "artist": "Ed Sheeran", "file": "Perfect_-_Ed_Sheeran_PIANO.mid", "difficulty": "Challenge", "players": 2},
+    66: {"name": "Glimpse of Us", "artist": "Joji", "file": "Glimpse_of_Us__Joji_Piano_Accompaniment.mid", "difficulty": "Challenge", "players": 2},
+    67: {"name": "Interstellar Theme", "artist": "Hans Zimmer", "file": "Interstellar_Theme_Easy_Piano.mid", "difficulty": "Challenge", "players": 2},
+    68: {"name": "No Time to Die", "artist": "Billie Eilish", "file": "No_Time_to_Die_Piano_-_James_Bond_Theme_-_Billie_Eilish_with_Lyrics.mid", "difficulty": "Challenge", "players": 2},
+    69: {"name": "Someone Like You", "artist": "Adele", "file": "Someone_Like_You_easy_piano.mid", "difficulty": "Challenge", "players": 2},
+    70: {"name": "Love Yourself", "artist": "Justin Bieber", "file": "Love_Yourself.mid", "difficulty": "Challenge", "players": 2},
+    72: {"name": "How To Save A Life", "artist": "The Fray", "file": "How_To_Save_A_Life_-_The_Fray.mid", "difficulty": "Challenge", "players": 2},
+    73: {"name": "Somewhere Over the Rainbow", "artist": "Harold Arlen", "file": "Somewhere_over_the_Rainbow.mid", "difficulty": "Challenge", "players": 2},
+    74: {"name": "All of Me", "artist": "John Legend", "file": "All_of_me_-_John_Legend.mid", "difficulty": "Challenge", "players": 2},
+    75: {"name": "The Most Wonderful Time of the Year", "artist": "Andy Williams", "file": "The_Most_Wonderful_Time_of_the_Year_-_easy_piano_C_maj.mid", "difficulty": "Challenge", "players": 2},
+    76: {"name": "Hanachirusato", "artist": "Genshin Impact", "file": "Genshin_Impact_-_Hanachirusato_Piano.mid", "difficulty": "Challenge", "players": 2},
+    77: {"name": "Unravel", "artist": "Tokyo Ghoul", "file": "Unravel_-_Tokyo_Ghoul_Piano_Easy.mid", "difficulty": "Challenge", "players": 2},
+    78: {"name": "Running Up That Hill", "artist": "Kate Bush", "file": "Running_up_that_hill.mid", "difficulty": "Challenge", "players": 2},
+    79: {"name": "Zelda's Lullaby", "artist": "The Legend of Zelda: Ocarina of Time", "file": "Zeldas_Lullaby_The_Legend_of_Zelda_Ocarina_of_Time_-_Easy_version.mid", "difficulty": "Challenge", "players": 2},
+    80: {"name": "Song of the Storm", "artist": "The Legend of Zelda", "file": "Song_of_the_Storm.mid", "difficulty": "Challenge", "players": 2},
+    81: {"name": "Super Mario Bros. Main Theme", "artist": "Nintendo", "file": "Super_Mario_Bros.__Main_Theme.mid", "difficulty": "Challenge", "players": 2},
+    82: {"name": "Dancing in the Moonlight", "artist": "Toploader", "file": "Dancing_in_the_Moonlight_-_Toploader_-_Easy_Piano.mid", "difficulty": "Challenge", "players": 2},
+    83: {"name": "Mad at Disney", "artist": "salem ilese", "file": "mad_at_disney_copy.mid", "difficulty": "Challenge", "players": 2},
+    84: {"name": "Set Fire To The Rain", "artist": "Adele", "file": "Set_Fire_To_The_Rain.mid", "difficulty": "Challenge", "players": 2},
+    85: {"name": "The Legend of Zelda Main Theme", "artist": "Nintendo", "file": "The_Legend_of_Zelda_Main_Theme_Easy.mid", "difficulty": "Challenge", "players": 2},
+    86: {"name": "Evil Morty's Theme", "artist": "Rick and Morty", "file": "Evil_Morty_s_ThemeFor_the_Damaged_Coda_-_Easy_Piano.mid", "difficulty": "Challenge", "players": 2},
+    87: {"name": "Perfect", "artist": "Ed Sheeran", "file": "Ed_Sheeran_-_Perfect__c_major.mid", "difficulty": "Challenge", "players": 2},
+    88: {"name": "The Avatar's Love", "artist": "Avatar: The Last Airbender", "file": "The_Avatars_love.mid", "difficulty": "Challenge", "players": 2},
+    89: {"name": "Minecraft Theme (Sweden)", "artist": "C418", "file": "Minecraft_Theme_Sweden_Calm.mid", "difficulty": "Challenge", "players": 2},
+    90: {"name": "Let Her Go", "artist": "Passenger", "file": "Let_Her_Go_Passenger.mid", "difficulty": "Challenge", "players": 2},
+    91: {"name": "Can't Help Falling in Love", "artist": "Elvis Presley", "file": "Cant_Help_Falling_In_Love.mid", "difficulty": "Challenge", "players": 2},
+    92: {"name": "Running Up That Hill (A Deal with God)", "artist": "Kate Bush", "file": "Running_Up_That_Hill__A_Deal_With_God__Piano_Solo.mid", "difficulty": "Challenge", "players": 2},
+    93: {"name": "One Last Time", "artist": "Ariana Grande", "file": "One_Last_Time.mid", "difficulty": "Challenge", "players": 2},
+    94: {"name": "Snowman", "artist": "Sia", "file": "Sia_-_Snowman.mid", "difficulty": "Challenge", "players": 2},
+
+    # Impossible songs
+     116: {"name": "Don't Stop Believing", "artist": "Journey", "file": "Dont_Stop_Believing_Piano_Guitar_Vocals.mid", "difficulty": "Impossible", "players": 2},
+
+    200: {"name": "Perfect", "artist": "Ed Sheeran", "file": "Perfect_-_Ed_Sheeran_PIANO.mid", "difficulty": "Impossible", "players": 2},
     21: {"name": "Moon River", "artist": "Johnny Mercer and Henry Mancini", "file": "moon_river.mid", "difficulty": "Impossible", "players": 2},
-
-    22: {"name": "You've Got A Friend In Me", "artist": "Randy Newman", "file": "friend_in_me.mid", "difficulty": "Impossible", "players": 2},
-
-    23: {"name": "Uptown Girl Piano", "artist": "Westlife", "file": "uptown_girl.mid", "difficulty": "Impossible", "players": 2},
-
-    24: {"name": "Hallelujah", "artist": "Leonard Cohen", "file": "hallelujah.mid", "difficulty": "Impossible", "players": 2},
-
-    25: {"name": "Clark (Minecraft)", "artist": "C418", "file": "clark_minecraft.mid", "difficulty": "Impossible", "players": 2},
-
-    26: {"name": "Christmas Don't Be Late", "artist": "The Chipmunks", "file": "christmas_dont_be_late.mid", "difficulty": "Impossible", "players": 2},
+    23: {"name": "All the World's a Stage", "artist": "Genshin Impact", "file": "genshin.mid", "difficulty": "Impossible", "players": 2},
+    24: {"name": "Bluebird", "artist": "Naruto", "file": "bluebird_naruto.mid", "difficulty": "Impossible", "players": 2},
+    25: {"name": "Golden Hour", "artist": "JVKE", "file": "Golden_HOUR.mid", "difficulty": "Impossible", "players": 2},
+    26: {"name": "Number One (Thousand Year Blood War ver.)", "artist": "Bleach OST", "file": "number_one_bleach.mid", "difficulty": "Impossible", "players": 2},
     27: {"name": "Here With Me", "artist": "D4vd", "file": "here_with_me.mid", "difficulty": "Impossible", "players": 2},
-    28: {"name": "Jojo's Bizarre Adventure G", "artist": "Unknown", "file": "jojo.mid", "difficulty": "Unknown", "players": 2},
-    29: {"name": "Bluebird", "artist": "Naruto", "file": "bluebird_naruto.mid", "difficulty": "Medium", "players": 2}    
-
-    
-    
+    28: {"name": "Jojo's Bizarre Adventure G", "artist": "Unknown", "file": "jojo.mid", "difficulty": "Impossible", "players": 2},
+    29: {"name": "Runaway", "artist": "Kanye West", "file": "runaway.mid", "difficulty": "Impossible", "players": 2},
+    30: {"name": "September", "artist": "Earth, Wind & Fire", "file": "september.mid", "difficulty": "Impossible", "players": 2},
+    31: {"name": "You've Got A Friend In Me", "artist": "Randy Newman", "file": "friend_in_me.mid", "difficulty": "Impossible", "players": 2},
+    95: {"name": "Piano Sonata No. 11 K. 331 3rd Movement Rondo alla Turca", "artist": "Mozart", "file": "Piano_Sonata_No._11_K._331_3rd_Movement_Rondo_alla_Turca.mid", "difficulty": "Impossible", "players": 2},
+    96: {"name": "Fallen Down", "artist": "Undertale", "file": "Fallen_Down_-_Undertale_Piano_Solo.mid", "difficulty": "Impossible", "players": 2},
+    97: {"name": "Autumn Leaves", "artist": "Jazz Piano", "file": "Autumn_Leaves_Jazz_Piano.mid", "difficulty": "Impossible", "players": 2},
+    98: {"name": "Mii Channel", "artist": "Nintendo", "file": "Mii_Channel_piano.mscz.mid", "difficulty": "Impossible", "players": 2},
+    99: {"name": "Bach Toccata and Fugue in D Minor", "artist": "Bach", "file": "Bach_Toccata_and_Fugue_in_D_Minor_Piano_solo.mid", "difficulty": "Impossible", "players": 2},
+    100: {"name": "Beethoven Symphony No. 5 1st movement", "artist": "Beethoven", "file": "Beethoven_Symphony_No._5_1st_movement_Piano_solo.mid", "difficulty": "Impossible", "players": 2},
+    101: {"name": "Main Theme From Interstellar", "artist": "Hans Zimmer", "file": "Main_Theme_From_Interstellar__Hans_Zimmer_Piano.mid", "difficulty": "Impossible", "players": 2},
+    102: {"name": "Gravity Falls Opening", "artist": "Intermediate Piano Solo", "file": "Gravity_Falls_Opening_-_Intermediate_Piano_Solo.mid", "difficulty": "Impossible", "players": 2},
+    103: {"name": "Undertale", "artist": "Undertale", "file": "Undertale_Undertale_Piano.mid", "difficulty": "Impossible", "players": 2},
+    104: {"name": "River Flows in You", "artist": "Yiruma", "file": "River_Flows_in_You_-_Yiruma_-_10th_Anniversary_Version_Piano.mid", "difficulty": "Impossible", "players": 2},
+    106: {"name": "Great Fairy Fountain", "artist": "The Legend of Zelda", "file": "The_Legend_of_Zelda_Great_Fairy_Fountain_Piano_Cover.mid", "difficulty": "Impossible", "players": 2},
+    107: {"name": "Pokemon Theme Song", "artist": "Pokemon", "file": "Pokemon_Theme_Song_piano.mid", "difficulty": "Impossible", "players": 2},
+    108: {"name": "Wii Sports Theme", "artist": "Nintendo", "file": "Wii_Sports_Theme_piano.mid", "difficulty": "Impossible", "players": 2},
+    109: {"name": "Littleroot Town", "artist": "Pokemon ORAS", "file": "Littleroot_Town_-_Pokmon_ORAS_for_piano.mid", "difficulty": "Impossible", "players": 2},
+    110: {"name": "Gusty Garden Galaxy", "artist": "Super Mario Galaxy", "file": "Gusty_Garden_Galaxy_From_Super_Mario_Galaxy_for_piano.mid", "difficulty": "Impossible", "players": 2},
+    111: {"name": "Merry Go Round of Life", "artist": "Howl's Moving Castle", "file": "Merry_Go_Round_of_Life_Howls_Moving_Castle_Piano_Tutorial_.mid", "difficulty": "Impossible", "players": 2},
+    112: {"name": "Skyrim Medley", "artist": "The Elder Scrolls V: Skyrim", "file": "Skyrim_Medley-_Dragonborn_The_Dragonborn_Comes_From_Past_to_Present_Far_Horizons.mid", "difficulty": "Impossible", "players": 2},
+    113: {"name": "The Observatory", "artist": "Super Mario Galaxy", "file": "The_Observatory_-_Super_Mario_Galaxy.mid", "difficulty": "Impossible", "players": 2},
+    114: {"name": "Dancing in the Moonlight", "artist": "Toploader", "file": "Dancing_in_the_Moonlight.mid", "difficulty": "Impossible", "players": 2},
+    115: {"name": "Deference for Darkness", "artist": "Halo 3 ODST", "file": "Deference_for_Darkness_from_Halo_3_ODST_for_Piano.mid", "difficulty": "Impossible", "players": 2},
+    117: {"name": "Someone Like You", "artist": "Adele", "file": "Someone_Like_You.mid", "difficulty": "Impossible", "players": 2},
+    118: {"name": "Pokemon Red and Blue Title Theme", "artist": "Pokemon", "file": "Pokemon_Red_and_Blue_-_Title_Theme_for_piano.mid", "difficulty": "Impossible", "players": 2},
+    119: {"name": "My Heart Will Go On", "artist": "Unknown", "file": "MY_HEART_WILL_GO_ON.mid", "difficulty": "Impossible", "players": 2},
+    120: {"name": "Song of Storms", "artist": "Koji Kondo", "file": "Song_of_Storms_-_The_Legend_of_Zelda_Ocarine_of_Time__Koji_Kondo_-_Accordion_Solo.mid", "difficulty": "Impossible", "players": 2},
+    121: {"name": "Set Fire to the Rain", "artist": "Adele", "file": "52__Adele__Set_Fire_to_the_Rain.mid", "difficulty": "Impossible", "players": 2},
+    122: {"name": "Good News", "artist": "Mac Miller", "file": "Good_News_-_Mac_Miller_-_Easy_piano.mid", "difficulty": "Impossible", "players": 2},
+    123: {"name": "Verdanturf Town", "artist": "Pokemon ORAS", "file": "Verdanturf_Town_-_Pokemon_ORAS_for_piano.mid", "difficulty": "Impossible", "players": 2},
+    124: {"name": "Man In The Mirror (Jazz Version)", "artist": "Michael Jackson", "file": "Man_In_The_Mirror_Jazz_version_arr._Brent_Edstrom_-_Michael_Jackson_Piano_Solo.mid", "difficulty": "Impossible", "players": 2},
+    125: {"name": "20th Century Fox Fanfare", "artist": "Unknown", "file": "20th_Century_Fox_Fanfare_Simple_Piano.mid", "difficulty": "Impossible", "players": 2},
+    126: {"name": "The Pink Panther Theme", "artist": "Henry Mancini", "file": "The_Pink_Panther_Theme_-_Henry_Mancini_-_Piano_version.mid", "difficulty": "Impossible", "players": 2},
+    127: {"name": "idontwannabeyouanymore", "artist": "Billie Eilish", "file": "idontwannabeyouanymore.mid", "difficulty": "Impossible", "players": 2},
+    128: {"name": "Ballad of the Wind Fish", "artist": "The Legend of Zelda", "file": "The_Legend_of_Zelda_Links_Awakening-Ballad_of_the_Wind_Fish_Piano.mid", "difficulty": "Impossible", "players": 2},
+    129: {"name": "From the New World - 4th Movement", "artist": "Unknown", "file": "From_the_New_World_-_4th_Movement.mid", "difficulty": "Impossible", "players": 2},
+    130: {"name": "Ode to Joy Easy Variation", "artist": "Unknown", "file": "Ode_to_Joy_Easy_variation.mid", "difficulty": "Impossible", "players": 2},
+    131: {"name": "Zoltraak - Frieren OST", "artist": "Unknown", "file": "Zoltraak_-_Frieren_OST.mid", "difficulty": "Impossible", "players": 2},
+    132: {"name": "Cowboy Bebop TANK", "artist": "Unknown", "file": "Cowboy_Bebop_TANK.mid", "difficulty": "Impossible", "players": 2},
+    133: {"name": "Canon in D", "artist": "Unknown", "file": "Canon_in_D.mid", "difficulty": "Impossible", "players": 2},
+    134: {"name": "A Cruel Angel's Thesis - Neon Genesis Evangelion", "artist": "Unknown", "file": "A_Cruel_Angels_Thesis_-_Neon_Genesis_Evangelion_Piano_Cover.mid", "difficulty": "Impossible", "players": 2},
+    135: {"name": "Never See Me Again", "artist": "Kanye West", "file": "Never_See_Me_Again__Kanye_West.mid", "difficulty": "Impossible", "players": 2},
+    136: {"name": "One Piece - Overtaken", "artist": "Unknown", "file": "One_Piece_-_Overtaken.mid", "difficulty": "Impossible", "players": 2},
+    137: {"name": "Lost in Paradise", "artist": "Unknown", "file": "Lost_in_Paradise.mid", "difficulty": "Impossible", "players": 2},
+    138: {"name": "Kick Back (TV Size)", "artist": "Unknown", "file": "Kick_Back__TV_Size.mid", "difficulty": "Impossible", "players": 2},
+    139: {"name": "Jump Up, Super Star! (Super Mario Odyssey)", "artist": "Unknown", "file": "Jump_Up_Super_Star_-Super_Mario_Odyssey-.mid", "difficulty": "Impossible", "players": 2},
+    140: {"name": "Isn't She Lovely", "artist": "Unknown", "file": "Isnt_She_Lovely.mid", "difficulty": "Impossible", "players": 2},
+    141: {"name": "Promenade I", "artist": "Unknown", "file": "Promenade_I.mid", "difficulty": "Impossible", "players": 2},
 }
 
 def csv_to_song_database(csv_filename):
@@ -271,6 +370,7 @@ class WalkingPianoGame(pyglet.window.Window):
         self.song_select_batch_jukebox = pyglet.graphics.Batch()
         self.settings_batch = pyglet.graphics.Batch()
         self.player_mode_batch = pyglet.graphics.Batch()
+        self.difficulty_batch = pyglet.graphics.Batch()
                 
         self.game_modes = ['Challenge Mode', 'Practice', 'FreePlay', 'Settings', 'JukeBox', 'Exit']
         
@@ -279,6 +379,7 @@ class WalkingPianoGame(pyglet.window.Window):
         self.player_count = 1  # Default to 1 player
         self.autoplay = False  # Default to no autoplay
         self.controller_size = '49 key'  # Default to smaller 49 key version
+        self.selected_difficulty = 'Easy'  # Default to easy difficulty
 
         
         self.menu_options_labels = []
@@ -286,6 +387,7 @@ class WalkingPianoGame(pyglet.window.Window):
         self.song_options_labels_jukebox = []
         self.settings_options_labels = []
         self.player_mode_options_labels = []
+        self.difficulty_options_labels = []
         
         self.game = None
         
@@ -293,6 +395,7 @@ class WalkingPianoGame(pyglet.window.Window):
         self.setup_song_selection()
         self.setup_jukebox_song_selection()
         self.setup_player_mode_selection()
+        self.setup_difficulty_selection()
         
         self.outport = mido.get_output_names()[0] if mido.get_output_names() else None
         self.inport = mido.get_input_names()[0] if mido.get_input_names() else None
@@ -334,7 +437,7 @@ class WalkingPianoGame(pyglet.window.Window):
         
         # Home button at the bottom
         home_button_y = start_y - len(valid_songs) * label_height - 50  # Extra space before the home button
-        self.home_button = ClickableLabel("Return to Menu", None, 24, self.width // 2, home_button_y, 'center', 'center', self.song_select_batch)
+        self.home_button = ClickableLabel("Back", None, 24, self.width // 2, home_button_y, 'center', 'center', self.song_select_batch)
         self.song_options_labels.append(self.home_button)
             
     def setup_jukebox_song_selection(self, current_page=0):
@@ -449,11 +552,31 @@ class WalkingPianoGame(pyglet.window.Window):
         choose_players_title = ClickableLabel("Select number of players:", None, 32, self.width // 2, self.height - 50, 'center', 'center', self.player_mode_batch, highlightable=False)
         self.player_mode_options_labels.append(choose_players_title)
         
-        modes = ['1 Player', '2 Player', 'Return to Menu']
+        modes = ['1 Player', '2 Player']
         y_offset = 125
         for index, mode in enumerate(modes):
             label = ClickableLabel(mode, None, 24, self.width // 2, self.height - index * 50 - y_offset, 'center', 'center', self.player_mode_batch)
-            self.player_mode_options_labels.append(label)       
+            self.player_mode_options_labels.append(label)
+            
+        return_to_menu = ClickableLabel("Back", None, 24, self.width // 2, self.height - 2.5 * 50 - y_offset, 'center', 'center', self.player_mode_batch)
+        self.player_mode_options_labels.append(return_to_menu)
+    
+    def setup_difficulty_selection(self):
+        """
+        Sets up the difficulty selection labels.
+        """
+        choose_difficulty = ClickableLabel("Select your difficulty:", None, 32, self.width // 2, self.height - 50, 'center', 'center', self.difficulty_batch, highlightable=False)
+        self.difficulty_options_labels.append(choose_difficulty)
+        
+        difficulties = ['Easy', 'Challenge', 'Impossible']
+        y_offset = 125
+        
+        for index, difficulty in enumerate(difficulties):
+            label = ClickableLabel(difficulty, None, 24, self.width // 2, self.height - index * 50 - y_offset, 'center', 'center', self.difficulty_batch)
+            self.difficulty_options_labels.append(label)
+            
+        return_to_menu = ClickableLabel("Back", None, 24, self.width // 2,  self.height - 3.5 * 50 - y_offset, 'center', 'center', self.difficulty_batch)
+        self.difficulty_options_labels.append(return_to_menu)
         
     def filter_songs_based_on_mode_and_players(self):
         """
@@ -471,17 +594,15 @@ class WalkingPianoGame(pyglet.window.Window):
             for song_id, song_info in song_database.items():
                 if song_info['difficulty'] == 'Easy':
                     filtered_songs[song_id] = song_info
+                    
         elif self.selected_game_mode == 'Challenge':
             # In Challenge Mode, filter songs based on the number of players
             for song_id, song_info in song_database.items():
-                if self.player_count == 2:
-                    # Show only 2-player songs
-                    if song_info['players'] == 2:
+                if song_info['difficulty'] == self.selected_difficulty:
+                    if self.player_count == 1:
                         filtered_songs[song_id] = song_info
-            
-                elif self.player_count == 1:
-                    # Show ALL songs, both 1-player songs and 2 player songs
-                    filtered_songs[song_id] = song_info
+                    elif self.player_count == 2 and song_info['players'] == 2:
+                        filtered_songs[song_id] = song_info
                     
         elif self.selected_game_mode in ['FreePlay', 'JukeBox']:
             # For FreePlay or JukeBox, show all songs
@@ -532,6 +653,11 @@ class WalkingPianoGame(pyglet.window.Window):
         if self.game_state == 'PLAYER_MODE_SELECTION':
             self.clear()
             self.player_mode_batch.draw()
+            
+        if self.game_state == 'DIFFICULTY_SELECTION':
+            self.clear()
+            self.difficulty_batch.draw()
+
             
         elif self.game_state == 'GAME':
             # print("Game is running")
@@ -607,27 +733,41 @@ class WalkingPianoGame(pyglet.window.Window):
                     if clicked_text == '1 Player':
                         self.player_count = 1
                         self.selected_game_mode = 'Challenge'  # Ensure game mode is explicitly set
-                        self.setup_song_selection()  # Refresh song list based on new settings
-                        self.game_state = 'SONG_SELECTION'
+                        self.game_state = 'DIFFICULTY_SELECTION'
                         return
                     elif clicked_text == '2 Player':
                         self.player_count = 2
                         self.selected_game_mode = 'Challenge'
-                        self.setup_song_selection()
-                        self.game_state = 'SONG_SELECTION'
+                        self.game_state = 'DIFFICULTY_SELECTION'
                         return
-                    elif clicked_text == 'Return to Menu':
+                    elif clicked_text == 'Back':
                         self.return_to_menu()
                         return
+                    
+        elif self.game_state == 'DIFFICULTY_SELECTION':
+            for label in self.difficulty_options_labels:
+                if label.is_clicked(x, y):
+                    if label.label.text == 'Back':
+                        self.game_state = 'PLAYER_MODE_SELECTION'
+                        return
 
-
+                    else:
+                        self.selected_difficulty = label.label.text
+                        self.setup_song_selection()  # Proceed to song selection after choosing difficulty
+                        self.game_state = 'SONG_SELECTION'
+                        return
+                
+             
                 
         elif self.game_state == 'SONG_SELECTION':
             for index, label in enumerate(self.song_options_labels):
                 if label.is_clicked(x, y):
                     # Check for a return to menu command
-                    if label.label.text == "Return to Menu":
-                        self.return_to_menu()
+                    if label.label.text == "Back":
+                        if self.selected_game_mode == 'Practice':
+                            self.return_to_menu()
+                        else:
+                            self.game_state = 'DIFFICULTY_SELECTION'
                         return
                     else:
                         # Fetch the corresponding song ID from the label itself or by maintaining a map
@@ -742,6 +882,10 @@ class WalkingPianoGame(pyglet.window.Window):
         
         if self.game_state == 'SETTINGS':
             for label in self.settings_options_labels:
+                label.update_highlight(x, y)
+        
+        if self.game_state == 'DIFFICULTY_SELECTION':
+            for label in self.difficulty_options_labels:
                 label.update_highlight(x, y)
 
                                  

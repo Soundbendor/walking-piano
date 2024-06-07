@@ -71,13 +71,17 @@ class MIDIProcessor():
         elapsed_ticks = 0
         cumulative_time = 0.0  # Cumulative time in seconds
         current_tempo = bpm2tempo(120)  # Default tempo (microseconds per beat)
+        speed_multiplier = 1.0  # Speed multiplier for tempo changes
+        
+        if self.file_path == 'mary_lamb.mid':
+            speed_multiplier = 1.75
 
         for msg in track:
             if msg.time > 0:
-                cumulative_time += (msg.time * current_tempo) / (self.midi_file.ticks_per_beat * 1e6)
+                cumulative_time += (msg.time * current_tempo * speed_multiplier) / (self.midi_file.ticks_per_beat * 1e6)
             if msg.type == 'set_tempo':
-                self.global_tempo_changes.append((cumulative_time, msg.tempo))
-                current_tempo = msg.tempo  # Update current tempo
+                self.global_tempo_changes.append((cumulative_time, msg.tempo * speed_multiplier))
+                current_tempo = msg.tempo * speed_multiplier  # Update current tempo
             elapsed_ticks += msg.time
 
    
