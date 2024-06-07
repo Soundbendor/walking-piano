@@ -82,6 +82,9 @@ class MIDIProcessor():
             
         if self.file_path == 'You_ve_Got_A_Friend_In_Me_Easy_Piano_Sheet_Music.mid':
             speed_multiplier = 1.6
+            
+        if self.file_path == 'Super_Mario_Theme_Song.mid':
+            speed_multiplier = 1.75
         
 
         for msg in track:
