@@ -808,7 +808,10 @@ class WalkingPianoGame(pyglet.window.Window):
             for song_id, label in enumerate(self.song_options_labels_jukebox, start=1):
                 if label.is_clicked(x, y):
                     if label.label.text == "Return to Menu":
+                        self.current_page_jukebox = 0
+                        self.setup_jukebox_song_selection()
                         self.return_to_menu()
+                        
                         return
                     elif label.label.text == "Previous":
                         print("Previous page")
@@ -951,7 +954,6 @@ class WalkingPianoGame(pyglet.window.Window):
         """
         # Logic to return to the main menu
         self.current_page = 0
-        self.current_page_jukebox = 0
         self.game = None
         self.player_count = 1
         self.game_state = 'MENU'
