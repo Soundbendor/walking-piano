@@ -675,8 +675,10 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             self.white_keys_batch.draw()
             self.black_keys_batch.draw()
             self.game_elements_batch.draw()
-            self.score_label.draw()
             
+            if self.game_mode == "Challenge":
+                self.score_label.draw()
+                
             #self.fps_display.draw()    
             
             # Draw Game Over message if the game is over
