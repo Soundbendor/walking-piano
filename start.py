@@ -47,7 +47,6 @@ song_database = {
     16: {"name": "7 Years", "artist": "Lukas Graham", "file": "7_Years.mid", "difficulty": "Challenge", "players": 2},
     17: {"name": "A Whole New World", "artist": "Aladdin", "file": "whole_new_world.mid", "difficulty": "Challenge", "players": 2},
     18: {"name": "All of Me", "artist": "John Legend", "file": "All_of_Me_John_Legend.mid", "difficulty": "Challenge", "players": 2},
-    19: {"name": "All of Me", "artist": "John Legend", "file": "All_of_me_-_John_Legend.mid", "difficulty": "Challenge", "players": 2},
     20: {"name": "Can't Help Falling in Love", "artist": "Elvis Presley", "file": "Cant_Help_Falling_In_Love.mid", "difficulty": "Challenge", "players": 2},
     21: {"name": "Captured Memories", "artist": "Zelda: Breath of the Wild", "file": "Zelda_Breath_of_the_Wild_-_Captured_Memories_piano.mid", "difficulty": "Challenge", "players": 2},
     22: {"name": "Christmas Don't Be Late", "artist": "The Chipmunks", "file": "christmas_dont_be_late.mid", "difficulty": "Challenge", "players": 2},
@@ -107,6 +106,7 @@ song_database = {
     75: {"name": "20th Century Fox Fanfare", "artist": "Unknown", "file": "20th_Century_Fox_Fanfare_Simple_Piano.mid", "difficulty": "Impossible", "players": 2},
     76: {"name": "A Cruel Angel's Thesis - Neon Genesis Evangelion", "artist": "Unknown", "file": "A_Cruel_Angels_Thesis_-_Neon_Genesis_Evangelion_Piano_Cover.mid", "difficulty": "Impossible", "players": 2},
     77: {"name": "All the World's a Stage", "artist": "Genshin Impact", "file": "genshin.mid", "difficulty": "Impossible", "players": 2},
+    701: {"name": "All of Me", "artist": "John Legend", "file": "All_of_me_-_John_Legend.mid", "difficulty": "Impossible", "players": 2},
     78: {"name": "Autumn Leaves", "artist": "Jazz Piano", "file": "Autumn_Leaves_Jazz_Piano.mid", "difficulty": "Impossible", "players": 2},
     79: {"name": "Bach Toccata and Fugue in D Minor", "artist": "Bach", "file": "Bach_Toccata_and_Fugue_in_D_Minor_Piano_solo.mid", "difficulty": "Impossible", "players": 2},
     80: {"name": "Ballad of the Wind Fish", "artist": "The Legend of Zelda", "file": "The_Legend_of_Zelda_Links_Awakening-Ballad_of_the_Wind_Fish_Piano.mid", "difficulty": "Impossible", "players": 2},
@@ -133,7 +133,6 @@ song_database = {
     101: {"name": "Littleroot Town", "artist": "Pokemon ORAS", "file": "Littleroot_Town_-_Pokmon_ORAS_for_piano.mid", "difficulty": "Impossible", "players": 2},
     102: {"name": "Lost in Paradise", "artist": "Unknown", "file": "Lost_in_Paradise.mid", "difficulty": "Impossible", "players": 2},
     103: {"name": "Main Theme From Interstellar", "artist": "Hans Zimmer", "file": "Main_Theme_From_Interstellar__Hans_Zimmer_Piano.mid", "difficulty": "Impossible", "players": 2},
-    104: {"name": "Man In The Mirror (Jazz Version)", "artist": "Michael Jackson", "file": "Man_In_The_Mirror_Jazz_version_arr._Brent_Edstrom_-_Michael_Jackson_Piano_Solo.mid", "difficulty": "Impossible", "players": 2},
     105: {"name": "Merry Go Round of Life", "artist": "Howl's Moving Castle", "file": "Merry_Go_Round_of_Life_Howls_Moving_Castle_Piano_Tutorial_.mid", "difficulty": "Impossible", "players": 2},
     106: {"name": "Mii Channel", "artist": "Nintendo", "file": "Mii_Channel_piano.mscz.mid", "difficulty": "Impossible", "players": 2},
     107: {"name": "Moon River", "artist": "Johnny Mercer and Henry Mancini", "file": "moon_river.mid", "difficulty": "Impossible", "players": 2},
@@ -988,7 +987,8 @@ if __name__ == "__main__":
     #Change to songs directory for access of song files within game.
     os.chdir("songs")
 
-    game = WalkingPianoGame(fullscreen=True, resizable=True, caption="Walking Piano")
-    #game = WalkingPianoGame(width = 1920, height = 1080, resizable=True, caption="Walking Piano")
+    game = WalkingPianoGame(width=1920, height=1080, resizable=False, caption="Walking Piano", style=pyglet.window.Window.WINDOW_STYLE_BORDERLESS)
+    #game = WalkingPianoGame(fullscreen=True, resizable=False, caption="Walking Piano")
+    #game = WalkingPianoGame(width = 1920, height = 1080, resizable=False, caption="Walking Piano")
 
     pyglet.app.run()

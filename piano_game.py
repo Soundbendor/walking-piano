@@ -186,6 +186,12 @@ class PianoGameUI(pyglet.event.EventDispatcher):
         
         self.points_for_hold = 10   # Points awarded per second for holding the note correctly 
         
+        self.score_label = pyglet.text.Label(
+            f"{self.score}", font_name='Times New Roman', font_size=36,
+            x=self.window.width - 10, y=self.window.height - 10,
+            anchor_x='right', anchor_y='top', color=(255, 255, 255, 255)
+        )
+        
         #Define back button
         self.back_button = pyglet.shapes.Rectangle(10, self.window.height - 40, 100, 30, color=(50, 50, 50), batch = self.game_elements_batch)
 
@@ -661,26 +667,8 @@ class PianoGameUI(pyglet.event.EventDispatcher):
             self.white_keys_batch.draw()
             self.black_keys_batch.draw()
             self.game_elements_batch.draw()
-            
-            #self.fps_display.draw()
-
-            """
-           if self.game_mode == "Challenge":
-                # Draw score
-                score_text = f"{self.score}"
-                score_label = pyglet.text.Label(
-                    score_text,
-                    font_name='Times New Roman',
-                    font_size=36,
-                    x=self.window.width - 10,
-                    y=self.window.height - 10,
-                    anchor_x='right',
-                    anchor_y='top',
-                    color=(255, 255, 255, 255)  # White color
-                )
-                score_label.draw()
-        
-                """        
+            self.score_label.draw()
+            self.fps_display.draw()    
             
             # Draw Game Over message if the game is over
             if self.game_over:
@@ -1234,7 +1222,7 @@ class PianoGameUI(pyglet.event.EventDispatcher):
                 
                 if self.incoming_notes[note]['note_timing'] != 0:
                     self.score += self.points_for_hold
-        
+        self.score_label.text = f"{self.score}"
 
                 
     def jukebox_mode(self, midi_file_path):

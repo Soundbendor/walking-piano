@@ -72,9 +72,17 @@ class MIDIProcessor():
         cumulative_time = 0.0  # Cumulative time in seconds
         current_tempo = bpm2tempo(120)  # Default tempo (microseconds per beat)
         speed_multiplier = 1.0  # Speed multiplier for tempo changes
+        self.global_tempo_changes = []
         
         if self.file_path == 'mary_lamb.mid':
             speed_multiplier = 1.75
+            
+        if self.file_path == "Pure_Imagination_Piano_Solo_-_Beginner.mid":
+            speed_multiplier = 1.85
+            
+        if self.file_path == 'You_ve_Got_A_Friend_In_Me_Easy_Piano_Sheet_Music.mid':
+            speed_multiplier = 1.6
+        
 
         for msg in track:
             if msg.time > 0:
