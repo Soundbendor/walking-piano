@@ -1010,8 +1010,8 @@ if __name__ == "__main__":
     #Change to songs directory for access of song files within game.
     os.chdir("songs")
 
-    #game = WalkingPianoGame(width=1920, height=1080, resizable=False, caption="Walking Piano", style=pyglet.window.Window.WINDOW_STYLE_BORDERLESS)
+    game = WalkingPianoGame(width=1920, height=1080, resizable=False, caption="Walking Piano", style=pyglet.window.Window.WINDOW_STYLE_BORDERLESS)
     #game = WalkingPianoGame(fullscreen=True, resizable=False, caption="Walking Piano")
-    game = WalkingPianoGame(width = 1920, height = 1080, resizable=False, caption="Walking Piano")
+    #game = WalkingPianoGame(width = 1920, height = 1080, resizable=False, caption="Walking Piano")
 
     pyglet.app.run()
