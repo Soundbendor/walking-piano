@@ -84,7 +84,7 @@ class MIDIProcessor():
             speed_multiplier = 1.6
             
         if self.file_path == 'Super_Mario_Theme_Song.mid':
-            speed_multiplier = 1.75
+            speed_multiplier = 1.5
         
 
         for msg in track:
