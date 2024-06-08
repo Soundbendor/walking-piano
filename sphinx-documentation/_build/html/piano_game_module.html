@@ -311,7 +311,6 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.create_black_key"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.create_black_key()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.create_piano"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.create_piano()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.create_white_key"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.create_white_key()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.draw_piano"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.draw_piano()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.end_of_song"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.end_of_song()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.exit_game"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.exit_game()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.falling_rectangles_list"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.falling_rectangles_list</span></code></a></li>
@@ -424,7 +423,7 @@ The implementation is based on the Pyglet clock and scheduling functions.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="piano_game.PianoGameUI">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">piano_game.</span></span><span class="sig-name descname"><span class="pre">PianoGameUI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">midi_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">game_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inport_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outport_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_play</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">piano_game.</span></span><span class="sig-name descname"><span class="pre">PianoGameUI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">midi_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">game_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inport_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outport_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_play</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">EventDispatcher</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="piano_game.PianoGameUI.create_active_notes_line">
@@ -496,13 +495,6 @@ See attribute ‘controller_size’ for more details.</p>
 </dd>
 </dl>
 </section>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="piano_game.PianoGameUI.draw_piano">
-<span class="sig-name descname"><span class="pre">draw_piano</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#piano_game.PianoGameUI.draw_piano" title="Link to this definition">#</a></dt>
-<dd><p>As helper function to draw the piano keys and labels.
-It is utilized by the on_draw function which is called automatically by Pyglet every frame.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -850,7 +842,6 @@ A deep understanding of the game logic is recommended before making changes here
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.create_black_key"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.create_black_key()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.create_piano"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.create_piano()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.create_white_key"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.create_white_key()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.draw_piano"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.draw_piano()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.end_of_song"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.end_of_song()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.exit_game"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.exit_game()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#piano_game.PianoGameUI.falling_rectangles_list"><code class="docutils literal notranslate"><span class="pre">PianoGameUI.falling_rectangles_list</span></code></a></li>

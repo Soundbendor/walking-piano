@@ -308,12 +308,13 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.filter_songs_based_on_mode_and_players"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.filter_songs_based_on_mode_and_players()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.get_song_id_from_label"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.get_song_id_from_label()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.handle_next_page"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.handle_next_page()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.handle_prev_page"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.handle_prev_page()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.handle_next_page_jukebox"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.handle_next_page_jukebox()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.handle_prev_page_jukebox"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.handle_prev_page_jukebox()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.on_draw"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.on_draw()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.on_mouse_motion"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.on_mouse_motion()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.on_mouse_press"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.on_mouse_press()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.return_to_menu"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.return_to_menu()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.setup_difficulty_selection"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.setup_difficulty_selection()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.setup_jukebox_song_selection"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.setup_jukebox_song_selection()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.setup_menu"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.setup_menu()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.setup_player_mode_selection"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.setup_player_mode_selection()</span></code></a></li>
@@ -439,7 +440,7 @@ playing the piano game.</p>
 </dd>
 <dt>player_count<span class="classifier">int</span></dt><dd><p>The number of players.</p>
 </dd>
-<dt>autoplay<span class="classifier">bool</span></dt><dd><p>Whether autoplay is enabled.</p>
+<dt>autoplay<span class="classifier">int</span></dt><dd><p>Whether autoplay is enabled.</p>
 </dd>
 <dt>controller_size<span class="classifier">str</span></dt><dd><p>The size of the controller.</p>
 </dd>
@@ -494,16 +495,14 @@ playing the piano game.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="start.WalkingPianoGame.handle_next_page">
-<span class="sig-name descname"><span class="pre">handle_next_page</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.handle_next_page" title="Link to this definition">#</a></dt>
-<dd><p>Handles navigation to the next page of songs.</p>
-</dd></dl>
+<dt class="sig sig-object py" id="start.WalkingPianoGame.handle_next_page_jukebox">
+<span class="sig-name descname"><span class="pre">handle_next_page_jukebox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.handle_next_page_jukebox" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="start.WalkingPianoGame.handle_prev_page">
-<span class="sig-name descname"><span class="pre">handle_prev_page</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.handle_prev_page" title="Link to this definition">#</a></dt>
-<dd><p>Handles navigation to the previous page of songs.</p>
-</dd></dl>
+<dt class="sig sig-object py" id="start.WalkingPianoGame.handle_prev_page_jukebox">
+<span class="sig-name descname"><span class="pre">handle_prev_page_jukebox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.handle_prev_page_jukebox" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="start.WalkingPianoGame.on_draw">
@@ -553,6 +552,12 @@ playing the piano game.</p>
 <dt class="sig sig-object py" id="start.WalkingPianoGame.return_to_menu">
 <span class="sig-name descname"><span class="pre">return_to_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.return_to_menu" title="Link to this definition">#</a></dt>
 <dd><p>Returns to the main menu.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="start.WalkingPianoGame.setup_difficulty_selection">
+<span class="sig-name descname"><span class="pre">setup_difficulty_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start.WalkingPianoGame.setup_difficulty_selection" title="Link to this definition">#</a></dt>
+<dd><p>Sets up the difficulty selection labels.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -611,7 +616,7 @@ playing the piano game.</p>
 </dd>
 <dt>player_count<span class="classifier">int, optional</span></dt><dd><p>The number of players (default is 1).</p>
 </dd>
-<dt>autoplay<span class="classifier">bool, optional</span></dt><dd><p>Whether autoplay is enabled (default is False).</p>
+<dt>autoplay<span class="classifier">int: 0 for none, 1 for half autoplay (left hand automatic), 2 for full autoplay optional</span></dt><dd><p>Whether autoplay is enabled (default is False).</p>
 </dd>
 </dl>
 </section>
@@ -696,12 +701,13 @@ playing the piano game.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.filter_songs_based_on_mode_and_players"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.filter_songs_based_on_mode_and_players()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.get_song_id_from_label"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.get_song_id_from_label()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.handle_next_page"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.handle_next_page()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.handle_prev_page"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.handle_prev_page()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.handle_next_page_jukebox"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.handle_next_page_jukebox()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.handle_prev_page_jukebox"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.handle_prev_page_jukebox()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.on_draw"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.on_draw()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.on_mouse_motion"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.on_mouse_motion()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.on_mouse_press"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.on_mouse_press()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.return_to_menu"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.return_to_menu()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.setup_difficulty_selection"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.setup_difficulty_selection()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.setup_jukebox_song_selection"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.setup_jukebox_song_selection()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.setup_menu"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.setup_menu()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start.WalkingPianoGame.setup_player_mode_selection"><code class="docutils literal notranslate"><span class="pre">WalkingPianoGame.setup_player_mode_selection()</span></code></a></li>
