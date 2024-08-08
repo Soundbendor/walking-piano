@@ -4,6 +4,8 @@ The walking piano software project is built entirely using python and it's packa
 
 See a video about the project here: https://drive.google.com/file/d/1GRSkiWKka5izWtTdP_5gMmL0I-2AXRgO/view?usp=sharing
 
+Documentation: https://thricegreatest.github.io/WalkingPianoDocs/start_module.html
+
 ## Dependencies
 * pyglet
 * mido
