@@ -2,7 +2,9 @@
 
 The walking piano software project is built entirely using python and it's packages. Ensure you have python installed and install the following dependencies. 
 
-See a video about the project here: https://drive.google.com/file/d/1GRSkiWKka5izWtTdP_5gMmL0I-2AXRgO/view?usp=sharing
+A quick demo of some songs within the game can be found here: https://drive.google.com/file/d/1XKRd0-tS2Q-1Sg519iIPSfwJgtSdjQ85/view?usp=sharing
+
+A more in depth video explaining about the project here: https://drive.google.com/file/d/1GRSkiWKka5izWtTdP_5gMmL0I-2AXRgO/view?usp=sharing
 
 Documentation: https://thricegreatest.github.io/WalkingPianoDocs/start_module.html
 
